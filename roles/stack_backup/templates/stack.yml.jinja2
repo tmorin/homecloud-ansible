@@ -1,0 +1,43 @@
+version: "3.7"
+
+x-logging:
+  &default-logging
+  options:
+    max-size: 12m
+    max-file: 5
+  driver: json-file
+
+volumes:
+  destination: {% if homecloud_ceph_is_enabled %}
+    driver: n0r1skcom/docker-volume-cephfs
+    driver_opts:
+      name: admin
+      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      path: /volumes/docker/backup-destination
+      monitors: {{ ceph_monitor_ips }}
+{% else %}{{ backup_destination_volume | to_json }}{% endif %}
+{% for docker_volume in backup_source_volumes %}
+  {{ docker_volume }}:
+    external: true
+{% endfor %}
+services:
+
+  duplicity:
+    image: {{ backup_image }}
+    hostname: backup
+    env_file:
+      - duplicity.env
+    volumes:
+      - destination:/mnt/destination
+{% for docker_volume in backup_source_volumes %}
+      - {{ docker_volume }}:/mnt/{{ docker_volume }}:ro
+{% endfor %}
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: {{ backup_memory }}
+        reservations:
+          memory: {{ backup_memory }}

@@ -1,0 +1,28 @@
+---
+
+- name: 'add the secondary managers to the ceph cluster'
+  shell: |
+    status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
+    if [[ "$status" == "Missing" ]]; then
+      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
+      && cephadm shell -- ceph orch host label add {{ item }} manager \
+      && cephadm shell -- ceph orch host label add {{ item }} secondary_manager \
+      || exit 1
+    fi
+  args:
+    executable: /bin/bash
+  loop: "{{ groups.secondary_managers }}"
+  register: add_hosts
+
+- name: 'add the worker to the ceph cluster'
+  shell: |
+    status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
+    if [[ "$status" == "Missing" ]]; then
+      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
+      && cephadm shell -- ceph orch host label add {{ item }} worker \
+      || exit 1
+    fi
+  args:
+    executable: /bin/bash
+  loop: "{{ groups.workers }}"
+  register: add_hosts

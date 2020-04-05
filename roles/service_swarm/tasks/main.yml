@@ -1,0 +1,21 @@
+---
+
+- name: 'check parameters'
+  assert:
+    that:
+      - homecloud_network_interface | length > 0
+
+- name: 'initialize the main manager'
+  when: inventory_hostname in groups.main_manager
+  block:
+    - import_tasks: initialize-swarm.yml
+
+- name: 'initialize the secondary managers'
+  when: inventory_hostname in groups.secondary_managers
+  block:
+    - import_tasks: join-as-manager.yml
+
+- name: 'initialize the workers'
+  when: inventory_hostname in groups.workers
+  block:
+    - import_tasks: join-as-worker.yml

@@ -1,0 +1,6 @@
+[Unit]
+Description=Prune useless Docker resouces
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/docker-prune

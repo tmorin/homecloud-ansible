@@ -1,0 +1,9 @@
+---
+
+- name: "deploy the task"
+  docker_stack:
+    state: present
+    name: "nextcloud"
+    prune: true
+    compose:
+      - "/tmp/resources/nextcloud.stack.yml"

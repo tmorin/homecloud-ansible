@@ -1,0 +1,39 @@
+---
+
+# https://dl.armbian.com/rock64/archive/Armbian_19.11.5_Rock64_buster_current_5.4.6.7z
+# https://dl.armbian.com/rock64/archive/Armbian_19.11.6_Rock64_buster_current_5.4.8.7z
+# https://dl.armbian.com/rock64/archive/Armbian_20.02.1_Rock64_buster_current_5.4.20.7z
+# https://dl.armbian.com/rock64/archive/Armbian_20.02.1_Rock64_buster_legacy_4.4.213.7z
+image_armbian_image_name: "Armbian_20.02.1_Rock64_buster_legacy_4.4.213"
+image_armbian_image_url: "https://dl.armbian.com/rock64/archive/{{ image_armbian_image_name }}.7z"
+image_armbian_working_directory: "~/tmp/homecloud-swarm-images-armbian"
+
+ansible_user: homecloud
+ansible_become: yes
+
+homecloud_network_interface: 'ansible_eth0'
+homecloud_virtual_ip: '192.168.0.10'
+homecloud_network_netmask: '255.255.255.0'
+homecloud_network_gateway: '192.168.0.1'
+homecloud_network_nameservers: ['1.1.1.1', '1.0.0.1']
+homecloud_is_https: false
+
+homecloud_services:
+  - service_docker
+  - service_swarm
+  - service_keepalived
+
+homecloud_stacks:
+  - stack_traefik
+  - stack_portainer
+  - stack_nextcloud
+  - stack_calibreweb
+  - stack_backup
+
+backup_source_volumes:
+  - traefik_letsencrypt
+  - portainer_console
+  - nextcloud_database
+  - nextcloud_server
+  - calibreweb_config
+restore_source_volumes: "{{ backup_source_volumes }}"

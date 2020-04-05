@@ -1,0 +1,7 @@
+---
+
+restore_image: "thibaultmorin/duplicity-cron"
+restore_passphrase: "passphrase"
+restore_source_volumes: []
+restore_destination_volume: "backup_destination"
+restore_remove_stacks: true

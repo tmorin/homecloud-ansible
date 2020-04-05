@@ -1,0 +1,9 @@
+---
+
+ansible_user: vagrant
+ansible_become: yes
+
+homecloud_services:
+  - service_syncthing
+
+homecloud_stacks: []

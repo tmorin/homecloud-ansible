@@ -1,0 +1,9 @@
+[Unit]
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/swapoff -a
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,28 @@
+---
+
+- name: 'check parameters'
+  assert:
+    that:
+      - homecloud_network_interface | length > 0
+
+- import_tasks: install-cephadm.yml
+
+- name: 'setup the main manager node'
+  when: inventory_hostname in groups.main_manager
+  block:
+    - import_tasks: initialize-cluster.yml
+    - import_tasks: configure-cluster.yml
+    - import_tasks: get-ssh-pubkey.yml
+    - import_tasks: get-ceph-client-secret.yml
+
+- name: 'populate remaining hosts'
+  when: inventory_hostname not in groups.main_manager
+  block:
+    - import_tasks: push-ssh-pubkey.yml
+
+- name: 'setup the other nodes'
+  when: inventory_hostname in groups.main_manager
+  block:
+    - import_tasks: add-hosts.yml
+    - import_tasks: add-osds.yml
+    - import_tasks: create-volumes.yml

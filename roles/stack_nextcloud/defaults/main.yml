@@ -1,0 +1,64 @@
+---
+
+homecloud_ceph_is_enabled: false
+homecloud_is_https: true
+
+backup_destination_volume: {}
+
+nextcloud_host: 'nextcloud.homecloud.swarm'
+
+# volumes
+
+nextcloud_volume_server: {}
+nextcloud_volume_database: {}
+nextcloud_volumes: {}
+
+
+# database
+
+nextcloud_database_image: 'mariadb:10.4'
+nextcloud_database_memory: '256M'
+nextcloud_database_root_password: 'root_password'
+nextcloud_database_nextcoud_password: 'nextcloud_password'
+
+
+# backup
+
+nextcloud_backup_image: "thibaultmorin/duplicity-mariadb"
+nextcloud_backup_passphrase: "passphrase"
+nextcloud_backup_memory: "64M"
+
+
+# cache
+
+nextcloud_cache_image: 'redis:5-alpine'
+nextcloud_cache_memory: '48M'
+
+
+# server
+
+nextcloud_server_image: 'nextcloud:stable'
+nextcloud_server_replicas: 1
+nextcloud_server_memory: '256M'
+nextcloud_cron_memory: '128M'
+nextcloud_server_admin_user: 'admin'
+nextcloud_server_admin_password: 'admin_password'
+
+nextcloud_server_trusted_domains: 'nextcloud.homecloud.swarm'
+
+# (not set by default) hostname of the SMTP server
+nextcloud_server_smtp_host: ''
+# (empty by default) set to 'ssl' to use SSL on the connection.
+nextcloud_server_smtp_secure: 'ssl'
+# (default: 465 for SSL and 25 for non-secure connection) Optional port for SMTP connection.
+nextcloud_server_smtp_port: ''
+# (default: LOGIN) The method used for authentication.
+nextcloud_server_smtp_authtype: ''
+# (empty by default) Username for the authentication.
+nextcloud_server_smtp_name:
+# (empty by default) Password for the authentication.
+nextcloud_server_smtp_password:
+# (not set by default) Use this address for the 'from' field in the mail envelopes sent by Nextcloud.
+nextcloud_server_mail_from: ''
+# (not set by default) Set a different domain for the emails than the domain where Nextcloud is installed.
+nextcloud_server_mail_domain: ''

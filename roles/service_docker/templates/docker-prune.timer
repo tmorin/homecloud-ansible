@@ -1,0 +1,8 @@
+[Unit]
+Description=Prune useless Docker resouces every week
+
+[Timer]
+OnCalendar=weekly
+
+[Install]
+WantedBy=timers.target

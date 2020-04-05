@@ -1,0 +1,16 @@
+---
+
+- name: 'copy the load_ip_vs service'
+  template:
+    src: load_ip_vs.service
+    dest: /etc/systemd/system/load_ip_vs.service
+    owner: root
+    group: root
+    mode: 0644
+  register: install_load_ip_vs
+
+- name: 'enable and start the load_ip_vs service'
+  service:
+    name: load_ip_vs
+    enabled: yes
+    state: started

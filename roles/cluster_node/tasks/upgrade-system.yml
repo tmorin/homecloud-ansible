@@ -1,0 +1,27 @@
+---
+
+- name: 'hold packages'
+  shell: "apt-mark hold {{ item }}"
+  loop: "{{ apt_mark_hold_packages | default([]) }}"
+  register: upgrade_system
+#- debug: var=upgrade_system
+
+- name: 'upgrade the system'
+  apt:
+    update_cache: "yes"
+    autoclean: "yes"
+    autoremove: "yes"
+    upgrade: "yes"
+    force_apt_get: "yes"
+  register: upgrade_system
+- debug: var=upgrade_system
+
+- name: 'install python 3 and pip'
+  package:
+    name: python3,python3-pip
+    state: present
+    force_apt_get: "yes"
+  register: upgrade_system
+- name: 'install setuptools'
+  shell: pip3 install setuptools
+  register: upgrade_system

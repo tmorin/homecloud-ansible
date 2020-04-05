@@ -1,0 +1,45 @@
+---
+
+ansible_user: vagrant
+ansible_become: yes
+
+homecloud_virtual_ip: '192.168.11.10'
+homecloud_network_interface: 'ansible_eth1'
+homecloud_is_https: false
+
+homecloud_services:
+  - service_docker
+  - service_swarm
+
+homecloud_stacks:
+  - stack_traefik
+  - stack_influxdata
+  - stack_portainer
+  - stack_nextcloud
+  - stack_calibreweb
+  - stack_backup
+
+backup_source_volumes:
+  - calibreweb_config
+  - influxdata_influxdb
+  - influxdata_kapacitor
+  - influxdata_chronograf
+  - nextcloud_database
+  - nextcloud_server
+  - portainer_console
+  - traefik_letsencrypt
+
+nextcloud_volumes:
+  mnt:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /mnt
+
+backup_destination_volume:
+  driver: local
+  driver_opts:
+    o: bind
+    type: none
+    device: /tmp

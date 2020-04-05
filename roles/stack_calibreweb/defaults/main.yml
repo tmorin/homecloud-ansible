@@ -1,0 +1,22 @@
+---
+
+homecloud_ceph_is_enabled: false
+homecloud_is_https: true
+
+calibreweb_host: 'calibreweb.homecloud.swarm'
+
+
+# volumes
+
+calibreweb_volume_config: {}
+calibreweb_volume_books: {}
+
+
+# server
+
+calibreweb_server_image: 'linuxserver/calibre-web'
+calibreweb_server_replicas: 1
+calibreweb_server_memory: '96M'
+
+# for instance: Europe/Zurich
+calibreweb_server_timezone: ''

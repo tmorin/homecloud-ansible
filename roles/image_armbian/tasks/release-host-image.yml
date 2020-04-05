@@ -1,0 +1,15 @@
+---
+
+- name: 'chown {{ image_armbian_host_directory }}'
+  delegate_to: localhost
+  become: yes
+  raw: "chown -R $SUDO_UID:$SUDO_GID {{ image_armbian_host_directory }}"
+  register: chown_host_dir
+#- debug: var=chown_host_dir
+
+- name: 'move host images'
+  delegate_to: localhost
+  become: yes
+  raw: "mv -f {{ image_armbian_host_directory }}/image.img {{ playbook_dir }}/images/{{ inventory_hostname }}.img"
+  register: move_image
+#- debug: var=move_image

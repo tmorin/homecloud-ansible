@@ -1,0 +1,49 @@
+---
+
+- name: 'copy the backup configuration'
+  template:
+    src: backup.env
+    dest: /tmp/resources/backup.env
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    trim_blocks: no
+    lstrip_blocks: no
+  register: deploy_stack
+
+- name: 'copy the database configuration'
+  template:
+    src: database.env
+    dest: /tmp/resources/database.env
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    trim_blocks: no
+    lstrip_blocks: no
+  register: deploy_stack
+
+- name: 'copy the server configuration'
+  template:
+    src: server.env
+    dest: /tmp/resources/server.env
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    trim_blocks: no
+    lstrip_blocks: no
+  register: deploy_stack
+
+- name: 'copy the stack file'
+  template:
+    src: stack.yml.jinja2
+    dest: /tmp/resources/nextcloud.stack.yml
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    trim_blocks: no
+    lstrip_blocks: no
+  register: deploy_stack

@@ -1,0 +1,9 @@
+---
+
+- name: 'create the subvolumegroup docker/nextcloud-server'
+  shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/nextcloud-server"
+  register: create_ceph_volumes
+
+- name: 'create the subvolumegroup docker/nextcloud-database'
+  shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/nextcloud-database"
+  register: create_ceph_volumes

@@ -1,0 +1,9 @@
+---
+
+- name: "deploy the task"
+  docker_stack:
+    state: present
+    name: "influxdata"
+    prune: true
+    compose:
+      - "/tmp/resources/influxdata.stack.yml"

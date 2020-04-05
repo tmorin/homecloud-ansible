@@ -1,0 +1,9 @@
+---
+
+- name: 'create the volume swarm'
+  shell: "cephadm shell -- ceph fs volume create swarm"
+  register: create_volumes
+
+- name: 'create the subvolumegroup docker'
+  shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker"
+  register: create_volumes

@@ -1,0 +1,27 @@
+---
+
+- name: "install dependencies"
+  package:
+    pkg: apt-transport-https
+    state: present
+    force_apt_get: "yes"
+  register: install_syncthing
+
+- name: "import Syncthing GPG key to apt"
+  apt_key:
+    url: "https://syncthing.net/release-key.txt"
+    state: present
+  register: install_syncthing
+
+- name: "add Syncthing repository"
+  apt_repository:
+    repo: 'deb https://apt.syncthing.net/ syncthing stable'
+    state: present
+  register: install_syncthing
+
+- name: "install Syncthing"
+  package:
+    name: syncthing
+    state: present
+    force_apt_get: "yes"
+  register: install_syncthing

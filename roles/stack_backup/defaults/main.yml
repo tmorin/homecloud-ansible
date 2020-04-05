@@ -1,0 +1,9 @@
+---
+
+backup_image: "thibaultmorin/duplicity-cron"
+backup_passphrase: "passphrase"
+backup_memory: "128M"
+
+backup_source_volumes: []
+
+backup_destination_volume: {}

@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Thibault Morin
+  description: deploy a Docker Swarm stack to backup Docker volumes
+  license: MIT
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+
+  galaxy_tags:
+    - debian
+    - docker
+    - duplicity
+
+dependencies: []

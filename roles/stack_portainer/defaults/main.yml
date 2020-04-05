@@ -1,0 +1,23 @@
+---
+
+homecloud_ceph_is_enabled: false
+homecloud_is_https: true
+
+portainer_host: 'portainer.homecloud.swarm'
+
+
+# volumes
+
+portainer_volume_console: {}
+
+
+# console
+
+portainer_console_image: 'portainer/portainer'
+portainer_console_memory: '64M'
+
+
+# agent
+
+portainer_agent_image: 'portainer/agent'
+portainer_agent_memory: '32M'

@@ -1,0 +1,174 @@
+version: "3.7"
+
+x-logging:
+  &default-logging
+  options:
+    max-size: 12m
+    max-file: 5
+  driver: json-file
+
+volumes:
+  server: {% if homecloud_ceph_is_enabled %}
+    driver: n0r1skcom/docker-volume-cephfs
+    driver_opts:
+      name: admin
+      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      path: /volumes/docker/nextcloud-server
+      monitors: {{ ceph_monitor_ips }}
+{% else %}{{ nextcloud_volume_server | to_json }}{% endif %}
+  database: {% if homecloud_ceph_is_enabled %}
+    driver: n0r1skcom/docker-volume-cephfs
+    driver_opts:
+      name: admin
+      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      path: /volumes/docker/nextcloud-database
+      monitors: {{ ceph_monitor_ips }}
+{% else %}{{ nextcloud_volume_database | to_json }}{% endif %}
+  backup: {{ backup_destination_volume | to_json }}
+{% for key in nextcloud_volumes %}
+  {{ key }}: {{ nextcloud_volumes[key] | to_json }}
+{% endfor %}
+
+networks:
+  traefik_public:
+    external: true
+  internal:
+    driver: overlay
+
+services:
+
+  database:
+    image: {{ nextcloud_database_image }}
+    command: --transaction-isolation=READ-COMMITTED --log-bin=mariadb-bin --binlog-format=ROW
+    env_file:
+      - database.env
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - internal
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: {{ nextcloud_database_memory }}
+        reservations:
+          memory: {{ nextcloud_database_memory }}
+
+  cache:
+    image: {{ nextcloud_cache_image }}
+    volumes:
+      - type: tmpfs
+        target: /data
+        read_only: false
+    networks:
+      - internal
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: {{ nextcloud_cache_memory }}
+        reservations:
+          memory: {{ nextcloud_cache_memory }}
+
+  server:
+    image: {{ nextcloud_server_image }}
+    env_file:
+      - database.env
+      - server.env
+    volumes:
+      - server:/var/www/html
+{% for key in nextcloud_volumes %}
+      - {{ key }}:/mnt/{{ key }}
+{% endfor %}
+    networks:
+      - internal
+      - traefik_public
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: {{ nextcloud_server_replicas }}
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          memory: {{ nextcloud_server_memory }}
+        reservations:
+          memory: {{ nextcloud_server_memory }}
+      labels:
+        - "traefik.enable=true"
+        # routers
+        - "traefik.http.routers.nextcloud.rule=Host(`{{ nextcloud_host }}`)"
+{% if homecloud_is_https %}
+        - "traefik.http.routers.nextcloud.entrypoints=https"
+        - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
+{% else %}
+        - "traefik.http.routers.nextcloud.entrypoints=http"
+{% endif %}
+        # services
+        - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+        # middlewares
+        - "traefik.http.middlewares.nextcloud.headers.customFrameOptionsValue=SAMEORIGIN"
+        - "traefik.http.middlewares.nextcloud.headers.framedeny=true"
+{% if homecloud_is_https %}
+        - "traefik.http.middlewares.nextcloud.headers.sslredirect=true"
+{% endif %}
+        - "traefik.http.middlewares.nextcloud.headers.stsIncludeSubdomains=true"
+        - "traefik.http.middlewares.nextcloud.headers.stsPreload=true"
+        - "traefik.http.middlewares.nextcloud.headers.stsSeconds=15552000"
+        - "traefik.http.middlewares.nextcloud-dav.replacepathregex.regex=^/.well-known/ca(l|rd)dav"
+        - "traefik.http.middlewares.nextcloud-dav.replacepathregex.replacement=/remote.php/dav/"
+
+  cron:
+    image: {{ nextcloud_server_image }}
+    env_file:
+      - database.env
+      - server.env
+    entrypoint: /cron.sh
+    volumes:
+      - server:/var/www/html:ro
+{% for key in nextcloud_volumes %}
+      - {{ key }}:/mnt/{{ key }}
+{% endfor %}
+    networks:
+      - internal
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: {{ nextcloud_cron_memory }}
+        reservations:
+          memory: {{ nextcloud_cron_memory }}
+
+  backup:
+    image: {{ nextcloud_backup_image }}
+    hostname: backup
+    env_file:
+      - database.env
+      - backup.env
+    volumes:
+      - backup:/mnt/backup
+      - database:/mnt/database:ro
+      - server:/mnt/server:ro
+    networks:
+      - internal
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: {{ nextcloud_backup_memory }}
+        reservations:
+          memory: {{ nextcloud_backup_memory }}

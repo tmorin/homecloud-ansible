@@ -1,0 +1,37 @@
+---
+
+- name: 'install dependencies from apt'
+  package:
+    name: curl,nfs-common,cifs-utils
+    state: present
+    force_apt_get: "yes"
+  register: install_docker
+
+- name: 'install dependencies from pip'
+  pip:
+    name:
+      - docker
+      - jsondiff
+      - pyaml
+  register: install_docker
+
+- name: 'get /usr/bin/docker stat'
+  stat:
+    path: /usr/bin/docker
+  register: docker_binnary_file
+
+- name: 'install docker'
+  when: not docker_binnary_file.stat.exists
+  shell: "curl -o- https://get.docker.com | bash"
+  args:
+    warn: false
+  register: install_docker
+
+- name: 'configure current user'
+  command: usermod -aG docker ${SUDO_USER}
+  register: install_docker
+
+- name: 'install docker plugin n0r1skcom/docker-volume-cephfs'
+  when: homecloud_ceph_is_enabled
+  shell: "(docker plugin ls | grep n0r1skcom/docker-volume-cephfs) || docker plugin install n0r1skcom/docker-volume-cephfs --grant-all-permissions"
+  register: install_docker

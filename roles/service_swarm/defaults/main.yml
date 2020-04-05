@@ -1,0 +1,8 @@
+---
+
+homecloud_network_interface: ""
+
+swarm_manager_ip: "{{ hostvars[groups['main_manager'][0]][homecloud_network_interface].ipv4.address }}"
+
+# The value should be overridden from a host variable.
+swarm_node_labels: {}

@@ -1,0 +1,36 @@
+---
+
+- name: 'copy restore.env'
+  template:
+    src: restore.env.jinja2
+    dest: /tmp/resources/restore.env
+    mode: 0644
+    force: true
+  register: action_restore
+
+- name: 'copy restore.sh'
+  template:
+    src: restore.sh.jinja2
+    dest: /tmp/resources/restore.sh
+    mode: 0755
+    force: true
+  register: action_restore
+
+- name: 'clear stacks'
+  when: "{{ restore_remove_stacks }}"
+  shell: |
+    stacks=$(docker stack ls --format {{'{{'}}.Name{{'}}'}})
+    if [[ ! -z "$stacks" ]]; then
+      docker stack rm $stacks
+    fi
+  args:
+    executable: /bin/bash
+  register: action_restore
+- debug: var=action_restore
+
+- name: 'execute restore'
+  shell: /tmp/resources/restore.sh
+  args:
+    chdir: /tmp/resources
+  register: action_restore
+- debug: var=action_restore

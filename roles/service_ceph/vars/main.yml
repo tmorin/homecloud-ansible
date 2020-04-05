@@ -1,0 +1,4 @@
+---
+
+# The ceph should not be overridden.
+ceph_release: octopus

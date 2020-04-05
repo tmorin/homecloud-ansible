@@ -1,0 +1,12 @@
+swarm:
+  hosts:
+    r1-n1:
+
+  children:
+    main_manager:
+      hosts:
+        r1-n1:
+    secondary_managers:
+      hosts:
+    workers:
+      hosts:

@@ -1,0 +1,7 @@
+---
+
+- name: 'get SSH public key'
+  synchronize:
+    src: /etc/ceph/ceph.pub
+    dest: vault/ceph.pub
+    mode: pull

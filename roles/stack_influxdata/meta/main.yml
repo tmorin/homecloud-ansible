@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Thibault Morin
+  description: deploy a Docker Swarm stack based on influxdata products (Influxdb, Telegraf, Kapacitor, Chronograf)
+  license: MIT
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+
+  galaxy_tags:
+    - stack
+    - docker
+    - influxdb
+    - telegraf
+    - kapacitor
+    - chronograf
+
+dependencies: []

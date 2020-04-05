@@ -1,0 +1,27 @@
+---
+
+homecloud_network_interface: ""
+
+# Should be the IP of the main manager of the Docker Swarm cluster.
+ceph_monitor_ip: "{{ hostvars[groups['main_manager'][0]][homecloud_network_interface].ipv4.address }}"
+
+# https://docs.ceph.com/docs/octopus/mgr/orchestrator/
+ceph_config_max_mon: ""
+ceph_config_max_mgr: ""
+
+# https://docs.ceph.com/docs/master/start/hardware-recommendations/
+ceph_config_rocksdb_cache_size: ""
+ceph_config_mds_cache_memory_limit: ""
+
+# https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#automatic-cache-sizing
+ceph_config_osd_memory_base: ""
+# https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#manual-cache-sizing
+ceph_config_bluestore_cache_size: ""
+# https://docs.ceph.com/docs/master/rados/configuration/pool-pg-config-ref/
+ceph_config_osd_pool_default_size: ""
+ceph_config_osd_pool_default_min_size: ""
+
+# https://docs.ceph.com/docs/master/rados/configuration/mon-config-ref/#miscellaneous
+ceph_config_mon_osd_cache_size: ""
+ceph_config_mon_osd_cache_size_min: ""
+ceph_config_mon_memory_target: ""

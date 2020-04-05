@@ -1,0 +1,14 @@
+---
+
+swarm:
+  hosts:
+    hc-c1-n1:
+
+  children:
+    main_manager:
+      hosts:
+        hc-c1-n1:
+    secondary_managers:
+      hosts:
+    workers:
+      hosts:

@@ -1,0 +1,91 @@
+version: "3.7"
+
+x-logging:
+  &default-logging
+  options:
+    max-size: 12m
+    max-file: 5
+  driver: json-file
+
+networks:
+  public:
+    driver: overlay
+
+volumes:
+  letsencrypt: {% if homecloud_ceph_is_enabled %}
+    driver: n0r1skcom/docker-volume-cephfs
+    driver_opts:
+      name: admin
+      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      path: /volumes/docker/portainer-console
+      monitors: {{ ceph_monitor_ips }}
+{% else %}{{ traefik_volume_letsencrypt | to_json }}{% endif %}
+
+services:
+
+  server:
+    image: {{ traefik_server_image }}
+    command:
+      - "--log.level=ERROR"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik_public"
+      - "--entrypoints.http.address=:{{ traefik_http_port }}"
+      - "--entrypoints.https.address=:{{ traefik_https_port }}"
+{% if homecloud_is_https %}
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--certificatesresolvers.letsencrypt.acme.email={{ traefik_server_admin_email }}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+{% endif %}
+
+    ports:
+      - target: {{ traefik_http_port }}
+        published: {{ traefik_http_port }}
+        protocol: tcp
+      - target: {{ traefik_https_port }}
+        published: {{ traefik_https_port }}
+        protocol: tcp
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - letsencrypt:/letsencrypt
+    networks:
+      - public
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 0s
+        order: start-first
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        # routers
+        - "traefik.http.routers.traefik.rule=Host(`{{ traefik_host }}`)"
+{% if homecloud_is_https %}
+        - "traefik.http.routers.traefik.entrypoints=https"
+        - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+{% else %}
+        - "traefik.http.routers.traefik.entrypoints=http"
+{% endif %}
+        - "traefik.http.routers.traefik.middlewares=basic_auth_admin@docker"
+        # services
+        - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+{% if homecloud_is_https %}
+        # global redirect to https
+        - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+        - "traefik.http.routers.http-catchall.entrypoints=http"
+        - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+        # middleware redirect
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+{% endif %}
+        # middleware basic auth
+        - "traefik.http.middlewares.basic_auth_admin.basicauth.users={{ traefik_server_auth_admin }}"

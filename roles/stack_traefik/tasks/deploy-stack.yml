@@ -1,0 +1,9 @@
+---
+
+- name: "deploy the task"
+  docker_stack:
+    state: present
+    name: "traefik"
+    prune: true
+    compose:
+      - "/tmp/resources/traefik.stack.yml"

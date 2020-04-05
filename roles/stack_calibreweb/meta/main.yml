@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Thibault Morin
+  description: deploy a Docker Swarm stack propulsing Calibreweb
+  license: MIT
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+
+  galaxy_tags:
+    - stack
+    - docker
+    - calibre
+    - calibreweb
+
+dependencies: []

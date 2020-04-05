@@ -1,0 +1,16 @@
+swarm:
+  hosts:
+    c3-n1:
+    c3-n2:
+    c3-n3:
+
+  children:
+    main_manager:
+      hosts:
+        c3-n1:
+    secondary_managers:
+      hosts:
+        c3-n2:
+    workers:
+      hosts:
+        c3-n3:

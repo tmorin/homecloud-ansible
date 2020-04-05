@@ -1,0 +1,15 @@
+---
+
+- name: "cleaning existing deployment"
+  docker_container:
+    name: keepalived
+    state: absent
+
+- name: "deploy container"
+  shell: |
+    docker run -d --name keepalived --restart=unless-stopped \
+      --cap-add=NET_ADMIN --net=host \
+      -e KEEPALIVED_PRIORITY="{{ (groups['main_manager'][0] == inventory_hostname) | ternary('200','100') }}" \
+      -e KEEPALIVED_VIRTUAL_IPS="{{ homecloud_virtual_ip }}" \
+      -e KEEPALIVED_UNICAST_PEERS="{{ homecloud_ips_as_strings }}" \
+      {{ keepalived_docker_image }}

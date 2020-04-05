@@ -1,0 +1,10 @@
+---
+
+- name: 'check parameters'
+  assert:
+    that:
+      - homecloud_virtual_ip | length > 0
+      - homecloud_network_interface | length > 0
+
+- import_tasks: install-load_ip_vs.yml
+- import_tasks: deploy-keepalived.yml

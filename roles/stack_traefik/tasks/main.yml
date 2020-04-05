@@ -1,0 +1,7 @@
+---
+
+
+- import_tasks: copy-resources.yml
+- when: homecloud_ceph_is_enabled
+  import_tasks: create-ceph-volumes.yml
+- import_tasks: deploy-stack.yml

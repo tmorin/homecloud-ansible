@@ -1,0 +1,21 @@
+---
+
+- name: 'create working directory'
+  delegate_to: localhost
+  file:
+    path: "{{ image_armbian_working_directory }}/{{ inventory_hostname }}"
+    state: directory
+
+- name: 'resolve image_armbian_base_image_path'
+  delegate_to: localhost
+  raw: "realpath {{ image_armbian_base_image_path }}"
+  register: image_armbian_base_image_path_cmd
+- name: 'resolve image_armbian_base_image_path'
+  set_fact: image_armbian_base_image_path="{{ image_armbian_base_image_path_cmd.stdout_lines[0] }}"
+
+- name: 'resolve image_armbian_host_directory_cmd'
+  delegate_to: localhost
+  raw: "realpath {{ image_armbian_working_directory }}/{{ inventory_hostname }}"
+  register: image_armbian_host_directory_cmd
+- name: 'resolve image_armbian_host_directory'
+  set_fact: image_armbian_host_directory="{{ image_armbian_host_directory_cmd.stdout_lines[0] }}"

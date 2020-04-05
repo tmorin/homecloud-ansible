@@ -1,0 +1,28 @@
+---
+
+- name: 'get /etc/ceph/ceph.conf stat'
+  stat:
+    path: /etc/ceph/ceph.conf
+  register: ceph_conf_file
+
+- name: 'initialize the ceph cluster'
+  when: not ceph_conf_file.stat.exists
+  block:
+    - name: 'create /etc/ceph'
+      file:
+        path: /etc/ceph
+        state: directory
+      register: initialize_cluster
+    - name: 'bootstrap ceph'
+      shell: |
+        cephadm bootstrap \
+          --mon-ip {{ ceph_monitor_ip }} \
+          --skip-dashboard \
+          --skip-monitoring-stack \
+          --skip-firewalld
+      register: initialize_cluster
+    - name: 'set labels'
+      shell: |
+        cephadm shell -- ceph orch host label add {{ inventory_hostname }} manager \
+        && cephadm shell -- ceph orch host label add {{ inventory_hostname }} primary_manager
+      register: initialize_cluster

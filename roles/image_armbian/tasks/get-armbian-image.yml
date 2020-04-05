@@ -1,0 +1,21 @@
+---
+
+- name: 'fetch armbian image'
+  delegate_to: localhost
+  get_url:
+    url: "{{ image_armbian_image_url }}"
+    dest: "{{ image_armbian_base_image_path }}.7z"
+    force: false
+
+- name: "get {{ image_armbian_base_image_path }} stat"
+  delegate_to: localhost
+  stat:
+    path: "{{ image_armbian_base_image_path }}"
+  register: armbian_archive_file
+
+- name: 'unpack armbian archive'
+  delegate_to: localhost
+  when: not armbian_archive_file.stat.exists
+  shell:
+    chdir: "{{ image_armbian_working_directory }}"
+    cmd: "7z x -y {{ image_armbian_base_image_path }}.7z"

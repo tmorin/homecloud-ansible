@@ -1,0 +1,4 @@
+---
+
+# the path of the armbian image
+image_armbian_base_image_path: "{{ image_armbian_working_directory }}/{{ image_armbian_image_name }}.img"

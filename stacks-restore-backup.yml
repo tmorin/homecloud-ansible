@@ -1,0 +1,11 @@
+---
+
+- hosts: main_manager
+  vars:
+    homecloud_ceph_is_enabled: "{{'service_ceph' in homecloud_services}}"
+  pre_tasks:
+    - import_tasks: tasks/prepare-resources.yml
+  roles:
+    - action_restore
+  post_tasks:
+    - import_tasks: tasks/clean-resources.yml

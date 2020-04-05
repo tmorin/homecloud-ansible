@@ -1,0 +1,22 @@
+---
+
+- hosts: swarm
+  vars:
+    homecloud_ceph_is_enabled: "{{'service_ceph' in homecloud_services}}"
+  pre_tasks:
+    - import_tasks: tasks/prepare-resources.yml
+  tasks:
+    - include_role: name=cluster_node
+    - name: "execute services"
+      include_role:
+        name: "{{ homecloud_service }}"
+      loop: "{{ homecloud_services | default([]) }}"
+      loop_control:
+        loop_var: "homecloud_service"
+  post_tasks:
+    - import_tasks: tasks/clean-resources.yml
+
+- hosts: swarm
+  roles:
+    - dev-sec.os-hardening
+    - dev-sec.ssh-hardening

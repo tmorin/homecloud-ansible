@@ -1,0 +1,85 @@
+version: "3.7"
+
+x-logging:
+  &default-logging
+  options:
+    max-size: 12m
+    max-file: 5
+  driver: json-file
+
+networks:
+  agent:
+    driver: overlay
+    attachable: true
+  traefik_public:
+    external: true
+
+volumes:
+  console: {% if homecloud_ceph_is_enabled %}
+    driver: n0r1skcom/docker-volume-cephfs
+    driver_opts:
+      name: admin
+      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      path: /volumes/docker/traefik-letsencrypt
+      monitors: {{ ceph_monitor_ips }}
+{% else %}{{ portainer_volume_console | to_json }}{% endif %}
+
+services:
+
+  agent:
+    image: {{ portainer_agent_image }}
+    environment:
+      - LOG_LEVEL=WARN
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - agent
+    logging: *default-logging
+    deploy:
+      mode: global
+      resources:
+        limits:
+          memory: {{ portainer_agent_memory }}
+        reservations:
+          memory: {{ portainer_agent_memory }}
+      placement:
+        constraints: [node.platform.os == linux]
+
+  console:
+    image: {{ portainer_console_image }}
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    volumes:
+      - console:/data
+    networks:
+      - agent
+      - traefik_public
+    logging: *default-logging
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 0s
+        order: stop-first
+      resources:
+        limits:
+          memory: {{ portainer_console_memory }}
+        reservations:
+          memory: {{ portainer_console_memory }}
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        # routers
+        - "traefik.http.routers.portainer.rule=Host(`{{ portainer_host }}`)"
+{% if homecloud_is_https %}
+        - "traefik.http.routers.portainer.entrypoints=https"
+        - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
+{% else %}
+        - "traefik.http.routers.portainer.entrypoints=http"
+{% endif %}
+        # services
+        - "traefik.http.services.portainer.loadbalancer.server.port=9000"

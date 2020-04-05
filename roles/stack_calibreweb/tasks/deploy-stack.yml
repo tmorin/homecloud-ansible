@@ -1,0 +1,9 @@
+---
+
+- name: "deploy the task"
+  docker_stack:
+    state: present
+    name: "calibreweb"
+    prune: true
+    compose:
+      - "/tmp/resources/calibreweb.stack.yml"

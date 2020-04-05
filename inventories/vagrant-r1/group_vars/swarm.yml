@@ -1,0 +1,29 @@
+---
+
+ansible_user: vagrant
+ansible_become: yes
+
+homecloud_virtual_ip: '192.168.12.11'
+homecloud_network_interface: 'ansible_eth1'
+homecloud_is_https: false
+
+homecloud_services:
+  - service_docker
+  - service_swarm
+
+homecloud_stacks:
+  - stack_traefik
+  - stack_portainer
+  - stack_backup
+
+backup_source_volumes:
+  - portainer_console
+
+restore_source_volumes: "{{ backup_source_volumes }}"
+
+backup_destination_volume:
+  driver: local
+  driver_opts:
+    o: bind
+    type: none
+    device: /tmp

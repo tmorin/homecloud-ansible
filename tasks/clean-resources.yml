@@ -1,0 +1,13 @@
+---
+
+- name: 'find resources'
+  find:
+    paths: /tmp/resources
+    patterns: "*"
+  register: files_to_delete
+
+- name: 'delete resources'
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"

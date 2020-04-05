@@ -1,0 +1,21 @@
+---
+
+homecloud_ceph_is_enabled: false
+homecloud_is_https: true
+
+traefik_host: "traefik.homecloud.swarm"
+traefik_http_port:  "80"
+traefik_https_port: "443"
+
+
+# volumes
+
+traefik_volume_letsencrypt: {}
+
+
+# server
+
+traefik_server_image: "traefik:latest"
+traefik_server_admin_email: "admin@homecloud.swarm"
+# echo $(htpasswd -nb admin admin_password) | sed -e s/\\$/\\$\\$/g
+traefik_server_auth_admin: "admin:$$apr1$$dAp9Vuir$$wxnIUy1XNHHSawNfWRSyg0"
