@@ -1,4 +1,4 @@
-# homecloud - swarm
+# homecloud
 
 > `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home based on Docker Swarm.
 

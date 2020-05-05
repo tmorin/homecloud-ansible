@@ -22,7 +22,9 @@
 
 - name: 'install docker'
   when: not docker_binnary_file.stat.exists
-  shell: "curl -o- https://get.docker.com | bash"
+  shell: |
+    set -o pipefail
+    curl -o- https://get.docker.com | bash
   args:
     warn: false
   register: install_docker
@@ -33,5 +35,7 @@
 
 - name: 'install docker plugin n0r1skcom/docker-volume-cephfs'
   when: homecloud_ceph_is_enabled
-  shell: "(docker plugin ls | grep n0r1skcom/docker-volume-cephfs) || docker plugin install n0r1skcom/docker-volume-cephfs --grant-all-permissions"
+  shell: |
+    set -o pipefail
+    (docker plugin ls | grep n0r1skcom/docker-volume-cephfs) || docker plugin install n0r1skcom/docker-volume-cephfs --grant-all-permissions
   register: install_docker

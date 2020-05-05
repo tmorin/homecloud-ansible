@@ -5,5 +5,9 @@
     name: "{{ inventory_hostname }}"
 
 - name: "build hosts file"
-  lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item][homecloud_network_interface].ipv4.address }} {{item}}" state=present
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: "{{ hostvars[item][homecloud_network_interface].ipv4.address }} {{ item }}"
+    state: present
   loop: "{{ groups.swarm }}"

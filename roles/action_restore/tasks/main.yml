@@ -17,7 +17,7 @@
   register: action_restore
 
 - name: 'clear stacks'
-  when: "{{ restore_remove_stacks }}"
+  when: restore_remove_stacks
   shell: |
     stacks=$(docker stack ls --format {{'{{'}}.Name{{'}}'}})
     if [[ ! -z "$stacks" ]]; then

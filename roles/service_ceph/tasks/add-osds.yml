@@ -2,6 +2,7 @@
 
 - name: 'add osds'
   shell: |
+    set -o pipefail
     status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].ceph_osd_device }}")
     echo "1 status $status"
     until [[ ! -z "$status" ]]; do

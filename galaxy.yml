@@ -1,6 +1,6 @@
-namespace: homecloud
-name: swarm
-version: 1.0.0-alpha.0
+namespace: tmorin
+name: homecloud
+version: 1.0.0-alpha.2
 readme: README.md
 authors:
   - Thibault Morin (https://tmorin.github.io)
@@ -14,6 +14,8 @@ repository: https://framagit.org/tmorin/homecloud-swarm
 homepage:  https://framagit.org/tmorin/homecloud-swarm
 issues: https://framagit.org/tmorin/homecloud-swarm/-/issues
 build_ignore:
+  - .idea/
+  - images/
   - inventories/
   - scripts/
   - tmp/
