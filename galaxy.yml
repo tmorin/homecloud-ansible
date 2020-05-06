@@ -14,9 +14,9 @@ repository: https://framagit.org/tmorin/homecloud-ansible
 homepage:  https://framagit.org/tmorin/homecloud-ansible
 issues: https://framagit.org/tmorin/homecloud-ansible/-/issues
 build_ignore:
-  - .idea/
+  - .*
+  - ansible.cfg
   - images/
   - inventories/
+  - playbooks/vault/
   - scripts/
-  - tmp/
-  - vault/

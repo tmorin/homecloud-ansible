@@ -5,4 +5,5 @@ export homecloud_IP="192.168.10.11"
 
 . $(pwd)/scripts/include.sh
 
-bootstrapEnvironment
+bootstrapVagrant
+playbook syncthing-install.yml

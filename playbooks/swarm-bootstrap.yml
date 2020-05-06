@@ -15,8 +15,3 @@
         loop_var: "homecloud_service"
   post_tasks:
     - import_tasks: tasks/clean-resources.yml
-
-- hosts: swarm
-  roles:
-    - dev-sec.os-hardening
-    - dev-sec.ssh-hardening

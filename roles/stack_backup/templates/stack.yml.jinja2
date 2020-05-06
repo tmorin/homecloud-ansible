@@ -12,7 +12,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/backup-destination
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ backup_destination_volume | to_json }}{% endif %}

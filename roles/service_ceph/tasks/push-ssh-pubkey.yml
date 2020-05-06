@@ -5,7 +5,7 @@
   authorized_key:
     user: "{{ ansible_user }}"
     state: present
-    key: "{{ lookup('file', 'vault/ceph.pub') }}"
+    key: "{{ lookup('file', playbook_dir~'/vault/ceph.pub') }}"
   register: push_ssh_pubkey
 
 - name: 'push SSH public key to the root user'
@@ -13,23 +13,5 @@
   authorized_key:
     user: root
     state: present
-    key: "{{ lookup('file', 'vault/ceph.pub') }}"
+    key: "{{ lookup('file', playbook_dir~'/vault/ceph.pub') }}"
   register: push_ssh_pubkey
-
-#- name: 'push SSH public key to current user'
-#  lineinfile:
-#    path: '.ssh/authorized_keys'
-#    line: "{{ lookup('file', 'vault/ceph.pub') }}"
-#    mode: '0600'
-#    state: present
-#    create: yes
-#  register: push_ssh_pubkey
-
-#- name: 'push SSH public key to root'
-#  lineinfile:
-#    path: '/root/.ssh/authorized_keys'
-#    line: "{{ lookup('file', 'vault/ceph.pub') }}"
-#    mode: '0600'
-#    state: present
-#    create: yes
-#  register: push_ssh_pubkey

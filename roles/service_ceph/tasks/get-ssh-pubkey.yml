@@ -1,7 +1,7 @@
 ---
 
 - name: 'get SSH public key'
-  synchronize:
-    src: /etc/ceph/ceph.pub
-    dest: vault/ceph.pub
-    mode: pull
+  fetch:
+    src: "/etc/ceph/ceph.pub"
+    dest: "{{ playbook_dir }}/vault/ceph.pub"
+    flat: yes

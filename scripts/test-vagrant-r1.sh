@@ -5,7 +5,9 @@ export homecloud_IP="192.168.11.11"
 
 . $(pwd)/scripts/include.sh
 
-bootstrapEnvironment
+bootstrapVagrant
+playbook swarm-bootstrap.yml
+playbook stacks-deploy.yml
 
 waitForService "traefik" "traefik_server.1"
 waitForService "portainer" "portainer_console.1"
@@ -26,5 +28,4 @@ vagrant.sh ${CLUSTER} ssh -c 'docker exec $(docker ps --format {{.Names}} | grep
 sleep 5
 
 # restore portainer backup
-ansible-playbook -i inventories/vagrant-${CLUSTER}/inventory.yml stacks-restore-backup.yml
-IS "$?" == "0"
+playbook stacks-restore-backup.yml

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ROOT_FS="/home/tmorin/tmp/homecloud-ansible-images-armbian/c1-n1/rootfs"
+ROOT_FS=""
 CREATE_USER="homecloud"
 LOCK_ROOT="yes"
 
@@ -33,6 +33,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
+
+if [[ ! -z "${CREATE_USER}" ]]; then
+  echo "error : [-rf|--root-fs <path>] is required"
+  exit 1
+fi
 
 if [[ ! -z "${CREATE_USER}" ]]; then
 chroot ${ROOT_FS} /bin/bash -c "

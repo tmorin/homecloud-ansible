@@ -12,11 +12,11 @@
   become: false
   copy:
     content: "{{ initialize_swarm.swarm_facts.JoinTokens.Manager }}"
-    dest: vault/token_manager
+    dest: "{{ playbook_dir }}/vault/token_manager"
 
 - name: 'fetch worker token'
   delegate_to: localhost
   become: false
   copy:
     content: "{{ initialize_swarm.swarm_facts.JoinTokens.Worker }}"
-    dest: vault/token_worker
+    dest: "{{ playbook_dir }}/vault/token_worker"

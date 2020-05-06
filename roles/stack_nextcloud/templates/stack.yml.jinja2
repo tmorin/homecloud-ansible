@@ -12,7 +12,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/nextcloud-server
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ nextcloud_volume_server | to_json }}{% endif %}
@@ -20,7 +20,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', 'vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/nextcloud-database
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ nextcloud_volume_database | to_json }}{% endif %}

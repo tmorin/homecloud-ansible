@@ -61,54 +61,38 @@ Roles deploying ready-to-use Docker Swarm stacks:
 
 ### Bootstrap the Docker Swarm
 
-The playbook [swarm-bootstrap.yml](./swarm-bootstrap.yml) bootstraps a cluster of Docker Swarm instances.
-
-The playbook depends on some [Ansible Galaxy](https://galaxy.ansible.com) dependencies:
-
-- https://galaxy.ansible.com/dev-sec/os-hardening
-- https://galaxy.ansible.com/dev-sec/ssh-hardening
-
-```bash
-ansible-galaxy install dev-sec.os-hardening dev-sec.ssh-hardening
-```
+The playbook [swarm-bootstrap.yml](playbooks/swarm-bootstrap.yml) bootstraps a cluster of Docker Swarm instances.
 
 The playbook executes the roles listed in the variable `homecloud_services`.
 
 ### Deploy the stacks
 
-The playbook [stacks-deploy.yml](./stacks-deploy.yml) deploys the stacks.
+The playbook [stacks-deploy.yml](playbooks/stacks-deploy.yml) deploys the stacks.
 
 The playbook executes the roles listed in the variable `homecloud_stacks`.
 
 ### Restore stacks backups
 
-The playbook [stacks-restore-backups.yml](./stacks-restore-backup.yml) restores backups of stacks.
+The playbook [stacks-restore-backups.yml](playbooks/stacks-restore-backup.yml) restores backups of stacks.
 
 ## Examples
 
 Several examples are available in the [inventories](./inventories) directory.
 
-| |[vagrant-c1]|[vagrant-c2]|[vagrant-c3]|
-|---|---|---|---|
-|nodes|1|2|3|
-|https|no|no|no|
-|keepalived|no|yes|yes|
-|ceph|no|yes|yes|
-|portainer|yes|yes|yes|
-|influxdata|yes|no|no|
-|nextcloud|yes|yes|yes|
-|calibreweb|yes|yes|yes|
-|backup|yes|yes|yes|
+| |[vagrant-c1]|[vagrant-c2]|[vagrant-c3]|[vagrant-r1]|
+|---|---|---|---|---|
+|nodes|1|2|3|1|
+|https|no|no|no|no|
+|keepalived|no|yes|yes|no|
+|ceph|no|yes|yes|no|
+|portainer|yes|yes|yes|yes|
+|influxdata|yes|no|no|no|
+|nextcloud|yes|yes|yes|no|
+|calibreweb|yes|yes|yes|no|
+|backup|yes|yes|yes|yes|
+|restore|no|no|no|yes|
 
 [vagrant-c1]: inventories/vagrant-c1/README.md
 [vagrant-c2]: inventories/vagrant-c2/README.md
 [vagrant-c3]: inventories/vagrant-c3/README.md
-
-## Ansible Galaxy dependencies
-
-- https://galaxy.ansible.com/dev-sec/os-hardening
-- https://galaxy.ansible.com/dev-sec/ssh-hardening
-
-```bash
-ansible-galaxy install dev-sec.os-hardening dev-sec.ssh-hardening
-```
+[vagrant-r1]: inventories/vagrant-r1/README.md

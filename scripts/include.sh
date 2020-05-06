@@ -2,6 +2,8 @@
 
 export PATH=$(pwd)/scripts:${PATH}
 
+set -eu
+
 # https://github.com/coryb/osht
 eval "$(curl -q -s https://raw.githubusercontent.com/coryb/osht/master/osht.sh)"
 
@@ -33,12 +35,24 @@ if [[ -z "${homecloud_IP}" ]]; then
   exit 2
 fi
 
-function bootstrapEnvironment {
-  vagrant.sh ${CLUSTER} destroy --force && echo "sleep for 5 seconds" && sleep 5
-  vagrant.sh ${CLUSTER} up && echo "sleep for 5 seconds" && sleep 5 || exit 1
-  vagrant.sh ${CLUSTER} ssh -c "hostname" ${CLUSTER}-n1 && echo "sleep for 5 seconds" && sleep 5 || exit 1
-  ansible-playbook -i inventories/vagrant-${CLUSTER}/inventory.yml swarm-bootstrap.yml \
-  && ansible-playbook -i inventories/vagrant-${CLUSTER}/inventory.yml stacks-deploy.yml || exit 1
+function bootstrapVagrant {
+  vagrant.sh ${CLUSTER} destroy --force || exit 1
+  IS "$?" == "0"
+  echo "sleep for 5 seconds" && sleep 5
+
+  vagrant.sh ${CLUSTER} up || exit 1
+  IS "$?" == "0"
+  echo "sleep for 5 seconds" && sleep 5
+
+  vagrant.sh ${CLUSTER} ssh -c "hostname" ${CLUSTER}-n1 || exit 1
+  IS "$?" == "0"
+  echo "sleep for 5 seconds" && sleep 5
+}
+
+function playbook {
+  local book=$1
+  ansible-playbook -i inventories/vagrant-${CLUSTER}/inventory.yml playbooks/${book} || exit 1
+  IS "$?" == "0"
 }
 
 function checkWsFound {
