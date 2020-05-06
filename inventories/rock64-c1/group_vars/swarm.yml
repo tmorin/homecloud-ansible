@@ -6,7 +6,7 @@
 # https://dl.armbian.com/rock64/archive/Armbian_20.02.1_Rock64_buster_legacy_4.4.213.7z
 image_armbian_image_name: "Armbian_20.02.1_Rock64_buster_legacy_4.4.213"
 image_armbian_image_url: "https://dl.armbian.com/rock64/archive/{{ image_armbian_image_name }}.7z"
-image_armbian_working_directory: "~/tmp/homecloud-swarm-images-armbian"
+image_armbian_working_directory: "~/tmp/homecloud-ansible-images-armbian"
 
 ansible_user: homecloud
 ansible_become: yes

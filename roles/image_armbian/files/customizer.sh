@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ROOT_FS="/home/tmorin/tmp/homecloud-swarm-images-armbian/c1-n1/rootfs"
+ROOT_FS="/home/tmorin/tmp/homecloud-ansible-images-armbian/c1-n1/rootfs"
 CREATE_USER="homecloud"
 LOCK_ROOT="yes"
 
