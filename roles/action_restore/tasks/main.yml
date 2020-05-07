@@ -19,18 +19,21 @@
 - name: 'clear stacks'
   when: restore_remove_stacks
   shell: |
+    set -e -o pipefail
     stacks=$(docker stack ls --format {{'{{'}}.Name{{'}}'}})
     if [[ ! -z "$stacks" ]]; then
       docker stack rm $stacks
     fi
   args:
     executable: /bin/bash
-  register: action_restore
-- debug: var=action_restore
+  register: result
+  changed_when: result is not succeeded
+- debug: var=result
 
 - name: 'execute restore'
   shell: /tmp/resources/restore.sh
   args:
     chdir: /tmp/resources
   register: action_restore
+  changed_when: action_restore is not succeeded
 - debug: var=action_restore

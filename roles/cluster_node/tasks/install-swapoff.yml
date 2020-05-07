@@ -1,6 +1,7 @@
 ---
 
 - name: 'copy the service'
+  become: yes
   template:
     src: swapoff.service
     dest: /etc/systemd/system/swapoff.service
@@ -10,6 +11,7 @@
   register: install_swapoff
 
 - name: 'activate and start the service'
+  become: yes
   systemd:
     daemon_reload: true
     enabled: yes

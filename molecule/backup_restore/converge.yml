@@ -1,0 +1,46 @@
+---
+
+# wait for deployment
+- hosts: main_manager
+  tasks:
+    - set_fact:
+        verify_waitfor_stack: 'portainer'
+        verify_waitfor_service: 'portainer_console.1'
+- import_playbook: ../../playbooks/stacks-waitfor.yml
+- hosts: main_manager
+  tasks:
+    - set_fact:
+        verify_waitfor_stack: 'portainer'
+        verify_waitfor_service: 'portainer_console.1'
+
+# backup portainer
+- hosts: main_manager
+  tasks:
+    - name: "backup portainer"
+      become: yes
+      shell: |
+        set -e -o pipefail
+        docker exec $(docker ps --format {{ '{{' }}.Names{{ '}}' }} | grep duplicity) /tasks/backup-PORTAINER-CONSOLE.sh
+      args:
+        executable: /bin/bash
+      register: backup_output
+    - name: "backup portainer output"
+      debug: var=backup_output
+
+# remove stacks
+- hosts: main_manager
+  tasks:
+    - name: "remove stacks"
+      become: yes
+      shell: |
+        set -e -o pipefail
+        docker stack rm portainer
+        docker stack rm backup
+      args:
+        executable: /bin/bash
+      register: remove_stacks_output
+    - name: "remove stacks output"
+      debug: var=remove_stacks_output
+
+# restore
+- import_playbook: ../../playbooks/stacks-restore-backup.yml

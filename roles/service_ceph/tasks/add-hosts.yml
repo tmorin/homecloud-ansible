@@ -12,7 +12,7 @@
     fi
   args:
     executable: /bin/bash
-  loop: "{{ groups.secondary_managers }}"
+  loop: "{{ groups.secondary_managers | default([]) }}"
   register: add_hosts
 
 - name: 'add the worker to the ceph cluster'

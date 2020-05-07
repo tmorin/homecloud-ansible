@@ -1,6 +1,7 @@
 ---
 
 - name: "deploy the task"
+  become: yes
   docker_stack:
     state: present
     name: "traefik"

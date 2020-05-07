@@ -4,9 +4,6 @@
   template:
     src: backup.env
     dest: /tmp/resources/backup.env
-    owner: root
-    group: root
-    mode: 0644
     force: true
     trim_blocks: no
     lstrip_blocks: no
@@ -16,9 +13,6 @@
   template:
     src: database.env
     dest: /tmp/resources/database.env
-    owner: root
-    group: root
-    mode: 0644
     force: true
     trim_blocks: no
     lstrip_blocks: no
@@ -28,9 +22,6 @@
   template:
     src: server.env
     dest: /tmp/resources/server.env
-    owner: root
-    group: root
-    mode: 0644
     force: true
     trim_blocks: no
     lstrip_blocks: no
@@ -40,9 +31,6 @@
   template:
     src: stack.yml.jinja2
     dest: /tmp/resources/nextcloud.stack.yml
-    owner: root
-    group: root
-    mode: 0644
     force: true
     trim_blocks: no
     lstrip_blocks: no

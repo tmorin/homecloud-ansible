@@ -4,9 +4,6 @@
   template:
     src: stack.yml.jinja2
     dest: /tmp/resources/traefik.stack.yml
-    owner: root
-    group: root
-    mode: 0644
     force: true
     trim_blocks: no
     lstrip_blocks: no

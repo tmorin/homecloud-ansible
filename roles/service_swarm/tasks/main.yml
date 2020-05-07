@@ -11,11 +11,11 @@
     - import_tasks: initialize-swarm.yml
 
 - name: 'initialize the secondary managers'
-  when: inventory_hostname in groups.secondary_managers
+  when: inventory_hostname in groups.secondary_managers | default([])
   block:
     - import_tasks: join-as-manager.yml
 
 - name: 'initialize the workers'
-  when: inventory_hostname in groups.workers
+  when: inventory_hostname in groups.workers | default([])
   block:
     - import_tasks: join-as-worker.yml

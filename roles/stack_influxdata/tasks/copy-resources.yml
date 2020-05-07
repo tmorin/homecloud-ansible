@@ -4,9 +4,6 @@
   template:
     src: stack.yml.jinja2
     dest: /tmp/resources/influxdata.stack.yml
-    owner: root
-    group: root
-    mode: 0644
     force: true
     trim_blocks: no
     lstrip_blocks: no
@@ -16,9 +13,6 @@
   template:
     src: telegraf.conf
     dest: /tmp/resources/telegraf.conf
-    owner: root
-    group: root
-    mode: 0644
     force: true
     trim_blocks: no
     lstrip_blocks: no

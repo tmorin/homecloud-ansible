@@ -1,0 +1,5 @@
+---
+
+# deploy
+- import_playbook: ../../playbooks/swarm-bootstrap.yml
+- import_playbook: ../../playbooks/stacks-deploy.yml

@@ -1,6 +1,7 @@
 ---
 
 - name: 'install dependencies from apt'
+  become: yes
   package:
     name: curl,nfs-common,cifs-utils
     state: present
@@ -8,6 +9,7 @@
   register: install_docker
 
 - name: 'install dependencies from pip'
+  become: yes
   pip:
     name:
       - docker
@@ -16,29 +18,41 @@
   register: install_docker
 
 - name: 'get /usr/bin/docker stat'
+  become: yes
   stat:
     path: /usr/bin/docker
   register: docker_binnary_file
 
 - name: 'install docker'
+  become: yes
   when: not docker_binnary_file.stat.exists
   shell: |
     set -o pipefail
     curl -o- https://get.docker.com | bash
   args:
     executable: /bin/bash
+    creates: /usr/bin/docker
     warn: false
   register: install_docker
 
+- debug: var=ansible_user
+  become: true
 - name: 'configure current user'
-  command: usermod -aG docker ${SUDO_USER}
+  become: yes
+  user:
+    user: "{{ ansible_user }}"
+    groups: docker
   register: install_docker
+- name: "reset ssh connection"
+  meta: reset_connection
 
 - name: 'install docker plugin n0r1skcom/docker-volume-cephfs'
+  become: yes
   when: homecloud_ceph_is_enabled
   shell: |
     set -o pipefail
     (docker plugin ls | grep n0r1skcom/docker-volume-cephfs) || docker plugin install n0r1skcom/docker-volume-cephfs --grant-all-permissions
   args:
     executable: /bin/bash
+  changed_when: false
   register: install_docker

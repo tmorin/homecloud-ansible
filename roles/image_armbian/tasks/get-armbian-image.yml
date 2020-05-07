@@ -16,6 +16,6 @@
 - name: 'unpack armbian archive'
   delegate_to: localhost
   when: not armbian_archive_file.stat.exists
-  shell:
+  command:
     chdir: "{{ image_armbian_working_directory }}"
     cmd: "7z x -y {{ image_armbian_base_image_path }}.7z"

@@ -2,7 +2,7 @@
 
 - hosts: swarm
   vars:
-    homecloud_ceph_is_enabled: "{{'service_ceph' in homecloud_services}}"
+    homecloud_ceph_is_enabled: "{{ 'service_ceph' in homecloud_services }}"
   pre_tasks:
     - import_tasks: tasks/prepare-resources.yml
   tasks:

@@ -1,6 +1,7 @@
 ---
 
 - name: 'copy the service'
+  become: yes
   template:
     src: docker-prune.service
     dest: /etc/systemd/system/docker-prune.service
@@ -11,6 +12,7 @@
   register: intall_docker_prune
 
 - name: 'copy the timer'
+  become: yes
   template:
     src: docker-prune.timer
     dest: /etc/systemd/system/docker-prune.timer
@@ -21,6 +23,7 @@
   register: intall_docker_prune
 
 - name: 'copy the script'
+  become: yes
   template:
     src: docker-prune.sh
     dest: /usr/local/bin/docker-prune
@@ -31,6 +34,7 @@
   register: intall_docker_prune
 
 - name: 'activate the service'
+  become: yes
   systemd:
     daemon_reload: true
     enabled: yes
@@ -38,6 +42,7 @@
   register: intall_docker_prune
 
 - name: 'activate and start the timer'
+  become: yes
   systemd:
     daemon_reload: true
     enabled: yes

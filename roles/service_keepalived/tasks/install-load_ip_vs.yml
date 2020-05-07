@@ -1,6 +1,7 @@
 ---
 
 - name: 'copy the load_ip_vs service'
+  become: yes
   template:
     src: load_ip_vs.service
     dest: /etc/systemd/system/load_ip_vs.service
@@ -10,6 +11,7 @@
   register: install_load_ip_vs
 
 - name: 'enable and start the load_ip_vs service'
+  become: yes
   service:
     name: load_ip_vs
     enabled: yes

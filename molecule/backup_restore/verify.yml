@@ -1,0 +1,13 @@
+---
+
+- hosts: main_manager
+  tasks:
+    - name: "stat /tmp/portainer_console"
+      stat:
+        path: /tmp/portainer_console
+      register: dir_tmp_portainer_console
+    - debug: var=dir_tmp_portainer_console.stat.exists
+    - name: "check /tmp/portainer_console exists"
+      fail:
+        msg: "/tmp/portainer_console must exist"
+      when: dir_tmp_portainer_console.stat.exists == false

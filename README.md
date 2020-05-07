@@ -96,3 +96,17 @@ Several examples are available in the [inventories](./inventories) directory.
 [vagrant-c2]: inventories/vagrant-c2/README.md
 [vagrant-c3]: inventories/vagrant-c3/README.md
 [vagrant-r1]: inventories/vagrant-r1/README.md
+
+# Dev env
+
+apt-get --yes build-dep vagrant ruby-libvirt
+apt-get --yes install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base
+apt-get --yes install libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
+vagrant plugin install vagrant-libvirt
+
+apt-get --yes install python-virtualenv python3-dev
+virtualenv -p python3 venv
+source venv/bin/activate
+
+python3 -m pip install --upgrade --ignore-installed --requirement requirements.txt
+molecule test -s swarm_single_node

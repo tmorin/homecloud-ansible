@@ -1,0 +1,40 @@
+image: debian/buster
+arch: amd64
+sources:
+  - https://framagit.org/tmorin/homecloud-ansible.git
+secrets:
+packages:
+  - curl
+  - dnsmasq-base
+  - ebtables
+  - libvirt-clients
+  - libvirt-daemon-system
+  - libvirt-dev
+  - libxml2-dev
+  - libxslt-dev
+  - python3-dev
+  - python-virtualenv
+  - qemu
+  - ruby-dev
+  - ruby-libvirt
+  - zlib1g-dev
+tasks:
+  - vagrant: |
+      curl -o vagrant.deb https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb
+      sudo dpkg --install vagrant.deb
+      vagrant plugin install vagrant-libvirt
+  - python: |
+      cd homecloud-ansible
+      virtualenv -p python3 venv
+  - checkout: |
+      cd homecloud-ansible
+      git fetch origin ${GITHUB_REF}
+      git checkout FETCH_HEAD -b build
+  - install: |
+      cd homecloud-ansible
+      source venv/bin/activate
+      python3 -m pip install --upgrade --ignore-installed --requirement requirements.txt
+  - test: |
+      cd homecloud-ansible
+      source venv/bin/activate
+      molecule test
