@@ -1,4 +1,4 @@
 .idea/
 .vagrant/
-custom-*
 *.log
+*.tar.gz
