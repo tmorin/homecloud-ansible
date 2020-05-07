@@ -10,4 +10,4 @@
     regexp: '.*{{ item }}$'
     line: "{{ hostvars[item][homecloud_network_interface].ipv4.address }} {{ item }}"
     state: present
-  loop: "{{ groups.swarm }}"
+  loop: "{{ groups.all }}"

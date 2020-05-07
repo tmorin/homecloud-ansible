@@ -1,8 +1,5 @@
-swarm:
+---
+
+syncthing:
   hosts:
     s1-n1:
-
-  children:
-    syncthing:
-      hosts:
-        s1-n1:

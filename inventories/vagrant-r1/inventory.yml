@@ -1,3 +1,5 @@
+---
+
 swarm:
   hosts:
     r1-n1:

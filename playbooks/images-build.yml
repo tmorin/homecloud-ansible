@@ -1,6 +1,6 @@
 ---
 
-- hosts: swarm
+- hosts: all
   gather_facts: no
   become: no
   roles:
