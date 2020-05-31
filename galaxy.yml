@@ -20,3 +20,4 @@ build_ignore:
   - inventories/
   - playbooks/vault/
   - scripts/
+  - venv/
