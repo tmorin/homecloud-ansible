@@ -1,7 +1,6 @@
 ---
 
 ansible_user: vagrant
-ansible_become: yes
 
 homecloud_virtual_ip: '192.168.11.30'
 homecloud_network_interface: 'ansible_eth1'

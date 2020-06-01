@@ -9,7 +9,6 @@ image_armbian_image_url: "https://dl.armbian.com/rock64/archive/{{ image_armbian
 image_armbian_working_directory: "~/tmp/homecloud-ansible-images-armbian"
 
 ansible_user: homecloud
-ansible_become: yes
 
 homecloud_network_interface: 'ansible_eth0'
 homecloud_virtual_ip: '192.168.0.10'

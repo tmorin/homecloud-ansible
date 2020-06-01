@@ -1,6 +1,5 @@
 ---
 
 ansible_user: vagrant
-ansible_become: yes
 
 homecloud_network_interface: 'ansible_eth1'
