@@ -4,7 +4,7 @@
   vars:
     homecloud_ceph_is_enabled: "{{ 'service_ceph' in homecloud_services }}"
   pre_tasks:
-    - import_tasks: tasks/prepare-resources.yml
+    - include_role: resources_prepare
   tasks:
     - name: "execute stacks"
       include_role:
@@ -13,4 +13,4 @@
       loop_control:
         loop_var: "homecloud_stack"
   post_tasks:
-    - import_tasks: tasks/clean-resources.yml
+    - include_role: resources_clean

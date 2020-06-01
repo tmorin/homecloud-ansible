@@ -2,9 +2,9 @@
 
 - hosts: syncthing
   pre_tasks:
-    - import_tasks: tasks/prepare-resources.yml
+    - include_role: resources_prepare
   tasks:
     - include_role: name=cluster_node
     - include_role: name=service_syncthing
   post_tasks:
-    - import_tasks: tasks/clean-resources.yml
+    - include_role: resources_clean
