@@ -45,8 +45,25 @@
         mode: "0640"
       register: copy_ssh_pub_key
     - debug: var=copy_ssh_pub_key
+    - name: 'fix /etc/hostname'
+      delegate_to: localhost
+      become: yes
+      copy:
+        content: "{{ inventory_hostname }}"
+        dest: "{{ image_armbian_host_directory }}/rootfs/etc/hostname"
+      register: fix_hostname
+    - debug: var=fix_hostname
+    - name: 'fix /etc/hosts'
+      delegate_to: localhost
+      become: yes
+      replace:
+        path: "{{ image_armbian_host_directory }}/rootfs/etc/hosts"
+        regexp: rock64
+        replace: "{{ inventory_hostname }}"
+      register: fix_hosts
+    - debug: var=fix_hosts
   always:
-    - name: 'umount host image'
+    - name: 'unmount host image'
       delegate_to: localhost
       become: yes
       script: "files/mounter.sh -u -hd {{ image_armbian_host_directory }}"
