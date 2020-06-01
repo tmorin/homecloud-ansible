@@ -34,12 +34,12 @@ while [[ $# -gt 0 ]]; do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-if [[ ! -z "${CREATE_USER}" ]]; then
+if [[ -z "${ROOT_FS}" ]]; then
   echo "error : [-rf|--root-fs <path>] is required"
   exit 1
 fi
 
-if [[ ! -z "${CREATE_USER}" ]]; then
+if [[ -n "${CREATE_USER}" ]]; then
 chroot ${ROOT_FS} /bin/bash -c "
 echo create the user ${CREATE_USER}
 # create the user with the password disabled

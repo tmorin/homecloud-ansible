@@ -6,8 +6,8 @@
   file:
     path: "{{ image_armbian_host_directory }}"
     mode: u=rwX,g=rX,o=rX
-    owner: "{{ ansible_env.SUDO_UID }}"
-    group: "{{ ansible_env.SUDO_GID }}"
+    owner: "1000"
+    group: "1000"
     recurse: yes
   register: chown_host_dir
 #- debug: var=chown_host_dir
@@ -15,6 +15,6 @@
 - name: 'move host images'
   delegate_to: localhost
   become: yes
-  raw: "mv -f {{ image_armbian_host_directory }}/image.img {{ playbook_dir }}/images/{{ inventory_hostname }}.img"
+  raw: "mv -f {{ image_armbian_host_directory }}/image.img {{ image_armbian_release_directory }}/{{ inventory_hostname }}.img"
   register: move_image
 #- debug: var=move_image

@@ -16,3 +16,5 @@ image_armbian_working_directory: "/tmp/homecloud-ansible-images-armbian"
 image_armbian_ssh_pub_key_path: "~/.ssh/id_rsa.pub"
 # the username of the user which will be used by ansible
 image_armbian_username: "homecloud"
+# the directory where images will be released
+image_armbian_release_directory: "{{ playbook_dir }}/images"
