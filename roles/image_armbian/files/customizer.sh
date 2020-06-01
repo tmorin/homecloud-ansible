@@ -51,7 +51,8 @@ chown -R ${CREATE_USER}:${CREATE_USER} /home/${CREATE_USER}
 chmod 700 /home/${CREATE_USER}/.ssh
 chmod 600 /home/${CREATE_USER}/.ssh/authorized_keys
 # add the user to sudoers people without password
-echo \"${CREATE_USER} ALL=(ALL) NOPASSWD: ALL\" >> /etc/sudoers.d/${CREATE_USER}"
+echo \"${CREATE_USER} ALL=(ALL) NOPASSWD: ALL\" >> /etc/sudoers.d/${CREATE_USER}
+chmod 0440 /etc/sudoers.d/${CREATE_USER}"
 fi
 
 if [[ "${LOCK_ROOT}" == "yes" ]]; then

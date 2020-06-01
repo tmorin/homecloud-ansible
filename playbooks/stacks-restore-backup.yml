@@ -4,8 +4,8 @@
   vars:
     homecloud_ceph_is_enabled: "{{ 'service_ceph' in homecloud_services }}"
   pre_tasks:
-    - include_role: resources_prepare
+    - include_role: name="resources_prepare"
   roles:
     - action_restore
   post_tasks:
-    - include_role: resources_clean
+    - include_role: name="resources_clean"
