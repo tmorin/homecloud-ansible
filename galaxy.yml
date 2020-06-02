@@ -1,6 +1,6 @@
 namespace: tmorin
 name: homecloud
-version: 1.0.0-alpha.8
+version: 1.0.0-alpha.9
 readme: README.md
 authors:
   - Thibault Morin (https://tmorin.github.io)
