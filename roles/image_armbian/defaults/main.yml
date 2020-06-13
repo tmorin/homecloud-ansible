@@ -4,9 +4,13 @@ homecloud_network_netmask: ''
 homecloud_network_gateway: ''
 homecloud_network_nameserver: []
 
-# the url to get the armbian (c.f. https://dl.armbian.com)
+# the url to get the armbian archive (c.f. https://dl.armbian.com)
+# https://dl.armbian.com/rock64/archive/Armbian_20.02.1_Rock64_buster_legacy_4.4.213.7z
+# https://dl.armbian.com/rock64/archive/Armbian_20.05.1_Rock64_bionic_current_5.4.43_desktop.img.xz
 image_armbian_image_url: ""
-# the name of the armbian image (for instance Armbian_19.11.6_Rock64_buster_current_5.4.8)
+# the name of the armbian archive (for instance Armbian_20.05.1_Rock64_bionic_current_5.4.43_desktop.img.xz)
+image_armbian_archive_name: ""
+# the name of the armbian image (for instance Armbian_20.05.1_Rock64_bionic_current_5.4.43_desktop.img)
 image_armbian_image_name: ""
 # clean the working directory of each host
 image_armbian_clean_working_directory: true

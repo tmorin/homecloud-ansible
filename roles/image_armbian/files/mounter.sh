@@ -62,20 +62,20 @@ echo "---- execute action [$ACTION] in ${HOST_DIRECTORY} ----"
 set -x -e -o pipefail
 
 function execute_mount() {
-  mkdir -p ${MOUNT_DIRECTORY}
-  offset=$(sudo fdisk -l ${IMAGE_FILE} | grep -A2 -E "Device\s*Boot\s*Start\s*End" | tail -n +2 | sed -r "s/[^ ]* *([0-9]*).*$/\1/")
-  offsetInBytes=$(($offset * 512))
-  local device=$(sudo losetup -f ${IMAGE_FILE} -o ${offsetInBytes} --show)
-  mount -t auto ${device} ${MOUNT_DIRECTORY}
+  mkdir -p "${MOUNT_DIRECTORY}"
+  offset=$(sudo fdisk -l "${IMAGE_FILE}" | grep -A2 -E "Device\s*Boot\s*Start\s*End" | tail -n +2 | sed -r "s/[^ ]* *([0-9]*).*$/\1/")
+  offsetInBytes=$((offset * 512))
+  local device=$(sudo losetup -f "${IMAGE_FILE}" -o ${offsetInBytes} --show)
+  mount -t auto "${device}" "${MOUNT_DIRECTORY}"
   sync
 }
 
 function execute_umount() {
-  mount | grep ${MOUNT_DIRECTORY} && umount ${MOUNT_DIRECTORY} || echo "mount [${MOUNT_DIRECTORY}] missing"
+  mount | grep "${MOUNT_DIRECTORY}" && umount "${MOUNT_DIRECTORY}" || echo "mount [${MOUNT_DIRECTORY}] missing"
   devices=$(losetup -l -O BACK-FILE,NAME -n -J | jq -r ".loopdevices | .[] | select(.\"back-file\" | contains(\"${IMAGE_FILE}\") ) | .name")
   declare -a arr=(${devices})
   for device in "${arr[@]}"; do
-    losetup -d ${device}
+    losetup -d "${device}"
   done
   sync
 }
@@ -87,12 +87,12 @@ function execute_prepare() {
   fi
   mkdir -p ${MOUNT_DIRECTORY}
   if [[ ! -f "IMAGE_FILE" ]]; then
-    cp ${BASE_IMAGE_FILE} ${IMAGE_FILE}
+    cp "${BASE_IMAGE_FILE}" "${IMAGE_FILE}"
   fi
 }
 
 function execute_clean() {
-  rm -Rf ${HOST_DIRECTORY}
+  rm -Rf "${HOST_DIRECTORY}"
 }
 
 case ${ACTION} in
@@ -106,6 +106,7 @@ case ${ACTION} in
     prepare)
     execute_umount
     execute_prepare
+    execute_mount
     ;;
     clean)
     execute_umount

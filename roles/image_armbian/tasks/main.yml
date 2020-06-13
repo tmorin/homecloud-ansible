@@ -4,6 +4,7 @@
   delegate_to: localhost
   assert:
     that:
+      - image_armbian_archive_name | length > 0
       - image_armbian_image_name | length > 0
       - image_armbian_image_url | length > 0
       - homecloud_network_netmask | length > 0
