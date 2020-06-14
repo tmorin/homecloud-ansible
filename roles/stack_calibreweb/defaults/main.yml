@@ -16,7 +16,7 @@ calibreweb_volume_books: {}
 
 calibreweb_server_image: 'linuxserver/calibre-web'
 calibreweb_server_replicas: 1
-calibreweb_server_memory: '96M'
+calibreweb_server_memory: '128M'
 
 # for instance: Europe/Zurich
 calibreweb_server_timezone: ''
