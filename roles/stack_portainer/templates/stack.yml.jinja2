@@ -30,6 +30,7 @@ services:
     image: {{ portainer_agent_image }}
     environment:
       - LOG_LEVEL=WARN
+      - AGENT_CLUSTER_ADDR=tasks.agent
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
