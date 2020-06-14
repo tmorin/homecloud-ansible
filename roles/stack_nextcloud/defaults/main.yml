@@ -39,7 +39,7 @@ nextcloud_cache_memory: '48M'
 
 nextcloud_server_image: 'nextcloud:stable'
 nextcloud_server_replicas: 1
-nextcloud_server_memory: '256M'
+nextcloud_server_memory: '512M'
 nextcloud_cron_memory: '128M'
 nextcloud_server_admin_user: 'admin'
 nextcloud_server_admin_password: 'admin_password'
