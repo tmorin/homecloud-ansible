@@ -133,7 +133,7 @@ services:
       - server.env
     entrypoint: /cron.sh
     volumes:
-      - server:/var/www/html:ro
+      - server:/var/www/html
 {% for key in nextcloud_volumes %}
       - {{ key }}:/mnt/{{ key }}
 {% endfor %}
