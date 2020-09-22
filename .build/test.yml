@@ -1,7 +1,7 @@
 image: debian/buster
 arch: amd64
 sources:
-  - https://framagit.org/tmorin/homecloud-ansible.git
+  - https://github.com/tmorin/homecloud-ansible.git
 secrets:
 packages:
   - curl
