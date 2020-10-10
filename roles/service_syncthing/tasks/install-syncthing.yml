@@ -29,4 +29,3 @@
     state: present
     force_apt_get: "yes"
   register: install_syncthing
-  become: yes
