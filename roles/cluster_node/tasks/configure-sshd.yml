@@ -1,0 +1,16 @@
+---
+
+- name: 'disable password authentication for ssh'
+  become: yes
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication .+$'
+    replace: 'PasswordAuthentication no'
+  register: disable_password_authentication
+
+- name: 'restart service'
+  become: true
+  service:
+    name: sshd
+    state: restarted
+  register: install_samba

@@ -5,7 +5,8 @@
     that:
       - homecloud_network_interface | length > 0
 
-#- import_tasks: configure-hostname.yml
+- import_tasks: configure-hostname.yml
+- import_tasks: configure-sshd.yml
 - import_tasks: upgrade-system.yml
 - import_tasks: install-python.yml
 - import_tasks: install-swapoff.yml
