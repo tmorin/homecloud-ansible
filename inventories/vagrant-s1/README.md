@@ -1,9 +1,9 @@
-# vagrant-c1
+# vagrant-s1
 
 ## Execute the test suite
 
 ```bash
-scripts/test-vagrant-c1.sh
+scripts/test-vagrant-s1.sh
 ```
 
 ## Operations
@@ -17,13 +17,13 @@ scripts/vagrant.sh c1 up
 ### Bootstrap the swarm
 
 ```bash
-ansible-playbook -i inventories/vagrant-c1/inventory.yml swarm-bootstrap.yml
+ansible-playbook -i inventories/vagrant-s1/inventory.yml swarm-bootstrap.yml
 ```
 
 ### Deploy the stacks
 
 ```bash
-ansible-playbook -i inventories/vagrant-c1/inventory.yml stacks-deploy.yml
+ansible-playbook -i inventories/vagrant-s1/inventory.yml stacks-deploy.yml
 ```
 
 ### Get an SSH access
