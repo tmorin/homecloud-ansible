@@ -3,3 +3,6 @@
 ansible_user: vagrant
 
 homecloud_network_interface: 'ansible_eth1'
+
+nas_syncthing_gui_password: "$2y$12$DtmSEehiQvc3x6ujg1lSz.9loInMX.ZWRIc7fiH.6J.PdfWbxkXry"
+nas_mount_what: '/dev/sdb'

@@ -1,0 +1,24 @@
+---
+
+- name: 'Add the group nas'
+  become: yes
+  group:
+    name: "nas"
+
+- name: 'Add the user nas:nas'
+  become: yes
+  user:
+    name: nas
+    group: nas
+    home: /mnt/nas
+    create_home: false
+    password: "{{ 'nas' | password_hash('sha512', 'nas') }}"
+
+- name: 'chown home directory'
+  become: yes
+  file:
+    path: /mnt/nas
+    state: directory
+    recurse: yes
+    owner: nas
+    group: nas

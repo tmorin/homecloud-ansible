@@ -46,7 +46,7 @@ Roles installing ready-to-use services:
 - `service_swarm`: install and configure Docker Swarm
 - `service_ceph`: install and configure a Ceph cluster with cephadm
 - `service_keepalived`: install and configure Keepalived with Docker container
-- `service_syncthing`: install and configure Synchting
+- `service_nas`: install and configure Samba and syncthing
 
 Roles deploying ready-to-use Docker Swarm stacks:
 

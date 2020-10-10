@@ -5,6 +5,6 @@
     - include_role: name="resources_prepare"
   tasks:
     - include_role: name=cluster_node
-    - include_role: name=service_syncthing
+    - include_role: name=service_nas
   post_tasks:
     - include_role: name="resources_clean"

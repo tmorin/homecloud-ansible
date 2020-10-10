@@ -1,0 +1,34 @@
+---
+
+- name: 'install samba'
+  become: yes
+  package:
+    pkg: samba
+    state: present
+    force_apt_get: 'yes'
+  register: install_samba
+
+- name: 'copy configuration'
+  become: true
+  template:
+    src: smb.conf.jinja2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: install_samba
+
+- name: 'set samba password'
+  become: true
+  shell: >
+    (pdbedit --user=nas 2>&1 > /dev/null)
+    || (echo 'nas'; echo 'nas')
+    | smbpasswd -s -a nas
+  register: install_samba
+
+- name: 'restart service'
+  become: true
+  service:
+    name: smbd
+    state: restarted
+  register: install_samba

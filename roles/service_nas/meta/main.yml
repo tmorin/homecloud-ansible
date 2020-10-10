@@ -1,6 +1,6 @@
 galaxy_info:
   author: Thibault Morin
-  description: install and configure a syncthing
+  description: install and configure a an external drive, samba and syncthing
   license: MIT
   min_ansible_version: 2.4
 
@@ -12,7 +12,7 @@ galaxy_info:
 
   galaxy_tags:
     - debian
-    - docker
+    - samba
     - syncthing
 
 dependencies: []

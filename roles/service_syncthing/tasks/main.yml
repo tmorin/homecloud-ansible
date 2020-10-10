@@ -1,6 +1,0 @@
----
-
-- name: 'initialize the syncthing nodes'
-  when: inventory_hostname in groups.syncthing
-  block:
-    - import_tasks: install-syncthing.yml
