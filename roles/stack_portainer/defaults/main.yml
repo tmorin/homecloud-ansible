@@ -13,7 +13,7 @@ portainer_volume_console: {}
 
 # console
 
-portainer_console_image: 'portainer/portainer'
+portainer_console_image: 'portainer/portainer-ce'
 portainer_console_memory: '64M'
 
 
