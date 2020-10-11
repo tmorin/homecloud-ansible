@@ -1,7 +1,7 @@
 ---
 
 - name: 'initialize manager'
-  docker_swarm:
+  community.general.docker_swarm:
     advertise_addr: "{{ swarm_manager_ip }}"
     state: present
     labels: "{{ swarm_node_labels }}"

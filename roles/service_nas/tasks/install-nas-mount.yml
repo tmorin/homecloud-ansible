@@ -10,25 +10,44 @@
     mode: 0644
   register: install_nas_mount
 
-- name: 'reload the daemon'
-  become: true
-  shell: systemctl daemon-reload
+- name: 'enable the mount configuration'
+  become: yes
+  systemd:
+    daemon_reload: true
+    enabled: yes
+    state: started
+    name: "{{ nas_mount_name }}.mount"
   register: install_nas_mount
 
-- name: 'enable the mount configuration'
-  become: true
-  shell: systemctl enable /etc/systemd/system/{{ nas_mount_name }}.mount
-  register: install_nas_mount
+#- name: 'reload the daemon'
+#  become: true
+#  shell: systemctl daemon-reload
+#  register: install_nas_mount
+
+#- name: 'enable the mount configuration'
+#  become: true
+#  shell: systemctl enable /etc/systemd/system/{{ nas_mount_name }}.mount
+#  register: install_nas_mount
 
 - name: 'check nas drive already mounted'
   become: true
   shell: mount | grep "{{ nas_mount_where }}"
+  args:
+    warn: no
   ignore_errors: yes
   register: check_already_mount
 - debug: var=check_already_mount
 
 - name: 'start the mount configuration'
-  become: true
+  become: yes
   when: check_already_mount.failed
-  shell: systemctl restart {{ nas_mount_name }}.mount
+  systemd:
+    state: started
+    name: "{{ nas_mount_name }}.mount"
   register: install_nas_mount
+
+#- name: 'start the mount configuration'
+#  become: true
+#  when: check_already_mount.failed
+#  shell: systemctl restart {{ nas_mount_name }}.mount
+#  register: install_nas_mount

@@ -1,7 +1,7 @@
 ---
 
 - name: 'join as worker'
-  docker_swarm:
+  community.general.docker_swarm:
     remote_addrs: ["{{ swarm_manager_ip }}"]
     advertise_addr: "{{ hostvars[inventory_hostname][homecloud_network_interface].ipv4.address }}"
     join_token: "{{ lookup('file', playbook_dir~'/vault/token_worker') }}"

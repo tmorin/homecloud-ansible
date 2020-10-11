@@ -15,4 +15,5 @@ galaxy_info:
     - docker
     - swarm
 
-dependencies: []
+dependencies:
+  - community.general

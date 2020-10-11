@@ -1,5 +1,5 @@
 [Unit]
-Description=Prune useless Docker resouces every week
+Description=Prune useless Docker resources every week
 
 [Timer]
 OnCalendar=weekly

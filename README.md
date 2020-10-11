@@ -26,11 +26,18 @@ Each hosts must fulfilled the following constraints:
 
 - Operating System: Debian Stretch or Debian Buster
 - CPU Architecture: amd64 or arm64
-- Memory: at least 2 GO
+- Memory: at least 2Go
 
 If `ceph` is enabled:
 
 - 1 available storage device by hosts ([more information there](https://docs.ceph.com/docs/master/cephadm/install/#deploy-osds))
+
+## Dependencies
+
+```shell script
+ansible-galaxy collection install ansible.posix
+ansible-galaxy collection install community.general
+```
 
 ## Ansible Roles
 
@@ -50,12 +57,12 @@ Roles installing ready-to-use services:
 
 Roles deploying ready-to-use Docker Swarm stacks:
 
-- `stack_traefik`: deploy a Docker Swarm stack propulsing Traefik
-- `stack_portainer`: deploy a Docker Swarm stack propulsing Portainer
+- `stack_traefik`: deploy a Docker Swarm stack running Traefik
+- `stack_portainer`: deploy a Docker Swarm stack running Portainer
 - `stack_influxdata`: deploy a Docker Swarm stack based on influxdata products (Influxdb, Telegraf, Kapacitor, Chronograf)
-- `stack_calibreweb`: deploy a Docker Swarm stack propulsing Calibreweb
-- `stack_nextcloud`: deploy a Docker Swarm stack propulsing Nextcloud
-- `stack_backup`: deploy a Docker Swarm stack propulsing Duplicity to backup Docker volumes
+- `stack_calibreweb`: deploy a Docker Swarm stack running Calibreweb
+- `stack_nextcloud`: deploy a Docker Swarm stack running Nextcloud
+- `stack_backup`: deploy a Docker Swarm stack running Duplicity in order to backup Docker volumes
 
 ## Ansible Playbooks
 
@@ -97,16 +104,32 @@ Several examples are available in the [inventories](./inventories) directory.
 [vagrant-c3]: inventories/vagrant-c3/README.md
 [vagrant-r1]: inventories/vagrant-r1/README.md
 
-# Dev env
+# Development
 
+Install Vagrant
+```shell script
 apt-get --yes build-dep vagrant ruby-libvirt
-apt-get --yes install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base
-apt-get --yes install libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
 vagrant plugin install vagrant-libvirt
+```
 
+Install libvirt
+```shell script
+apt-get --yes install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
+```
+
+Install python3
+```shell script
 apt-get --yes install python-virtualenv python3-dev
+```
+
+Setup dev/test environment
+```shell script
 virtualenv -p python3 venv
 source venv/bin/activate
-
 python3 -m pip install --upgrade --ignore-installed --requirement requirements.txt
+```
+
+Execute test
+```shell script
 molecule test -s swarm_single_node
+```

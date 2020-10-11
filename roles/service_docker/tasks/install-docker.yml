@@ -35,8 +35,8 @@
     warn: false
   register: install_docker
 
-- debug: var=ansible_user
-  become: true
+#- debug: var=ansible_user
+#  become: true
 - name: 'configure current user'
   become: yes
   user:

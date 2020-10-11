@@ -15,4 +15,5 @@ galaxy_info:
     - docker
     - ceph
 
-dependencies: []
+dependencies:
+  - ansible.posix

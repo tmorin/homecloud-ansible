@@ -1,7 +1,7 @@
 ---
 
 - name: "cleaning existing deployment"
-  docker_container:
+  community.general.docker_container:
     name: keepalived
     state: absent
 

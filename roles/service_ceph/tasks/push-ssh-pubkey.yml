@@ -2,7 +2,7 @@
 
 - name: 'push SSH public key to the current user'
   become: false
-  authorized_key:
+  ansible.posix.authorized_key:
     user: "{{ ansible_user }}"
     state: present
     key: "{{ lookup('file', playbook_dir~'/vault/ceph.pub') }}"
@@ -10,7 +10,7 @@
 
 - name: 'push SSH public key to the root user'
   become: true
-  authorized_key:
+  ansible.posix.authorized_key:
     user: root
     state: present
     key: "{{ lookup('file', playbook_dir~'/vault/ceph.pub') }}"

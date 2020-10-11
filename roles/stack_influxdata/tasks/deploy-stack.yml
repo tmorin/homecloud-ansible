@@ -2,7 +2,7 @@
 
 - name: "deploy the task"
   become: yes
-  docker_stack:
+  community.general.docker_stack:
     state: present
     name: "influxdata"
     prune: true
