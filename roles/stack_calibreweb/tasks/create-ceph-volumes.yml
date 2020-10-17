@@ -1,5 +1,6 @@
 ---
 
 - name: 'create the subvolumegroup docker/calibreweb-config'
+  become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/calibreweb-config"
   register: create_ceph_volumes

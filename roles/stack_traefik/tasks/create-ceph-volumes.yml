@@ -1,5 +1,6 @@
 ---
 
 - name: 'create the subvolumegroup docker/traefik-letsencrypt'
+  become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/traefik-letsencrypt"
   register: create_ceph_volumes

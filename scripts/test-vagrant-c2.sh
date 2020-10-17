@@ -6,7 +6,9 @@ export homecloud_IP="192.168.11.21"
 . $(pwd)/scripts/include.sh
 
 bootstrapVagrant
-playbook swarm-bootstrap.yml
+checkVM 1
+checkVM 2
+playbook cluster-bootstrap.yml
 playbook stacks-deploy.yml
 
 waitForService "traefik" "traefik_server.1"

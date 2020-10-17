@@ -1,6 +1,7 @@
 ---
 
 - name: 'add osds'
+  become: yes
   shell: |
     set -o pipefail
     status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].ceph_osd_device }}")
@@ -10,21 +11,22 @@
       status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].ceph_osd_device }}")
       echo "2 status loop $status"
     done
-    status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].ceph_osd_device }}" | awk '{print $6}')
+    status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].ceph_osd_device }}" | grep -o " True " | sed -s 's/ //g')
     if [[ "$status" == "True" ]]; then
       cephadm shell -- ceph orch daemon add osd {{ item }}:{{ hostvars[item].ceph_osd_device }}
       if [[ ! $? -eq 0 ]]; then
+        echo "unable to add the osd {{ item }}:{{ hostvars[item].ceph_osd_device }}"
         exit 1
       fi
       until [[ "$status" == "True" ]]; do
-        status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].ceph_osd_device }}" | awk '{print $6}')
+        status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].ceph_osd_device }}" | grep -o " True " | sed -s 's/ //g')
         sleep 1
         echo "3 status loop $status"
       done
     fi
   args:
     executable: /bin/bash
-  loop: "{{ groups.swarm }}"
+  loop: "{{ groups.ceph_osd }}"
   register: add_osds
 
 - debug: var=add_osds

@@ -8,20 +8,20 @@
 - import_tasks: install-cephadm.yml
 
 - name: 'setup the main manager node'
-  when: inventory_hostname in groups.main_manager
+  when: inventory_hostname in groups.ceph_mon[0:1]
   block:
     - import_tasks: initialize-cluster.yml
-    - import_tasks: configure-cluster.yml
     - import_tasks: get-ssh-pubkey.yml
     - import_tasks: get-ceph-client-secret.yml
+    - import_tasks: configure-cluster.yml
 
 - name: 'populate remaining hosts'
-  when: inventory_hostname not in groups.main_manager
+  when: inventory_hostname in groups.ceph_mgr,groups.ceph_mon,groups.ceph_osd
   block:
     - import_tasks: push-ssh-pubkey.yml
 
 - name: 'setup the other nodes'
-  when: inventory_hostname in groups.main_manager
+  when: inventory_hostname in groups.ceph_mon[0:1]
   block:
     - import_tasks: add-hosts.yml
     - import_tasks: add-osds.yml

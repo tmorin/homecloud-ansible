@@ -1,14 +1,16 @@
 # homecloud
 
-> `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home based on Docker Swarm.
+> `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home based on Docker Swarm, Ceph and Syncthing.
 
 ## Overview
 
 This ansible collection provides the following building blocks:
 
-- a layer4 load-balancer handled by `keepalived`
+- a Docker Swarm with:
+    - a layer4 load-balancer handled by `keepalived`
+    - a modern reverse proxy for UDP, TCP and HTTP handled by `traefik`
 - a distributed file system handled by `ceph`
-- a modern reverse proxy for UDP, TCP and HTTP handled by `traefik`
+- a decentralized solution to synchronize files between local/remote nodes with `Syncthing`
 
 The collection provides also ready-to-use stacks:
 
@@ -34,9 +36,78 @@ If `ceph` is enabled:
 
 ## Dependencies
 
+The collection's roles can be dependent of the following ansible collection:
+
 ```shell script
 ansible-galaxy collection install ansible.posix
 ansible-galaxy collection install community.general
+```
+
+## Inventory
+
+The following inventory define a cluster of six nodes.
+
+All of them are parts of the Docker Swarm.
+The first three ones are managers of the swarm whereas the remaining ones are simple workers.
+
+The Ceph setup use the six nodes as well.
+The first three nodes host the mon and mgr of the Ceph cluster whereas the last three nodes host the osd.
+
+Finally, the "decentralized" NAS uses the last to nodes.
+
+```yaml
+all:
+  children:
+    # BOARDS
+    rock64:
+      hosts:
+        node1:
+        node2:
+        node3:
+        node4:
+        node5:
+        node6:
+    # SWARM
+    swarm_mgr:
+      hosts:
+        node1:
+        node2:
+        node3:
+    swarm_wks:
+      hosts:
+        node4:
+        node5:
+        node6:
+    swarm:
+      children:
+        swarm_mgr:
+        swarm_wkr:
+    # CEPH
+    ceph_mon:
+      hosts:
+        node1:
+        node2:
+        node3:
+    ceph_mgr:
+      hosts:
+        node1:
+        node2:
+        node3:
+    ceph_osd:
+      hosts:
+        node4:
+        node5:
+        node6:
+    ceph:
+      children:
+        ceph_mon:
+        ceph_mgr:
+        ceph_osd:
+    # CEPH
+    dnas:
+      hosts:
+        node5:
+        node6:
 ```
 
 ## Ansible Roles
@@ -45,7 +116,7 @@ The collection provides several roles.
 
 Roles configuring hosts' system:
 
-- `cluster_node`: apply basic configurations (hostname, deactivate swap ...)
+- `cluster_node`: apply basic configurations (hostname, deactivate the swap ...)
 
 Roles installing ready-to-use services:
 
@@ -53,7 +124,7 @@ Roles installing ready-to-use services:
 - `service_swarm`: install and configure Docker Swarm
 - `service_ceph`: install and configure a Ceph cluster with cephadm
 - `service_keepalived`: install and configure Keepalived with Docker container
-- `service_nas`: install and configure Samba and syncthing
+- `service_dnas`: install and configure Samba and syncthing
 
 Roles deploying ready-to-use Docker Swarm stacks:
 
@@ -66,17 +137,13 @@ Roles deploying ready-to-use Docker Swarm stacks:
 
 ## Ansible Playbooks
 
-### Bootstrap the Docker Swarm
+### Bootstrap the cluster
 
-The playbook [swarm-bootstrap.yml](playbooks/swarm-bootstrap.yml) bootstraps a cluster of Docker Swarm instances.
-
-The playbook executes the roles listed in the variable `homecloud_services`.
+The playbook [cluster-bootstrap.yml](playbooks/cluster-bootstrap.yml) bootstraps the cluster, i.e. the Docker Swarm instance, the Ceph cluster, and the Decentralized NAS.
 
 ### Deploy the stacks
 
 The playbook [stacks-deploy.yml](playbooks/stacks-deploy.yml) deploys the stacks.
-
-The playbook executes the roles listed in the variable `homecloud_stacks`.
 
 ### Restore stacks backups
 
@@ -86,25 +153,28 @@ The playbook [stacks-restore-backups.yml](playbooks/stacks-restore-backup.yml) r
 
 Several examples are available in the [inventories](./inventories) directory.
 
-| |[vagrant-c1]|[vagrant-c2]|[vagrant-c3]|[vagrant-r1]|
-|---|---|---|---|---|
-|nodes|1|2|3|1|
-|https|no|no|no|no|
-|keepalived|no|yes|yes|no|
-|ceph|no|yes|yes|no|
-|portainer|yes|yes|yes|yes|
-|influxdata|yes|no|no|no|
-|nextcloud|yes|yes|yes|no|
-|calibreweb|yes|yes|yes|no|
-|backup|yes|yes|yes|yes|
-|restore|no|no|no|yes|
+| |[vagrant-c1]|[vagrant-c2]|[vagrant-c3]|[vagrant-c4]|[vagrant-r1]|[vagrant-d1]|
+|---|---|---|---|---|---|---|
+|nodes|1|2|3|4|1|1|
+|https|no|no|no|no|no|no|
+|keepalived|no|yes|yes|yes|no|no|
+|ceph|no|yes|yes|yes|no|no|
+|portainer|yes|yes|yes|yes|yes|no|
+|influxdata|yes|no|no|yes|no|no|
+|nextcloud|yes|yes|yes|yes|no|no|
+|calibreweb|yes|yes|yes|yes|no|no|
+|backup|yes|yes|yes|yes|yes|no|
+|restore|no|no|no|no|yes|no|
+|dans|no|no|no|no|no|yes|
 
 [vagrant-c1]: inventories/vagrant-c1/README.md
 [vagrant-c2]: inventories/vagrant-c2/README.md
 [vagrant-c3]: inventories/vagrant-c3/README.md
+[vagrant-c4]: inventories/vagrant-c4/README.md
 [vagrant-r1]: inventories/vagrant-r1/README.md
+[vagrant-d1]: inventories/vagrant-d1/README.md
 
-# Development
+## Development
 
 Install Vagrant
 ```shell script

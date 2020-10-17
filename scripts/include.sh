@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-export PATH=$(pwd)/scripts:${PATH}
+PATH=$(pwd)/scripts:${PATH}
+export PATH
 
 set -eu
 
@@ -36,39 +37,42 @@ if [[ -z "${homecloud_IP}" ]]; then
 fi
 
 function bootstrapVagrant {
-  vagrant.sh ${CLUSTER} destroy --force || exit 1
+  vagrant.sh "${CLUSTER}" destroy --force || exit 1
   IS "$?" == "0"
   echo "sleep for 5 seconds" && sleep 5
 
-  vagrant.sh ${CLUSTER} up || exit 1
-  IS "$?" == "0"
-  echo "sleep for 5 seconds" && sleep 5
-
-  vagrant.sh ${CLUSTER} ssh -c "hostname" ${CLUSTER}-n1 || exit 1
+  vagrant.sh "${CLUSTER}" up || exit 1
   IS "$?" == "0"
   echo "sleep for 5 seconds" && sleep 5
 }
 
+function checkVM {
+  local nbr="$1"
+  OK -n "$nbr"
+  vagrant.sh "${CLUSTER}" ssh -c "hostname" "${CLUSTER}-n${nbr}" || exit 1
+  IS "$?" == "0"
+}
+
 function playbook {
   local book=$1
-  ansible-playbook -i inventories/vagrant-${CLUSTER}/inventory.yml playbooks/${book} || exit 1
+  ansible-playbook -i "inventories/vagrant-${CLUSTER}/inventory.yml" "playbooks/${book}" || exit 1
   IS "$?" == "0"
 }
 
 function checkWsFound {
   local host=$1
-  echo checkWsFound ${host}
+  echo checkWsFound "${host}"
   OK -n "$host"
-  curl -sILH host:${host} "http://${homecloud_IP}" | head -n 1 > /tmp/ws_result
+  curl -sILH "host:${host}" "http://${homecloud_IP}" | head -n 1 > /tmp/ws_result
   RUNS cat /tmp/ws_result
   NGREP "HTTP/1.1 404 Not Found"
 }
 
 function checkWsNotFound {
   local host=$1
-  echo checkWsNotFound ${host}
+  echo checkWsNotFound "${host}"
   OK -n "$host"
-  curl -sILH host:${host} "http://${homecloud_IP}" | head -n 1 > /tmp/ws_result
+  curl -sILH "host:${host}" "http://${homecloud_IP}" | head -n 1 > /tmp/ws_result
   RUNS cat /tmp/ws_result
   GREP "HTTP/1.1 404 Not Found"
 }
@@ -81,7 +85,7 @@ function waitForService {
   until [[ ! -z "$(grep -Eo "${service} Running" /tmp/test)" ]]; do
     echo "wait for the ${service} service" && sleep 1
     local command="docker stack ps ${stack} --format='{{.Name}} {{.CurrentState}}'"
-    vagrant.sh ${CLUSTER} ssh -c "${command}" ${CLUSTER}-n1 > /tmp/test
+    vagrant.sh "${CLUSTER}" ssh -c "${command}" "${CLUSTER}-n1" > /tmp/test
   done
 }
 
@@ -93,6 +97,6 @@ function waitForLogs {
   until [[ ! -z "$(grep -Eo "${entry}" /tmp/test)" ]]; do
     echo "wait for the ${service} logs" && sleep 1
     local command="docker service logs ${service}"
-    vagrant.sh ${CLUSTER} ssh -c "${command}" ${CLUSTER}-n1 > /tmp/test
+    vagrant.sh "${CLUSTER}" ssh -c "${command}" "${CLUSTER}-n1" > /tmp/test
   done
 }

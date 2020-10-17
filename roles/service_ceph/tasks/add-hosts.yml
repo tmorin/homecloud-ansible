@@ -1,30 +1,56 @@
 ---
 
-- name: 'add the secondary managers to the ceph cluster'
+- name: 'add the monitors to the ceph cluster'
+  become: yes
   shell: |
-    set -o pipefail
+    set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
     if [[ "$status" == "Missing" ]]; then
       cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
-      && cephadm shell -- ceph orch host label add {{ item }} manager \
-      && cephadm shell -- ceph orch host label add {{ item }} secondary_manager \
       || exit 1
     fi
+    cephadm shell -- ceph orch host label add {{ item }} mon
   args:
     executable: /bin/bash
-  loop: "{{ groups.secondary_managers | default([]) }}"
+  loop: "{{ groups.ceph_mon | default([]) }}"
   register: add_hosts
 
-- name: 'add the worker to the ceph cluster'
+- name: 'add managers to the ceph cluster'
+  become: yes
   shell: |
-    set -o pipefail
+    set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
     if [[ "$status" == "Missing" ]]; then
       cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
-      && cephadm shell -- ceph orch host label add {{ item }} worker \
       || exit 1
     fi
+    cephadm shell -- ceph orch host label add {{ item }} mgr
   args:
     executable: /bin/bash
-  loop: "{{ groups.workers }}"
+  loop: "{{ groups.ceph_mgr | default([]) }}"
+  register: add_hosts
+
+- name: 'add the osd to the ceph cluster'
+  become: yes
+  shell: |
+    set -exo pipefail
+    status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
+    if [[ "$status" == "Missing" ]]; then
+      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
+      || exit 1
+    fi
+    cephadm shell -- ceph orch host label add {{ item }} osd
+  args:
+    executable: /bin/bash
+  loop: "{{ groups.ceph_osd | default([]) }}"
+  register: add_hosts
+
+- name: 'deploy mgr and mon'
+  become: yes
+  shell: |
+    set -exo pipefail
+    cephadm shell -- ceph orch apply mgr label:mgr
+    cephadm shell -- ceph orch apply mon label:mon
+  args:
+    executable: /bin/bash
   register: add_hosts

@@ -1,0 +1,65 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+c4n1Vdi = '../../tmp/c4-n1.vdi'
+c4n1VdiBis = '../../tmp/c4-n1-bis.vdi'
+c4n2Vdi = '../../tmp/c4-n2.vdi'
+c4n3Vdi = '../../tmp/c4-n3.vdi'
+c4n4Vdi = '../../tmp/c4-n4.vdi'
+
+Vagrant.configure("2") do |config|
+  # https://docs.vagrantup.com.
+  config.vm.box = "debian/buster64"
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.memory = "2048"
+    vb.cpus = "1"
+  end
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+  SHELL
+  config.vm.define "c4-n1" do |machine|
+    machine.vm.hostname = "c4-n1"
+    machine.vm.network "private_network", ip: "192.168.11.41"
+    machine.vm.provider "virtualbox" do |vbm|
+      unless File.exist?(c4n1Vdi)
+        vbm.customize ['createhd', '--filename', c4n1Vdi, '--variant', 'Fixed', '--size', 5 * 1024]
+      end
+      vbm.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', c4n1Vdi]
+      unless File.exist?(c4n1VdiBis)
+        vbm.customize ['createhd', '--filename', c4n1VdiBis, '--variant', 'Fixed', '--size', 5 * 1024]
+      end
+      vbm.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', c4n1VdiBis]
+    end
+  end
+  config.vm.define "c4-n2" do |machine|
+    machine.vm.hostname = "c4-n2"
+    machine.vm.network "private_network", ip: "192.168.11.42"
+    machine.vm.provider "virtualbox" do |vbm|
+      unless File.exist?(c4n2Vdi)
+        vbm.customize ['createhd', '--filename', c4n2Vdi, '--variant', 'Fixed', '--size', 5 * 1024]
+      end
+      vbm.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', c4n2Vdi]
+    end
+  end
+  config.vm.define "c4-n3" do |machine|
+    machine.vm.hostname = "c4-n3"
+    machine.vm.network "private_network", ip: "192.168.11.43"
+    machine.vm.provider "virtualbox" do |vbm|
+      unless File.exist?(c4n3Vdi)
+        vbm.customize ['createhd', '--filename', c4n3Vdi, '--variant', 'Fixed', '--size', 5 * 1024]
+      end
+      vbm.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', c4n3Vdi]
+    end
+  end
+  config.vm.define "c4-n4" do |machine|
+    machine.vm.hostname = "c4-n4"
+    machine.vm.network "private_network", ip: "192.168.11.44"
+    machine.vm.provider "virtualbox" do |vbm|
+      unless File.exist?(c4n3Vdi)
+        vbm.customize ['createhd', '--filename', c4n4Vdi, '--variant', 'Fixed', '--size', 5 * 1024]
+      end
+      vbm.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', c4n4Vdi]
+    end
+  end
+end

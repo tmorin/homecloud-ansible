@@ -1,0 +1,20 @@
+---
+
+swarm_services:
+  - service_docker
+  - service_swarm
+  - service_keepalived
+
+swarm_stacks:
+  - stack_traefik
+  - stack_portainer
+  - stack_nextcloud
+  - stack_calibreweb
+  - stack_backup
+
+backup_source_volumes:
+  - calibreweb_config
+  - nextcloud_database
+  - nextcloud_server
+  - portainer_console
+  - traefik_letsencrypt

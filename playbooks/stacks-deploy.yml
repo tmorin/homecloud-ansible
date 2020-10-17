@@ -1,16 +1,18 @@
 ---
 
-- hosts: main_manager
+- hosts: swarm_mgr[0]
   vars:
-    homecloud_ceph_is_enabled: "{{ 'service_ceph' in homecloud_services }}"
+    homecloud_ceph_is_enabled: "{{ 'service_ceph' in ceph_services | default([]) }}"
+    ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, [homecloud_network_interface, 'ipv4', 'address']) | list }}"
+    ceph_monitor_ips: "{{ ceph_monitor_ips_as_array | join(',') }}"
   pre_tasks:
     - include_role: name="resources_prepare"
   tasks:
-    - name: "execute stacks"
+    - name: "install swarm stacks"
       include_role:
-        name: "{{ homecloud_stack }}"
-      loop: "{{ homecloud_stacks | default([]) }}"
+        name: "{{ swarm_stack }}"
+      loop: "{{ swarm_stacks | default([]) }}"
       loop_control:
-        loop_var: "homecloud_stack"
+        loop_var: "swarm_stack"
   post_tasks:
     - include_role: name="resources_clean"

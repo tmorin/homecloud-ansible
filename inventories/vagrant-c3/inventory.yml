@@ -1,18 +1,33 @@
 ---
 
-swarm:
-  hosts:
-    c3-n1:
-    c3-n2:
-    c3-n3:
-
+all:
   children:
-    main_manager:
+    # SWARM
+    swarm_mgr:
       hosts:
         c3-n1:
-    secondary_managers:
-      hosts:
         c3-n2:
-    workers:
+    swarm_wkr:
       hosts:
         c3-n3:
+    swarm:
+      children:
+        swarm_mgr: {}
+        swarm_wkr: {}
+    # CEPH
+    ceph_mon:
+      hosts:
+        c3-n1:
+    ceph_mgr:
+      hosts:
+        c3-n2:
+    ceph_osd:
+      hosts:
+        c3-n1:
+        c3-n2:
+        c3-n3:
+    ceph:
+      children:
+        ceph_mon: {}
+        ceph_mgr: {}
+        ceph_osd: {}

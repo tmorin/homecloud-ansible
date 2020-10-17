@@ -1,5 +1,6 @@
 ---
 
 - name: 'create the subvolumegroup docker/portainer-console'
+  become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/portainer-console"
   register: create_ceph_volumes

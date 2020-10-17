@@ -1,0 +1,7 @@
+---
+
+all:
+  children:
+    dnas:
+      hosts:
+        d1-n1:

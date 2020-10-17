@@ -1,6 +1,6 @@
 ---
 
-- hosts: main_manager
+- hosts: swarm_mgr[0]
   tasks:
     - name: "wait for {{ verify_waitfor_stack }} - {{ verify_waitfor_service }}"
       become: yes

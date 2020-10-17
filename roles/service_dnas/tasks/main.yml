@@ -1,0 +1,13 @@
+---
+
+- name: 'check parameters'
+  assert:
+    that:
+      - dnas_mount_what | length > 0
+      - dnas_syncthing_gui_password | length > 0
+
+- import_tasks: install-mount.yml
+- import_tasks: add-user.yml
+- import_tasks: install-samba.yml
+- import_tasks: install-syncthing.yml
+- import_tasks: configure-syncthing.yml

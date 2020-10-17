@@ -1,0 +1,68 @@
+---
+
+- name: 'install dependencies'
+  become: yes
+  package:
+    pkg: python3-lxml
+    state: present
+    force_apt_get: 'yes'
+  register: install_syncthing
+
+- name: 'enable service'
+  become: true
+  systemd:
+    name: syncthing@{{ dnas_username }}.service
+    daemon_reload: yes
+    enabled: yes
+    state: started
+  register: install_syncthing
+
+- name: 'stop service'
+  become: true
+  systemd:
+    name: syncthing@{{ dnas_username }}.service
+    state: stopped
+  register: install_syncthing
+
+- name: 'remove the Sync folder'
+  become: yes
+  community.general.xml:
+    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    xpath: /configuration/folder[@id='default']
+    state: absent
+
+- name: 'set address'
+  become: yes
+  community.general.xml:
+    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    xpath: /configuration/gui/address
+    value: "{{ dnas_syncthing_gui_address }}"
+
+- name: 'set user'
+  become: yes
+  community.general.xml:
+    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    xpath: /configuration/gui/user
+    value: "{{ dnas_syncthing_gui_username }}"
+
+- name: 'set password'
+  become: yes
+  community.general.xml:
+    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    xpath: /configuration/gui/password
+    value: "{{ dnas_syncthing_gui_password }}"
+
+- name: 'restart service'
+  become: true
+  systemd:
+    name: syncthing@{{ dnas_username }}.service
+    state: started
+  register: install_syncthing
+
+- name: 'uninstall dependencies'
+  become: yes
+  package:
+    pkg: python-lxml
+    state: absent
+    force_apt_get: 'yes'
+  register: install_syncthing

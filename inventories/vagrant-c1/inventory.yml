@@ -1,14 +1,14 @@
 ---
 
-swarm:
-  hosts:
-    c1-n1:
-
+all:
   children:
-    main_manager:
+    # SWARM
+    swarm_mgr:
       hosts:
         c1-n1:
-    secondary_managers:
-      hosts:
-    workers:
-      hosts:
+    swarm_wkr:
+      hosts: {}
+    swarm:
+      children:
+        swarm_mgr: {}
+        swarm_wkr: {}

@@ -6,11 +6,11 @@ homecloud_virtual_ip: '192.168.12.11'
 homecloud_network_interface: 'ansible_eth1'
 homecloud_is_https: false
 
-homecloud_services:
+swarm_services:
   - service_docker
   - service_swarm
 
-homecloud_stacks:
+swarm_stacks:
   - stack_traefik
   - stack_portainer
   - stack_backup

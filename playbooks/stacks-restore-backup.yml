@@ -1,8 +1,10 @@
 ---
 
-- hosts: main_manager
+- hosts: swarm_mgr[0]
   vars:
-    homecloud_ceph_is_enabled: "{{ 'service_ceph' in homecloud_services }}"
+    homecloud_ceph_is_enabled: "{{ 'service_ceph' in ceph_services | default([]) }}"
+    ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, [homecloud_network_interface, 'ipv4', 'address']) | list }}"
+    ceph_monitor_ips: "{{ ceph_monitor_ips_as_array | join(',') }}"
   pre_tasks:
     - include_role: name="resources_prepare"
   roles:

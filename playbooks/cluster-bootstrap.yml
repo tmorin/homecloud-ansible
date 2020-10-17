@@ -1,0 +1,36 @@
+---
+
+- hosts: all
+  vars:
+    homecloud_ceph_is_enabled: "{{ 'service_ceph' in ceph_services | default([]) }}"
+    ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, [homecloud_network_interface, 'ipv4', 'address']) | list }}"
+    ceph_monitor_ips: "{{ ceph_monitor_ips_as_array | join(',') }}"
+  pre_tasks:
+    - include_role: name="resources_prepare"
+  tasks:
+    - name: 'check ceph configuration'
+      when: homecloud_ceph_is_enabled
+      assert:
+        that:
+          - ceph_monitor_ips | length > 0
+    - include_role: name=cluster_node
+    - name: "bootstrap swarm services"
+      include_role:
+        name: "{{ swarm_service }}"
+      loop: "{{ swarm_services | default([]) }}"
+      loop_control:
+        loop_var: "swarm_service"
+    - name: "bootstrap ceph services"
+      include_role:
+        name: "{{ ceph_service }}"
+      loop: "{{ ceph_services | default([]) }}"
+      loop_control:
+        loop_var: "ceph_service"
+    - name: "bootstrap dnas services"
+      include_role:
+        name: "{{ dnas_service }}"
+      loop: "{{ dnas_services | default([]) }}"
+      loop_control:
+        loop_var: "dnas_service"
+  post_tasks:
+    - include_role: name="resources_clean"

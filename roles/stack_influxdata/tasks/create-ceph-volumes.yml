@@ -1,13 +1,16 @@
 ---
 
 - name: 'create the subvolumegroup docker/influxdata-influxdb'
+  become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/influxdata-influxdb"
   register: create_ceph_volumes
 
 - name: 'create the subvolumegroup docker/influxdata-kapacitor'
+  become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/influxdata-kapacitor"
   register: create_ceph_volumes
 
 - name: 'create the subvolumegroup docker/influxdata-chronograf'
+  become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/influxdata-chronograf"
   register: create_ceph_volumes

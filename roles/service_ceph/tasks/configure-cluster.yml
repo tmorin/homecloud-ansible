@@ -1,7 +1,10 @@
 ---
 
 - name: 'configure ceph'
+  become: yes
   shell: |
+    set -exo pipefail
+
     [[ -n "{{ ceph_config_max_mon }}" ]] \
     && cephadm shell -- ceph orch apply mon "{{ ceph_config_max_mon }}"
     [[ -n "{{ ceph_config_max_mgr }}" ]] \
@@ -29,6 +32,8 @@
     && cephadm shell -- ceph config set global mon_osd_cache_size_min "{{ ceph_config_mon_osd_cache_size_min }}"
     [[ -n "{{ ceph_config_mon_memory_target }}" ]] \
     && cephadm shell -- ceph config set global mon_memory_target "{{ ceph_config_mon_memory_target }}"
+
+    cephadm shell -- ceph cephadm set-user "{{ ansible_user }}"
   args:
     executable: /bin/bash
   register: configure_cluster

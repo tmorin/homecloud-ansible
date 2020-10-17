@@ -1,0 +1,13 @@
+---
+
+# https://archive.armbian.com/rock64/archive/
+# https://archive.armbian.com/rock64/archive/Armbian_20.08_Rock64_buster_legacy_4.4.213.img.xz
+image_armbian_image_name: "Armbian_20.08_Rock64_buster_legacy_4.4.213.img"
+image_armbian_archive_name: "{{ image_armbian_image_name }}.xz"
+image_armbian_image_url: "https://archive.armbian.com/rock64/archive/{{ image_armbian_archive_name }}"
+image_armbian_working_directory: "~/tmp/homecloud-ansible-images-armbian"
+image_armbian_ssh_pub_key_path: "~/.ssh/thibault.morin.io.rsa.pub"
+
+swarm_node_labels:
+  board: rock64
+  main_block_fs: emmc

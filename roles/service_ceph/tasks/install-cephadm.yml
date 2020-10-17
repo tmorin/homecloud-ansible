@@ -1,14 +1,17 @@
 ---
 
 - name: 'install ceph dependencies'
+  become: yes
   package:
     name: curl,lvm2
     state: present
     force_apt_get: "yes"
 
 - name: 'download cephadm'
+  become: yes
   get_url:
-    url: https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm
+    #url: https://raw.githubusercontent.com/ceph/ceph/octopus/src/cephadm/cephadm
+    url: https://raw.githubusercontent.com/ceph/ceph/v15.2.5/src/cephadm/cephadm
     dest: /usr/local/bin
     mode: '775'
   register: install_cephadm
