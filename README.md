@@ -169,7 +169,7 @@ Several examples are available in the [inventories](./inventories) directory.
 |calibreweb|yes|yes|yes|yes|no|no|
 |backup|yes|yes|yes|yes|yes|no|
 |restore|no|no|no|no|yes|no|
-|dans|no|no|no|no|no|yes|
+|dans|no|no|no|yes|no|yes|
 
 [vagrant-c1]: inventories/vagrant-c1/README.md
 [vagrant-c2]: inventories/vagrant-c2/README.md
