@@ -1,6 +1,6 @@
 ---
 
-swarm:
+all:
   children:
     # BOARDS
     rock64:

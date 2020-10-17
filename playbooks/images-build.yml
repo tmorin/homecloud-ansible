@@ -3,5 +3,6 @@
 - hosts: all
   gather_facts: no
   become: no
+  serial: 1
   roles:
     - image_armbian
