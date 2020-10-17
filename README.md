@@ -73,7 +73,7 @@ all:
         node1:
         node2:
         node3:
-    swarm_wks:
+    swarm_wkr:
       hosts:
         node4:
         node5:
