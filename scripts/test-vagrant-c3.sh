@@ -9,6 +9,7 @@ bootstrapVagrant
 checkVM 1
 checkVM 2
 checkVM 3
+playbook cluster-hardening.yml
 playbook cluster-bootstrap.yml
 playbook stacks-deploy.yml
 

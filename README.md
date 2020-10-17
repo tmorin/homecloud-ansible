@@ -38,8 +38,9 @@ If `ceph` is enabled:
 
 The collection's roles can be dependent of the following ansible collection:
 ```shell script
-ansible-galaxy collection install ansible.posix
 ansible-galaxy collection install community.general
+ansible-galaxy install dev-sec.os-hardening --force
+ansible-galaxy install dev-sec.ssh-hardening --force
 ```
 
 To build the Armbian images, the following dependencies are required:

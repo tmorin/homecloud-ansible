@@ -18,6 +18,7 @@
       become: yes
       shell: |
         cephadm bootstrap \
+          --ssh-user {{ ansible_user }} \
           --mon-ip {{ ceph_monitor_ip }} \
           --skip-dashboard \
           --skip-monitoring-stack \

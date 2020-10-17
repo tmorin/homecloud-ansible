@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+  become: yes
+  vars:
+    ssh_allow_users: "{{ ansible_user }}"
+    sftp_enabled: yes
+  roles:
+    - dev-sec.ssh-hardening
+
+- hosts: all
+  become: yes
+  vars:
+    sysctl_overwrite:
+      net.ipv4.ip_forward: 1
+  roles:
+    - dev-sec.os-hardening

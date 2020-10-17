@@ -7,6 +7,7 @@ export homecloud_IP="192.168.11.11"
 
 bootstrapVagrant
 checkVM 1
+playbook cluster-hardening.yml
 playbook cluster-bootstrap.yml
 playbook stacks-deploy.yml
 

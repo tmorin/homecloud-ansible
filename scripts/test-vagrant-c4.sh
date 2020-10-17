@@ -10,6 +10,7 @@ checkVM 1
 checkVM 2
 checkVM 3
 checkVM 4
+playbook cluster-hardening.yml
 playbook cluster-bootstrap.yml
 playbook stacks-deploy.yml
 

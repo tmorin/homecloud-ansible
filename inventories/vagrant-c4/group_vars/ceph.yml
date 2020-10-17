@@ -5,9 +5,6 @@ ceph_services:
   - service_ceph
 
 ceph_osd_device: '/dev/sdb'
-# https://docs.ceph.com/docs/octopus/mgr/orchestrator/
-ceph_config_max_mon: "1"
-ceph_config_max_mgr: "1"
 # https://docs.ceph.com/docs/master/start/hardware-recommendations/
 ceph_config_rocksdb_cache_size: "67108864" # 64mb
 ceph_config_mds_cache_memory_limit: "67108864" # 64mb

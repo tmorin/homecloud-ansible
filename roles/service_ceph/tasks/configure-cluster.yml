@@ -5,11 +5,6 @@
   shell: |
     set -exo pipefail
 
-    [[ -n "{{ ceph_config_max_mon }}" ]] \
-    && cephadm shell -- ceph orch apply mon "{{ ceph_config_max_mon }}"
-    [[ -n "{{ ceph_config_max_mgr }}" ]] \
-    && cephadm shell -- ceph orch apply mgr "{{ ceph_config_max_mgr }}"
-
     [[ -n "{{ ceph_config_rocksdb_cache_size }}" ]] \
     && cephadm shell -- ceph config set global rocksdb_cache_size "{{ ceph_config_rocksdb_cache_size }}"
     [[ -n "{{ ceph_config_mds_cache_memory_limit }}" ]] \
@@ -20,6 +15,8 @@
 
     [[ -n "{{ ceph_config_bluestore_cache_size }}" ]] \
     && cephadm shell -- ceph config set global bluestore_cache_size "{{ ceph_config_bluestore_cache_size }}"
+    [[ -n "{{ ceph_config_bluestore_cache_kv_max }}" ]] \
+    && cephadm shell -- ceph config set global bluestore_cache_kv_max "{{ ceph_config_bluestore_cache_kv_max }}"
 
     [[ -n "{{ ceph_config_osd_pool_default_size }}" ]] \
     && cephadm shell -- ceph config set global osd_pool_default_size "{{ ceph_config_osd_pool_default_size }}"

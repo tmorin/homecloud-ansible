@@ -2,6 +2,9 @@
 
 ansible_user: vagrant
 
+ssh_use_pam: true
+ssh_max_auth_retries: 10
+
 homecloud_virtual_ip: '192.168.11.10'
 homecloud_network_interface: 'ansible_eth1'
 homecloud_is_https: false
