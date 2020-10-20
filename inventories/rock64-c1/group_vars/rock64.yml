@@ -11,3 +11,8 @@ image_armbian_ssh_pub_key_path: "~/.ssh/thibault.morin.io.rsa.pub"
 swarm_node_labels:
   board: rock64
   main_block_fs: emmc
+
+# dev-sec.os-hardening
+sysctl_overwrite:
+  net.ipv4.ip_forward: 1
+  vm.mmap_rnd_bits: 24
