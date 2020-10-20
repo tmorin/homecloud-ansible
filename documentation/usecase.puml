@@ -1,0 +1,26 @@
+@startuml use-case_network
+' configures the library
+!global $LIB_BRANCH="master"
+!global $LIB_BASE_LOCATION="https://raw.githubusercontent.com/tmorin/plantuml-libs/" + $LIB_BRANCH + "/perso"
+' loads the library
+!includeurl $LIB_BASE_LOCATION/library.puml
+
+include('elements/materials/MaterialsBoard')
+include('elements/materials/MaterialsCloud')
+include('groups/materials/MaterialsGroupNetwork')
+include('elements/materials/MaterialsRouter')
+
+MaterialsCloud('internet', 'internet')
+MaterialsGroupNetwork('home', 'home') {
+  MaterialsRouter('router', 'router')
+  MaterialsBoard('n1', 'node-1', 'rock64')
+  MaterialsBoard('n2', 'node-2', 'rock64')
+  MaterialsBoard('n3', 'node-3', 'pine64')
+  MaterialsBoard('n4', 'node-4', 'pine64')
+}
+internet - router
+router -- n1
+router -- n2
+router -- n3
+router -- n4
+@enduml
