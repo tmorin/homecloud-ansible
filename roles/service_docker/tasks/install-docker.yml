@@ -3,7 +3,7 @@
 - name: 'install dependencies from apt'
   become: yes
   package:
-    name: curl,nfs-common,cifs-utils
+    name: curl,nfs-common,cifs-utils,git
     state: present
     force_apt_get: "yes"
   register: install_docker
@@ -50,9 +50,30 @@
   become: yes
   when: homecloud_ceph_is_enabled
   shell: |
-    set -o pipefail
-    (docker plugin ls | grep n0r1skcom/docker-volume-cephfs) || docker plugin install n0r1skcom/docker-volume-cephfs --grant-all-permissions
+    set -ex
+    plugin_installed=$(docker plugin ls | grep n0r1skcom/docker-volume-cephfs || echo "")
+    if [[ -z $plugin_installed ]]; then
+      rm -Rf /tmp/docker-volume-cephfs
+      git clone https://gitlab.com/n0r1sk/docker-volume-cephfs.git /tmp/docker-volume-cephfs
+      cd /tmp/docker-volume-cephfs
+      docker build --pull -t docker-volume-cephfs:rootfs .
+      mkdir -p ./plugin/rootfs
+      docker create --name tmp docker-volume-cephfs:rootfs
+      docker export tmp | tar -x -C ./plugin/rootfs
+      cp config.json ./plugin/
+      docker rm -vf tmp
+      docker plugin create n0r1skcom/docker-volume-cephfs ./plugin
+      docker plugin enable n0r1skcom/docker-volume-cephfs
+    fi
   args:
     executable: /bin/bash
   changed_when: false
+  register: install_docker
+
+- name: 'uninstall dependencies from apt'
+  become: yes
+  package:
+    name: git
+    state: absent
+    force_apt_get: "yes"
   register: install_docker
