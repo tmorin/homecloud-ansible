@@ -1,13 +1,35 @@
 ---
 
-- hosts: swarm_mgr[0]
+- hosts: all
   vars:
     homecloud_ceph_is_enabled: "{{ 'service_ceph' in ceph_services | default([]) }}"
     ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, [homecloud_network_interface, 'ipv4', 'address']) | list }}"
     ceph_monitor_ips: "{{ ceph_monitor_ips_as_array | join(',') }}"
-  pre_tasks:
-    - include_role: name="resources_prepare"
-  roles:
-    - action_restore
-  post_tasks:
-    - include_role: name="resources_clean"
+  tasks:
+    - name: "create the volume containing backups"
+      docker_volume:
+        name: "backup_destination"
+        driver: "{{ backup_destination_volume.driver }}"
+        driver_options: "{{ backup_destination_volume.driver_opts | to_json }}"
+    - name: "create destination volumes (ceph)"
+      when: homecloud_ceph_is_enabled
+      community.general.docker_volume:
+        name: "{{ volume_name }}"
+        driver_options:
+          name: admin
+          secret: "{{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}"
+          path: "/volumes/docker/{{ volume_name }}"
+          monitors: "{{ ceph_monitor_ips }}"
+      loop: "{{ backup_source_volumes | default([]) }}"
+      loop_control:
+        loop_var: "volume_name"
+    - name: "create the destination volumes (local)"
+      when: not homecloud_ceph_is_enabled
+      docker_volume:
+        name: "{{ volume_name }}"
+      loop: "{{ backup_source_volumes | default([]) }}"
+      loop_control:
+        loop_var: "volume_name"
+    - when: ansible_hostname == groups.swarm_mgr[0]
+      include_role:
+        name: "action_restore"
