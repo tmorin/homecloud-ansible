@@ -11,5 +11,6 @@ ssh_max_auth_retries: 10
 sftp_enabled: yes
 # dev-sec.os-hardening
 os_auditd_enabled: false
+ufw_manage_defaults: false
 sysctl_overwrite:
   net.ipv4.ip_forward: 1

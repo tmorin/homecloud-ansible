@@ -4,8 +4,11 @@
   assert:
     that:
       - homecloud_network_interface | length > 0
-
-- import_tasks: configure-hostname.yml
-- import_tasks: upgrade-system.yml
-- import_tasks: install-python.yml
-- import_tasks: install-swapoff.yml
+- name: 'configure hostname'
+  import_tasks: configure-hostname.yml
+- name: 'upgrade system'
+  import_tasks: upgrade-system.yml
+- name: 'install python'
+  import_tasks: install-python.yml
+- name: 'install swapoff.service'
+  import_tasks: install-swapoff.yml

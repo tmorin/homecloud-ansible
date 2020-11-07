@@ -10,10 +10,14 @@
 - name: 'setup the main manager node'
   when: inventory_hostname in groups.ceph_mon[0:1]
   block:
-    - import_tasks: initialize-cluster.yml
-    - import_tasks: get-ssh-pubkey.yml
-    - import_tasks: get-ceph-client-secret.yml
-    - import_tasks: configure-cluster.yml
+    - name: 'initialize cluster'
+      import_tasks: initialize-cluster.yml
+    - name: 'get ssh pubkey'
+      import_tasks: get-ssh-pubkey.yml
+    - name: 'get ceph client secret'
+      import_tasks: get-ceph-client-secret.yml
+    - name: 'configure cluster'
+      import_tasks: configure-cluster.yml
 
 - name: 'populate remaining hosts'
   when: inventory_hostname in groups.ceph_mgr,groups.ceph_mon,groups.ceph_osd
@@ -23,6 +27,11 @@
 - name: 'setup the other nodes'
   when: inventory_hostname in groups.ceph_mon[0:1]
   block:
-    - import_tasks: add-hosts.yml
-    - import_tasks: add-osds.yml
-    - import_tasks: create-volumes.yml
+    - name: 'add hosts'
+      import_tasks: add-hosts.yml
+    - name: 'add osds'
+      import_tasks: add-osds.yml
+    - name: 'create volumes'
+      import_tasks: create-volumes.yml
+
+- import_tasks: install-ceph-client.yml
