@@ -1,10 +1,5 @@
 ---
 
-- name: 'check parameters'
-  assert:
-    that:
-      - homecloud_network_interface | length > 0
-
 - name: 'initialize the main manager'
   when: inventory_hostname in groups.swarm_mgr[:1]
   block:

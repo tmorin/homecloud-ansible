@@ -1,8 +1,0 @@
----
-
-ansible_host: 192.168.11.41
-ansible_ssh_private_key_file: inventories/vagrant-c4/.vagrant/machines/c4-n1/virtualbox/private_key
-
-swarm_node_labels:
-  blue:
-  type: generic

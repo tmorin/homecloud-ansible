@@ -3,7 +3,6 @@
 ansible_user: vagrant
 
 homecloud_virtual_ip: '192.168.11.30'
-homecloud_network_interface: 'ansible_eth1'
 homecloud_is_https: false
 
 # dev-sec.ssh-hardening

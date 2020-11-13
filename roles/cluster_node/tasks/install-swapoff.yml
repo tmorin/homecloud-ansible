@@ -10,11 +10,15 @@
     mode: 0644
   register: install_swapoff
 
-- name: 'activate and start the service'
+- name: 'activate the service'
   become: yes
   systemd:
     daemon_reload: true
     enabled: yes
-    state: started
     name: swapoff.service
+  register: install_swapoff
+
+- name: 'start service'
+  become: true
+  shell: "systemctl start swapoff.service"
   register: install_swapoff

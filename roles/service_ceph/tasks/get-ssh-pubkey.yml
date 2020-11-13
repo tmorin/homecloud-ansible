@@ -1,6 +1,7 @@
 ---
 
 - name: 'get SSH public key'
+  become: yes
   fetch:
     src: "/etc/ceph/ceph.pub"
     dest: "{{ playbook_dir }}/vault/ceph.pub"

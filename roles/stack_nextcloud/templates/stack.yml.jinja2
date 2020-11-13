@@ -13,7 +13,7 @@ volumes:
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/nextcloud-server
+      path: /volumes/docker/nextcloud_server
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ nextcloud_volume_server | to_json }}{% endif %}
   database: {% if homecloud_ceph_is_enabled %}
@@ -21,7 +21,7 @@ volumes:
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/nextcloud-database
+      path: /volumes/docker/nextcloud_database
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ nextcloud_volume_database | to_json }}{% endif %}
   backup: {{ backup_destination_volume | to_json }}

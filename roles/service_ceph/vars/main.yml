@@ -4,4 +4,4 @@
 ceph_release: 15.2.5
 
 # The IP of the main monitor should not be overridden.
-ceph_monitor_ip: "{{ hostvars[groups['ceph_mon'][0]][homecloud_network_interface].ipv4.address }}"
+ceph_monitor_ip: "{{ hostvars[groups['ceph_mon'][0]].homecloud_node_ip }}"

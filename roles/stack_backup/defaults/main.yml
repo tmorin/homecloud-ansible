@@ -1,6 +1,6 @@
 ---
 
-backup_image: "thibaultmorin/duplicity-cron"
+backup_image: "thibaultmorin/duplicity-cron:0.8.17"
 backup_passphrase: "passphrase"
 backup_memory: "128M"
 

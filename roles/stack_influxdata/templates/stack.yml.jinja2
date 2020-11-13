@@ -19,7 +19,7 @@ volumes:
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/influxdata-influxdb
+      path: /volumes/docker/influxdata_influxdb
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ influxdata_volume_influxdb | to_json }}{% endif %}
   kapacitor: {% if homecloud_ceph_is_enabled %}
@@ -27,7 +27,7 @@ volumes:
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/influxdata-kapacitor
+      path: /volumes/docker/influxdata_kapacitor
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ influxdata_volume_kapacitor | to_json }}{% endif %}
   chronograf: {% if homecloud_ceph_is_enabled %}
@@ -35,7 +35,7 @@ volumes:
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/influxdata-chronograf
+      path: /volumes/docker/influxdata_chronograf
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ influxdata_volume_chronograf | to_json }}{% endif %}
 

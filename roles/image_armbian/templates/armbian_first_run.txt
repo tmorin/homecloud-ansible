@@ -37,7 +37,7 @@ FR_net_wifi_countrycode='GB'
 #If you want to use a static ip, set it here
 
 FR_net_use_static=1
-FR_net_static_ip='{{ ansible_host }}'
+FR_net_static_ip='{{ homecloud_node_ip }}'
 FR_net_static_mask='{{ homecloud_network_netmask }}'
 FR_net_static_gateway='{{ homecloud_network_gateway }}'
 FR_net_static_dns='{{ homecloud_network_nameservers | join(' ') }}' #2 entries max, seperated by a space.

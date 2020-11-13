@@ -10,6 +10,6 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '.*{{ item }}$'
-    line: "{{ hostvars[item][homecloud_network_interface].ipv4.address }} {{ item }}"
+    line: "{{ hostvars[item].homecloud_node_ip }} {{ item }}"
     state: present
   loop: "{{ groups.all }}"

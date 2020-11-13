@@ -1,6 +1,6 @@
 namespace: tmorin
 name: homecloud
-version: 1.3.3
+version: 1.4.0
 readme: README.md
 authors:
   - Thibault Morin (https://tmorin.github.io)
@@ -10,6 +10,7 @@ tags:
   - docker
   - swarm
   - cloud
+  - ceph
 repository: https://github.com/tmorin/homecloud-ansible
 homepage: https://github.com/tmorin/homecloud-ansible#readme
 issues: https://github.com/tmorin/homecloud-ansible/issues

@@ -1,39 +1,13 @@
 ---
 
-- name: 'copy restore.env'
-  template:
-    src: restore.env.jinja2
-    dest: /tmp/resources/restore.env
-    mode: 0644
-    force: true
-  register: action_restore
+- when: ansible_hostname == groups.swarm_mgr[0]
+  import_tasks: copy-resources.yml
 
-- name: 'copy restore.sh'
-  template:
-    src: restore.sh.jinja2
-    dest: /tmp/resources/restore.sh
-    mode: 0755
-    force: true
-  register: action_restore
+- when: ansible_hostname == groups.swarm_mgr[0]
+  import_tasks: create-backup-volume.yml
 
-- name: 'clear stacks'
-  when: restore_remove_stacks
-  shell: |
-    set -e -o pipefail
-    stacks=$(docker stack ls --format {{'{{'}}.Name{{'}}'}})
-    if [[ ! -z "$stacks" ]]; then
-      docker stack rm $stacks
-    fi
-  args:
-    executable: /bin/bash
-  register: result
-  changed_when: result is not succeeded
-- debug: var=result
+- when: homecloud_ceph_is_enabled
+  import_tasks: create-ceph-volumes.yml
 
-- name: 'execute restore'
-  shell: /tmp/resources/restore.sh
-  args:
-    chdir: /tmp/resources
-  register: action_restore
-  changed_when: action_restore is not succeeded
-- debug: var=action_restore
+- when: ansible_hostname == groups.swarm_mgr[0]
+  import_tasks: execute-restore.yml

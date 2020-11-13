@@ -1,7 +1,6 @@
 ---
 
 - name: "deploy the task"
-  become: yes
   community.general.docker_stack:
     state: present
     name: "traefik"

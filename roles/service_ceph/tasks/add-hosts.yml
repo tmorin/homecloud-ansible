@@ -6,7 +6,7 @@
     set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
     if [[ "$status" == "Missing" ]]; then
-      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
+      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item].homecloud_node_ip }} \
       || exit 1
     fi
     cephadm shell -- ceph orch host label add {{ item }} mon
@@ -21,7 +21,7 @@
     set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
     if [[ "$status" == "Missing" ]]; then
-      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
+      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item].homecloud_node_ip }} \
       || exit 1
     fi
     cephadm shell -- ceph orch host label add {{ item }} mgr
@@ -36,7 +36,7 @@
     set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
     if [[ "$status" == "Missing" ]]; then
-      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item][homecloud_network_interface].ipv4.address }} \
+      cephadm shell -- ceph orch host add {{ item }} {{ hostvars[item].homecloud_node_ip }} \
       || exit 1
     fi
     cephadm shell -- ceph orch host label add {{ item }} osd

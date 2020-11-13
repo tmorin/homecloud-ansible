@@ -41,11 +41,15 @@
     name: docker-prune.service
   register: intall_docker_prune
 
-- name: 'activate and start the timer'
+- name: 'activate the timer'
   become: yes
   systemd:
     daemon_reload: true
     enabled: yes
-    state: started
     name: docker-prune.timer
+  register: intall_docker_prune
+
+- name: 'start the timer'
+  become: true
+  shell: systemctl start docker-prune.timer
   register: intall_docker_prune

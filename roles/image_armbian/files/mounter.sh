@@ -8,39 +8,39 @@ MOUNT_DIRECTORY=""
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
-    key="$1"
-    case ${key} in
-        -c|--clean)
-        ACTION="clean"
-        shift
-        ;;
-        -p|--prepare)
-        ACTION="prepare"
-        shift
-        ;;
-        -m|--mount)
-        ACTION="mount"
-        shift
-        ;;
-        -u|--umount)
-        ACTION="umount"
-        shift
-        ;;
-        -hd|--host-directory)
-        HOST_DIRECTORY="$2"
-        shift
-        shift
-        ;;
-        -bi|--base-image)
-        BASE_IMAGE_FILE="$2"
-        shift
-        shift
-        ;;
-        *)
-        POSITIONAL+=("$1")
-        shift
-        ;;
-    esac
+  key="$1"
+  case ${key} in
+  -c | --clean)
+    ACTION="clean"
+    shift
+    ;;
+  -p | --prepare)
+    ACTION="prepare"
+    shift
+    ;;
+  -m | --mount)
+    ACTION="mount"
+    shift
+    ;;
+  -u | --umount)
+    ACTION="umount"
+    shift
+    ;;
+  -hd | --host-directory)
+    HOST_DIRECTORY="$2"
+    shift
+    shift
+    ;;
+  -bi | --base-image)
+    BASE_IMAGE_FILE="$2"
+    shift
+    shift
+    ;;
+  *)
+    POSITIONAL+=("$1")
+    shift
+    ;;
+  esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
@@ -85,7 +85,7 @@ function execute_prepare() {
     echo "error : [-bi|--base-image <path>] is required"
     exit 1
   fi
-  mkdir -p ${MOUNT_DIRECTORY}
+  mkdir -p "${MOUNT_DIRECTORY}"
   if [[ ! -f "IMAGE_FILE" ]]; then
     cp "${BASE_IMAGE_FILE}" "${IMAGE_FILE}"
   fi
@@ -96,20 +96,20 @@ function execute_clean() {
 }
 
 case ${ACTION} in
-    mount)
-    execute_umount
-    execute_mount
-    ;;
-    umount)
-    execute_umount
-    ;;
-    prepare)
-    execute_umount
-    execute_prepare
-    execute_mount
-    ;;
-    clean)
-    execute_umount
-    execute_clean
-    ;;
+mount)
+  execute_umount
+  execute_mount
+  ;;
+umount)
+  execute_umount
+  ;;
+prepare)
+  execute_umount
+  execute_prepare
+  execute_mount
+  ;;
+clean)
+  execute_umount
+  execute_clean
+  ;;
 esac

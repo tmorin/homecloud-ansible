@@ -1,4 +1,4 @@
 ---
 
-homecloud_ips_as_array: "{{ groups.swarm | map('extract', hostvars, [homecloud_network_interface, 'ipv4', 'address']) | list }}"
+homecloud_ips_as_array: "{{ groups.swarm | map('extract', hostvars, 'homecloud_node_ip') | list }}"
 homecloud_ips_as_strings: "{{ homecloud_ips_as_array | join(',') }}"

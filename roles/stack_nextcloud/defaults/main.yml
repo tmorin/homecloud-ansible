@@ -24,7 +24,7 @@ nextcloud_database_nextcoud_password: 'nextcloud_password'
 
 # backup
 
-nextcloud_backup_image: "thibaultmorin/duplicity-mariadb"
+nextcloud_backup_image: "thibaultmorin/duplicity-mariadb:0.8.17"
 nextcloud_backup_passphrase: "passphrase"
 nextcloud_backup_memory: "64M"
 

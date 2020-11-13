@@ -25,9 +25,13 @@ all:
       hosts:
         c3-n1:
         c3-n2:
-        c3-n3:
+        #c3-n3:
     ceph:
       children:
         ceph_mon: {}
         ceph_mgr: {}
         ceph_osd: {}
+    # DNAS
+    dnas:
+      hosts:
+        c3-n3:

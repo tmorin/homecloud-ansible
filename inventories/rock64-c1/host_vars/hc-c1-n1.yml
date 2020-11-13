@@ -1,3 +1,5 @@
 ---
 
 ansible_host: 192.168.100.11
+
+homecloud_node_ip: "{{ ansible_host }}"

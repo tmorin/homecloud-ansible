@@ -14,7 +14,13 @@ swarm_stacks:
 
 backup_source_volumes:
   - calibreweb_config
-  - nextcloud_database
-  - nextcloud_server
-  - portainer_console
-  - traefik_letsencrypt
+
+restore_source_volumes:
+  - calibreweb_config
+
+backup_destination_volume:
+  driver: local
+  driver_opts:
+    type: "cifs"
+    device: "//192.168.11.33/dnas"
+    o: "username=dnas,password=dnas,uid=1000,gid=1000,file_mode=0777,dir_mode=0777"

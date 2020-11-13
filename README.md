@@ -38,7 +38,7 @@ If `ceph` is enabled:
 
 The collection's roles can be dependent of the following ansible collection:
 ```shell script
-ansible-galaxy collection install community.general
+ansible-galaxy collection install community.general --force
 ansible-galaxy install dev-sec.os-hardening --force
 ansible-galaxy install dev-sec.ssh-hardening --force
 ```
@@ -158,26 +158,22 @@ The playbook [stacks-restore-backups.yml](playbooks/stacks-restore-backup.yml) r
 
 Several examples are available in the [inventories](./inventories) directory.
 
-| |[vagrant-c1]|[vagrant-c2]|[vagrant-c3]|[vagrant-c4]|[vagrant-r1]|[vagrant-d1]|
-|---|---|---|---|---|---|---|
-|nodes|1|2|3|4|1|1|
-|https|no|no|no|no|no|no|
-|keepalived|no|yes|yes|yes|no|no|
-|ceph|no|yes|yes|yes|no|no|
-|portainer|yes|yes|yes|yes|yes|no|
-|influxdata|yes|no|no|yes|no|no|
-|nextcloud|yes|yes|yes|yes|no|no|
-|calibreweb|yes|yes|yes|yes|no|no|
-|backup|yes|yes|yes|yes|yes|no|
-|restore|no|no|no|no|yes|no|
-|dans|no|no|no|yes|no|yes|
+| |[vagrant-c1]|[vagrant-c3]|
+|---|---|---|
+|nodes|1|3|
+|https|no|no|
+|keepalived|no|yes|
+|ceph|no|yes|
+|portainer|yes|yes|
+|influxdata|yes|no|
+|nextcloud|yes|yes|
+|calibreweb|yes|yes|
+|backup|yes|yes|
+|restore|no|yes|
+|dans|no|yes|
 
 [vagrant-c1]: inventories/vagrant-c1/README.md
-[vagrant-c2]: inventories/vagrant-c2/README.md
 [vagrant-c3]: inventories/vagrant-c3/README.md
-[vagrant-c4]: inventories/vagrant-c4/README.md
-[vagrant-r1]: inventories/vagrant-r1/README.md
-[vagrant-d1]: inventories/vagrant-d1/README.md
 
 ## Development
 
@@ -190,21 +186,4 @@ vagrant plugin install vagrant-libvirt
 Install libvirt
 ```shell script
 apt-get --yes install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
-```
-
-Install python3
-```shell script
-apt-get --yes install python-virtualenv python3-dev
-```
-
-Setup dev/test environment
-```shell script
-virtualenv -p python3 venv
-source venv/bin/activate
-python3 -m pip install --upgrade --ignore-installed --requirement requirements.txt
-```
-
-Execute test
-```shell script
-molecule test -s swarm_single_node
 ```

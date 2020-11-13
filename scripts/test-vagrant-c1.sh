@@ -21,7 +21,7 @@ waitForService "nextcloud" "nextcloud_database.1"
 
 waitForLogs "nextcloud_server" "apache2 -D FOREGROUND"
 
-vagrant.sh ${CLUSTER} ssh -c 'docker stack ls --format "{{.Name}} {{.Services}}"' ${CLUSTER}-n1 > /tmp/test
+vagrant.sh ${CLUSTER} ssh -c 'docker stack ls --format "{{.Name}} {{.Services}}" || true' ${CLUSTER}-n1 &> /tmp/test
 RUNS cat /tmp/test
 GREP "backup 1"
 GREP "calibreweb 1"

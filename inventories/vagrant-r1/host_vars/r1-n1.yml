@@ -1,4 +1,0 @@
----
-
-ansible_host: 192.168.12.11
-ansible_ssh_private_key_file: inventories/vagrant-r1/.vagrant/machines/r1-n1/virtualbox/private_key

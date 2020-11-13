@@ -8,14 +8,7 @@ x-logging:
   driver: json-file
 
 volumes:
-  destination: {% if homecloud_ceph_is_enabled %}
-    driver: n0r1skcom/docker-volume-cephfs
-    driver_opts:
-      name: admin
-      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/backup-destination
-      monitors: {{ ceph_monitor_ips }}
-{% else %}{{ backup_destination_volume | to_json }}{% endif %}
+  destination: {{ backup_destination_volume | to_json }}
 {% for docker_volume in backup_source_volumes %}
   {{ docker_volume }}:
     external: true

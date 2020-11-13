@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include homecloud-ansible"
-      include_role:
-        name: "homecloud-ansible"

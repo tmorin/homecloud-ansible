@@ -9,12 +9,12 @@
   register: install_docker
 
 - name: 'install dependencies from pip'
-  become: yes
   pip:
     name:
       - docker
       - jsondiff
       - pyaml
+    extra_args: --user
   register: install_docker
 
 - name: 'get /usr/bin/docker stat'
@@ -35,8 +35,6 @@
     warn: false
   register: install_docker
 
-#- debug: var=ansible_user
-#  become: true
 - name: 'configure current user'
   become: yes
   user:

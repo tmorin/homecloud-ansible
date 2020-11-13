@@ -1,7 +1,10 @@
 ---
 
+- when: ansible_hostname == groups.swarm_mgr[0]
+  import_tasks: copy-resources.yml
 
-- import_tasks: copy-resources.yml
 - when: homecloud_ceph_is_enabled
   import_tasks: create-ceph-volumes.yml
-- import_tasks: deploy-stack.yml
+
+- when: ansible_hostname == groups.swarm_mgr[0]
+  import_tasks: deploy-stack.yml

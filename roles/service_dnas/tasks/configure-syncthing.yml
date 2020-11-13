@@ -14,14 +14,16 @@
     name: syncthing@{{ dnas_username }}.service
     daemon_reload: yes
     enabled: yes
-    state: started
+  register: install_syncthing
+
+- name: 'start service'
+  become: true
+  shell: "systemctl start syncthing@{{ dnas_username }}.service"
   register: install_syncthing
 
 - name: 'stop service'
   become: true
-  systemd:
-    name: syncthing@{{ dnas_username }}.service
-    state: stopped
+  shell: "systemctl stop syncthing@{{ dnas_username }}.service"
   register: install_syncthing
 
 - name: 'remove the Sync folder'
@@ -54,9 +56,7 @@
 
 - name: 'restart service'
   become: true
-  systemd:
-    name: syncthing@{{ dnas_username }}.service
-    state: started
+  shell: "systemctl restart syncthing@{{ dnas_username }}.service"
   register: install_syncthing
 
 - name: 'uninstall dependencies'

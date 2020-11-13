@@ -20,7 +20,7 @@ volumes:
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/traefik-letsencrypt
+      path: /volumes/docker/portainer_console
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ portainer_volume_console | to_json }}{% endif %}
 

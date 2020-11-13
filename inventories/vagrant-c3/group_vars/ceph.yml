@@ -4,7 +4,8 @@ ceph_services:
   - service_docker
   - service_ceph
 
-ceph_osd_device: '/dev/sdb'
+#ceph_osd_device: '/dev/sdb' debian
+#ceph_osd_device: '/dev/sdc' bionic
 # https://docs.ceph.com/docs/master/start/hardware-recommendations/
 ceph_config_rocksdb_cache_size: "67108864" # 64mb
 ceph_config_mds_cache_memory_limit: "67108864" # 64mb

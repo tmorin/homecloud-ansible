@@ -9,8 +9,12 @@ galaxy_info:
       versions:
         - stretch
         - buster
+    - name: Ubuntu
+      versions:
+        - bionic
 
   galaxy_tags:
     - debian
+    - ubuntu
 
 dependencies: []

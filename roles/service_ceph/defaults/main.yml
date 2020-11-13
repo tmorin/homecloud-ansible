@@ -1,7 +1,5 @@
 ---
 
-homecloud_network_interface: ""
-
 # https://docs.ceph.com/docs/master/start/hardware-recommendations/
 ceph_config_rocksdb_cache_size: ""
 ceph_config_mds_cache_memory_limit: ""

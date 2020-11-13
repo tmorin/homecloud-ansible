@@ -6,5 +6,6 @@
     ceph_monitor_ips: "{{ ceph_monitor_ips_as_array | join(',') }}"
     homecloud_ceph_is_enabled: "{{ ceph_monitor_ips | length > 0 }}"
   tasks:
-    - include_role:
-        name: "action_restore"
+    - debug: var=ceph_monitor_ips_as_array
+    - debug: var=ceph_monitor_ips
+    - debug: var=homecloud_ceph_is_enabled

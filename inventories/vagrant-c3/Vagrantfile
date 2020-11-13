@@ -6,8 +6,6 @@ c3n2Vdi = '../../tmp/c3-n2.vdi'
 c3n3Vdi = '../../tmp/c3-n3.vdi'
 
 Vagrant.configure("2") do |config|
-  # https://docs.vagrantup.com.
-  config.vm.box = "debian/buster64"
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.memory = "2048"
@@ -17,6 +15,7 @@ Vagrant.configure("2") do |config|
     apt-get update
   SHELL
   config.vm.define "c3-n1" do |machine|
+    machine.vm.box = "debian/buster64"
     machine.vm.hostname = "c3-n1"
     machine.vm.network "private_network", ip: "192.168.11.31"
     machine.vm.provider "virtualbox" do |vbm|
@@ -27,6 +26,7 @@ Vagrant.configure("2") do |config|
     end
   end
   config.vm.define "c3-n2" do |machine|
+    machine.vm.box = "debian/stretch64"
     machine.vm.hostname = "c3-n2"
     machine.vm.network "private_network", ip: "192.168.11.32"
     machine.vm.provider "virtualbox" do |vbm|
@@ -37,13 +37,18 @@ Vagrant.configure("2") do |config|
     end
   end
   config.vm.define "c3-n3" do |machine|
+    machine.vm.box = "ubuntu/bionic64"
     machine.vm.hostname = "c3-n3"
     machine.vm.network "private_network", ip: "192.168.11.33"
+    machine.vm.provision "shell", inline: <<-SHELL
+        apt-get update
+        mkfs.ext4 /dev/sdc
+      SHELL
     machine.vm.provider "virtualbox" do |vbm|
       unless File.exist?(c3n3Vdi)
         vbm.customize ['createhd', '--filename', c3n3Vdi, '--variant', 'Fixed', '--size', 5 * 1024]
       end
-      vbm.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', c3n3Vdi]
+      vbm.customize ['storageattach', :id,  '--storagectl', 'SCSI', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', c3n3Vdi]
     end
   end
 end

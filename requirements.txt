@@ -1,8 +1,0 @@
-ansible>=2.9
-ansible-lint
-ansible-runner
-ansible-runner-http
-docker
-molecule
-molecule-vagrant
-python-vagrant

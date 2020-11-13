@@ -13,7 +13,7 @@ volumes:
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
-      path: /volumes/docker/calibreweb-config
+      path: /volumes/docker/calibreweb_config
       monitors: {{ ceph_monitor_ips }}
 {% else %}{{ calibreweb_volume_config | to_json }}{% endif %}
   books: {{ calibreweb_volume_books | to_json }}

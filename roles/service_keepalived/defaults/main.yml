@@ -1,6 +1,5 @@
 ---
 
 homecloud_virtual_ip: ""
-homecloud_network_interface: ""
 
 keepalived_docker_image: 'thibaultmorin/keepalived:latest'

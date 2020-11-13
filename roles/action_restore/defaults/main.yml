@@ -1,7 +1,11 @@
 ---
 
-restore_image: "thibaultmorin/duplicity-cron"
+homecloud_ceph_is_enabled: false
+
+backup_destination_volume: {}
+
+restore_image: "thibaultmorin/duplicity-cron:0.8.17"
 restore_passphrase: "passphrase"
 restore_source_volumes: []
 restore_destination_volume: "backup_destination"
-restore_remove_stacks: true
+restore_remove_stacks: false
