@@ -2,9 +2,9 @@
 
 - name: 'initialize manager'
   community.general.docker_swarm:
-    advertise_addr: "{{ swarm_manager_ip }}"
+    advertise_addr: "{{ service_swarm_manager_ip }}"
     state: present
-    labels: "{{ swarm_node_labels }}"
+    labels: "{{ service_swarm_node_labels }}"
   register: initialize_swarm
 
 - name: 'fetch manager token'

@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+VAGRANT_DEFAULT_PROVIDER="${VAGRANT_DEFAULT_PROVIDER:=libvirt}"
+export VAGRANT_DEFAULT_PROVIDER="libvirt"
+
 PATH=$(pwd)/scripts:${PATH}
 export PATH
 
-set -euo pipefail
+set -u
 
 # https://github.com/coryb/osht
 eval "$(curl -q -s https://raw.githubusercontent.com/coryb/osht/master/osht.sh)"
@@ -16,7 +19,7 @@ while [[ $# -gt 0 ]]; do
     export CLUSTER="${key#*=}"
     ;;
   --swarm-ip=*)
-    export homecloud_IP="${key#*=}"
+    export HOMECLOUD_IP="${key#*=}"
     ;;
   *)
     POSITIONAL+=("$1")
@@ -31,17 +34,23 @@ if [[ -z "${CLUSTER}" ]]; then
   exit 1
 fi
 
-if [[ -z "${homecloud_IP}" ]]; then
-  echo "--swarm-ip! -z is required"
+if [[ -z "${HOMECLOUD_IP}" ]]; then
+  echo "--swarm-ip is required"
   exit 2
 fi
 
+if [[ -n "${DOCKER_USERNAME}" ]]; then
+  echo "{ \"service_docker_username\":\"$DOCKER_USERNAME\", \"service_docker_password\":\"$DOCKER_PASSWORD\" }" >extra-vars.json
+else
+  echo "{}" >extra-vars.json
+fi
+
 function bootstrapVagrant() {
-  vagrant.sh "${CLUSTER}" destroy --force || exit 1
+  vagrant.sh "${CLUSTER}" destroy --force
   IS "$?" == "0"
   echo "sleep for 5 seconds" && sleep 5
 
-  vagrant.sh "${CLUSTER}" up || exit 1
+  vagrant.sh "${CLUSTER}" up
   IS "$?" == "0"
   echo "sleep for 5 seconds" && sleep 5
 }
@@ -55,16 +64,19 @@ function checkVM() {
 
 function playbook() {
   local book=$1
-  ansible-playbook -i "inventories/vagrant-${CLUSTER}/inventory.yml" "playbooks/${book}"
+  ansible-playbook \
+    --extra-vars "@extra-vars.json" \
+    -i "inventories/vagrant-${CLUSTER}/inventory.yml" \
+    "playbooks/${book}"
   IS "$?" == "0"
 }
 
 function checkWsFound() {
-  set -eo pipefail
   local host=$1
   echo checkWsFound "${host}"
   OK -n "$host"
-  curl -sILH "host:${host}" "http://${homecloud_IP}" | head -n 1 || true &>/tmp/ws_result
+  echo '' >/tmp/ws_result
+  curl -sILH "host:${host}" "http://${HOMECLOUD_IP}" &>/tmp/ws_result || true
   IS "$?" == "0"
   RUNS cat /tmp/ws_result
   NGREP "HTTP/1.1 404 Not Found"
@@ -74,7 +86,8 @@ function checkWsNotFound() {
   local host=$1
   echo checkWsNotFound "${host}"
   OK -n "$host"
-  curl -sILH "host:${host}" "http://${homecloud_IP}" | head -n 1 || true &>/tmp/ws_result
+  echo '' >/tmp/ws_result
+  curl -sILH "host:${host}" "http://${HOMECLOUD_IP}" &>/tmp/ws_result || true
   IS "$?" == "0"
   RUNS cat /tmp/ws_result
   GREP "HTTP/1.1 404 Not Found"
@@ -85,10 +98,11 @@ function waitForService() {
   OK -n "$stack"
   local service="$2"
   OK -n "$service"
-  until [[ -n "$(grep -Eo "${service} Running" /tmp/test)" ]]; do
+  echo '' >/tmp/test_service
+  until [[ -n "$(grep -Eo "${service} Running" /tmp/test_service)" ]]; do
     echo "wait for the ${service} service" && sleep 1
-    local command="docker stack ps ${stack} --format='{{.Name}} {{.CurrentState}}'"
-    vagrant.sh "${CLUSTER}" ssh -c "${command}" "${CLUSTER}-n1" &>/tmp/test
+    local command="docker stack ps ${stack} --format='{{.Name}} {{.CurrentState}}' || true"
+    vagrant.sh "${CLUSTER}" ssh -c "${command}" "${CLUSTER}-n1" &>/tmp/test_service
   done
 }
 
@@ -97,9 +111,17 @@ function waitForLogs() {
   OK -n "$service"
   local entry="$2"
   OK -n "$entry"
-  until [[ -n "$(grep -Eo "${entry}" /tmp/test)" ]]; do
+  echo '' >/tmp/test_logs
+  until [[ -n "$(grep -Eo "${entry}" /tmp/test_logs)" ]]; do
     echo "wait for the ${service} logs" && sleep 1
-    local command="docker service logs ${service}"
-    vagrant.sh "${CLUSTER}" ssh -c "${command}" "${CLUSTER}-n1" &>/tmp/test
+    local command="docker service logs ${service} || true"
+    vagrant.sh "${CLUSTER}" ssh -c "${command}" "${CLUSTER}-n1" &>/tmp/test_logs
   done
+}
+
+function getServiceNode() {
+  local service="$1"
+  local command="docker service ps $service --filter desired-state=running --format '{{.Node}}'|| true"
+  vagrant.sh "${CLUSTER}" ssh -c "${command}" "${CLUSTER}-n1" &>/tmp/test_service || true
+  grep -oP '(c[0-9]-n[0-9])' /tmp/test_service || echo ''
 }

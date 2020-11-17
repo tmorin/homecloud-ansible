@@ -2,21 +2,51 @@
 
 - name: "cleaning existing deployment"
   shell: |
-    docker kill keepalived
-    docker rm keepalived
-    docker rmi {{ keepalived_docker_image }}
-  ignore_errors: yes
+    docker kill keepalived || true
+    docker rm keepalived || true
+    docker rmi {{ service_keepalived_image }} || true
 
 - name: "pull an image"
   community.general.docker_image:
-    name: "{{ keepalived_docker_image }}"
+    name: "{{ service_keepalived_image }}"
     source: pull
 
 - name: "deploy container"
-  shell: |
-    docker run -d --name keepalived --restart=unless-stopped \
-      --cap-add=NET_ADMIN --net=host \
-      -e KEEPALIVED_PRIORITY="{{ (groups['swarm_mgr'][0] == inventory_hostname) | ternary('200','100') }}" \
-      -e KEEPALIVED_VIRTUAL_IPS="{{ homecloud_virtual_ip }}" \
-      -e KEEPALIVED_UNICAST_PEERS="{{ homecloud_ips_as_strings }}" \
-      {{ keepalived_docker_image }}
+  community.general.docker_container:
+    networks_cli_compatible: yes
+    container_default_behavior: no_defaults
+    name: keepalived
+    image: '{{ service_keepalived_image }}'
+    detach: yes
+    state: started
+    restart_policy: unless-stopped
+    network_mode: host
+    networks:
+      - name: host
+    capabilities:
+      - NET_ADMIN
+    env:
+      KEEPALIVED_INTERFACE: "{{ service_keepalived_interface | default('') }}"
+      KEEPALIVED_PASSWORD: "{{ service_keepalived_password | default('') }}"
+      KEEPALIVED_ROUTER_ID: "{{ service_keepalived_router_id | default('') }}"
+      KEEPALIVED_NOTIFY: "{{ service_keepalived_notify | default('') }}"
+      KEEPALIVED_PRIORITY: "{{ (groups['swarm_mgr'][0] == inventory_hostname) | ternary('200','100') }}"
+      KEEPALIVED_VIRTUAL_IPS: "{{ homecloud_virtual_ip }}"
+      KEEPALIVED_UNICAST_PEERS: "{{ homecloud_ips_as_strings }}"
+  register: deploy_keepalived
+#- name: "deploy container"
+#  shell: |
+#    docker run -d --name keepalived \
+#      --restart=unless-stopped \
+#      --cap-add=NET_ADMIN \
+#      --net=host \
+#      {% if service_keepalived_interface | length > 0 %}-e KEEPALIVED_INTERFACE="{{ service_keepalived_interface }}" \ {% endif %}
+#      {% if service_keepalived_password | length > 0 %}-e KEEPALIVED_PASSWORD="{{ service_keepalived_password }}" \ {% endif %}
+#      {% if service_keepalived_router_id | length > 0 %}-e KEEPALIVED_ROUTER_ID="{{ service_keepalived_router_id }}" \ {% endif %}
+#      {% if service_keepalived_notify | length > 0 %}-e KEEPALIVED_NOTIFY="{{ service_keepalived_notify }}" \ {% endif %}
+#      -e KEEPALIVED_PRIORITY="{{ (groups['swarm_mgr'][0] == inventory_hostname) | ternary('200','100') }}" \
+#      -e KEEPALIVED_VIRTUAL_IPS="{{ homecloud_virtual_ip }}" \
+#      -e KEEPALIVED_UNICAST_PEERS="{{ homecloud_ips_as_strings }}" \
+#      {{ service_keepalived_image }}
+#  register: deploy_keepalived
+#- debug: var=deploy_keepalived

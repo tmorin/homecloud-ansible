@@ -3,7 +3,7 @@
 - when: ansible_hostname == groups.swarm_mgr[0]
   import_tasks: copy-resources.yml
 
-- when: homecloud_ceph_is_enabled
+- when: homecloud_ceph_is_enabled and ansible_hostname == groups.ceph_mon[0]
   import_tasks: create-ceph-volumes.yml
 
 - when: ansible_hostname == groups.swarm_mgr[0]

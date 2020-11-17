@@ -5,30 +5,30 @@
   shell: |
     set -exo pipefail
 
-    [[ -n "{{ ceph_config_rocksdb_cache_size }}" ]] \
-    && cephadm shell -- ceph config set global rocksdb_cache_size "{{ ceph_config_rocksdb_cache_size }}"
-    [[ -n "{{ ceph_config_mds_cache_memory_limit }}" ]] \
-    && cephadm shell -- ceph config set global mds_cache_memory_limit "{{ ceph_config_mds_cache_memory_limit }}"
+    [[ -n "{{ service_ceph_config_rocksdb_cache_size }}" ]] \
+    && cephadm shell -- ceph config set global rocksdb_cache_size "{{ service_ceph_config_rocksdb_cache_size }}"
+    [[ -n "{{ service_ceph_config_mds_cache_memory_limit }}" ]] \
+    && cephadm shell -- ceph config set global mds_cache_memory_limit "{{ service_ceph_config_mds_cache_memory_limit }}"
 
-    [[ -n "{{ ceph_config_osd_memory_base }}" ]] \
-    && cephadm shell -- ceph config set global osd_memory_base "{{ ceph_config_osd_memory_base }}"
+    [[ -n "{{ service_ceph_config_osd_memory_base }}" ]] \
+    && cephadm shell -- ceph config set global osd_memory_base "{{ service_ceph_config_osd_memory_base }}"
 
-    [[ -n "{{ ceph_config_bluestore_cache_size }}" ]] \
-    && cephadm shell -- ceph config set global bluestore_cache_size "{{ ceph_config_bluestore_cache_size }}"
-    [[ -n "{{ ceph_config_bluestore_cache_kv_max }}" ]] \
-    && cephadm shell -- ceph config set global bluestore_cache_kv_max "{{ ceph_config_bluestore_cache_kv_max }}"
+    [[ -n "{{ service_ceph_config_bluestore_cache_size }}" ]] \
+    && cephadm shell -- ceph config set global bluestore_cache_size "{{ service_ceph_config_bluestore_cache_size }}"
+    [[ -n "{{ service_ceph_config_bluestore_cache_kv_max }}" ]] \
+    && cephadm shell -- ceph config set global bluestore_cache_kv_max "{{ service_ceph_config_bluestore_cache_kv_max }}"
 
-    [[ -n "{{ ceph_config_osd_pool_default_size }}" ]] \
-    && cephadm shell -- ceph config set global osd_pool_default_size "{{ ceph_config_osd_pool_default_size }}"
-    [[ -n "{{ ceph_config_osd_pool_default_min_size }}" ]] \
-    && cephadm shell -- ceph config set global osd_pool_default_min_size "{{ ceph_config_osd_pool_default_min_size }}"
+    [[ -n "{{ service_ceph_config_osd_pool_default_size }}" ]] \
+    && cephadm shell -- ceph config set global osd_pool_default_size "{{ service_ceph_config_osd_pool_default_size }}"
+    [[ -n "{{ service_ceph_config_osd_pool_default_min_size }}" ]] \
+    && cephadm shell -- ceph config set global osd_pool_default_min_size "{{ service_ceph_config_osd_pool_default_min_size }}"
 
-    [[ -n "{{ ceph_config_mon_osd_cache_size }}" ]] \
-    && cephadm shell -- ceph config set global mon_osd_cache_size "{{ ceph_config_mon_osd_cache_size }}"
-    [[ -n "{{ ceph_config_mon_osd_cache_size_min }}" ]] \
-    && cephadm shell -- ceph config set global mon_osd_cache_size_min "{{ ceph_config_mon_osd_cache_size_min }}"
-    [[ -n "{{ ceph_config_mon_memory_target }}" ]] \
-    && cephadm shell -- ceph config set global mon_memory_target "{{ ceph_config_mon_memory_target }}"
+    [[ -n "{{ service_ceph_config_mon_osd_cache_size }}" ]] \
+    && cephadm shell -- ceph config set global mon_osd_cache_size "{{ service_ceph_config_mon_osd_cache_size }}"
+    [[ -n "{{ service_ceph_config_mon_osd_cache_size_min }}" ]] \
+    && cephadm shell -- ceph config set global mon_osd_cache_size_min "{{ service_ceph_config_mon_osd_cache_size_min }}"
+    [[ -n "{{ service_ceph_config_mon_memory_target }}" ]] \
+    && cephadm shell -- ceph config set global mon_memory_target "{{ service_ceph_config_mon_memory_target }}"
 
     cephadm shell -- ceph cephadm set-user "{{ ansible_user }}"
   args:

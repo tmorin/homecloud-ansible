@@ -17,7 +17,7 @@ scripts/vagrant.sh c3 up
 ### Bootstrap the swarm
 
 ```bash
-ansible-playbook -i inventories/vagrant-c1/inventory.yml swarm-bootstrap.yml
+ansible-playbook -i inventories/vagrant-c2/inventory.yml swarm-bootstrap.yml
 ```
 
 ### Deploy the stacks

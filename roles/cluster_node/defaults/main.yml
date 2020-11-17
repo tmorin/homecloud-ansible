@@ -1,3 +1,4 @@
 ---
 
-apt_mark_hold_packages: []
+cluster_node_hold_packages: []
+cluster_node_do_upgrade: true

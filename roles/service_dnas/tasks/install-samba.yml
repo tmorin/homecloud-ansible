@@ -21,9 +21,9 @@
 - name: 'set samba password'
   become: true
   shell: >
-    (pdbedit --user={{ dnas_username }} 2>&1 > /dev/null)
-    || (echo '{{ dnas_username }}'; echo '{{ dnas_username }}')
-    | smbpasswd -s -a {{ dnas_username }}
+    (pdbedit --user={{ service_dnas_username }} 2>&1 > /dev/null)
+    || (echo '{{ service_dnas_username }}'; echo '{{ service_dnas_username }}')
+    | smbpasswd -s -a {{ service_dnas_username }}
   register: install_samba
 
 - name: 'restart service'

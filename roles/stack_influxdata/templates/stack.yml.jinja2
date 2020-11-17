@@ -20,24 +20,24 @@ volumes:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/influxdata_influxdb
-      monitors: {{ ceph_monitor_ips }}
-{% else %}{{ influxdata_volume_influxdb | to_json }}{% endif %}
+      monitors: {{ homecloud_ceph_monitor_ips }}
+{% else %}{{ stack_influxdata_volume_influxdb | to_json }}{% endif %}
   kapacitor: {% if homecloud_ceph_is_enabled %}
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/influxdata_kapacitor
-      monitors: {{ ceph_monitor_ips }}
-{% else %}{{ influxdata_volume_kapacitor | to_json }}{% endif %}
+      monitors: {{ homecloud_ceph_monitor_ips }}
+{% else %}{{ stack_influxdata_volume_kapacitor | to_json }}{% endif %}
   chronograf: {% if homecloud_ceph_is_enabled %}
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/influxdata_chronograf
-      monitors: {{ ceph_monitor_ips }}
-{% else %}{{ influxdata_volume_chronograf | to_json }}{% endif %}
+      monitors: {{ homecloud_ceph_monitor_ips }}
+{% else %}{{ stack_influxdata_volume_chronograf | to_json }}{% endif %}
 
 configs:
   telegraf_config:
@@ -46,20 +46,20 @@ configs:
 services:
 
   influxdb:
-    image: {{ influxdata_influxdb_image }}
+    image: {{ stack_influxdata_influxdb_image }}
     environment:
       - INFLUXDB_DB=telegraf
       - INFLUXDB_LOGGING_LEVEL=error
       - INFLUXDB_META_LOGGING_ENABLED=false
       - INFLUXDB_DATA_TRACE_LOGGING_ENABLED=false
       - INFLUXDB_ADMIN_USER=admin
-      - INFLUXDB_ADMIN_PASSWORD={{ influxdata_influxdb_admin_password }}
+      - INFLUXDB_ADMIN_PASSWORD={{ stack_influxdata_influxdb_admin_password }}
       - INFLUXDB_USER=user
-      - INFLUXDB_USER_PASSWORD={{ influxdata_influxdb_user_password }}
+      - INFLUXDB_USER_PASSWORD={{ stack_influxdata_influxdb_user_password }}
       - INFLUXDB_READ_USER=read_user
-      - INFLUXDB_READ_USER_PASSWORD={{ influxdata_influxdb_read_user_password }}
+      - INFLUXDB_READ_USER_PASSWORD={{ stack_influxdata_influxdb_read_user_password }}
       - INFLUXDB_WRITE_USER=write_user
-      - INFLUXDB_WRITE_USER_PASSWORD={{ influxdata_influxdb_write_user_password }}
+      - INFLUXDB_WRITE_USER_PASSWORD={{ stack_influxdata_influxdb_write_user_password }}
     volumes:
       - influxdb:/var/lib/influxdb
     networks:
@@ -75,12 +75,12 @@ services:
         condition: on-failure
       resources:
         limits:
-          memory: {{ influxdata_influxdb_memory }}
+          memory: {{ stack_influxdata_influxdb_memory }}
         reservations:
-          memory: {{ influxdata_influxdb_memory }}
+          memory: {{ stack_influxdata_influxdb_memory }}
 
   telegraf:
-    image: {{ influxdata_telegraf_image }}
+    image: {{ stack_stack_influxdata_kapacitor_image }}
     configs:
       - source: telegraf_config
         target: /etc/telegraf/telegraf.conf
@@ -94,16 +94,16 @@ services:
       mode: global
       resources:
         limits:
-          memory: {{ influxdata_telegraf_memory }}
+          memory: {{ stack_stack_influxdata_kapacitor_memory }}
         reservations:
-          memory: {{ influxdata_telegraf_memory }}
+          memory: {{ stack_stack_influxdata_kapacitor_memory }}
 
   kapacitor:
     image: {{ influxdata_kapacitor_image }}
     environment:
       - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
       - KAPACITOR_INFLUXDB_0_USERNAME=user
-      - KAPACITOR_INFLUXDB_0_PASSWORD={{ influxdata_influxdb_user_password }}
+      - KAPACITOR_INFLUXDB_0_PASSWORD={{ stack_influxdata_influxdb_user_password }}
       - KAPACITOR_LOGGING_LEVEL=error
     volumes:
       - kapacitor:/var/lib/kapacitor
@@ -123,11 +123,11 @@ services:
           memory: {{ influxdata_kapacitor_memory }}
 
   chronograf:
-    image: {{ influxdata_chronograf_docker }}
+    image: {{ stack_influxdata_chronograf_docker }}
     environment:
       - INFLUXDB_URL=http://influxdb:8086
       - INFLUXDB_USERNAME=user
-      - INFLUXDB_PASSWORD={{ influxdata_influxdb_user_password }}
+      - INFLUXDB_PASSWORD={{ stack_influxdata_influxdb_user_password }}
       - KAPACITOR_URL=http://kapacitor:9092
       - LOG_LEVEL=error
     volumes:
@@ -144,13 +144,13 @@ services:
         order: start-first
       resources:
         limits:
-          memory: {{ influxdata_chronograf_memory }}
+          memory: {{ stack_influxdata_chronograf_memory }}
         reservations:
-          memory: {{ influxdata_chronograf_memory }}
+          memory: {{ stack_influxdata_chronograf_memory }}
       labels:
         - "traefik.enable=true"
         # routers
-        - "traefik.http.routers.influxdata.rule=Host(`{{ influxdata_host }}`)"
+        - "traefik.http.routers.influxdata.rule=Host(`{{ stack_influxdata_host }}`)"
 {% if homecloud_is_https %}
         - "traefik.http.routers.influxdata.entrypoints=https"
         - "traefik.http.routers.influxdata.tls.certresolver=letsencrypt"

@@ -1,14 +1,14 @@
 ---
 
-dnas_username: "dnas"
-dnas_password: "{{ 'dnas' | password_hash('sha512', 'dnas') }}"
+service_dnas_username: "dnas"
+service_dnas_password: "{{ 'dnas' | password_hash('sha512', 'dnas') }}"
 
-dnas_mount_what: ""
-dnas_mount_where: "/mnt/dnas"
-dnas_mount_type: "ext4"
-dnas_mount_options: ""
-dnas_mount_name: '{{ dnas_mount_where | regex_replace("^/") | regex_replace("/", "-") }}'
+service_dnas_mount_what: ""
+service_dnas_mount_where: "/mnt/dnas"
+service_dnas_mount_type: "ext4"
+service_dnas_mount_options: ""
+service_dnas_mount_name: '{{ service_dnas_mount_where | regex_replace("^/") | regex_replace("/", "-") }}'
 
-dnas_syncthing_gui_address: "0.0.0.0:8384"
-dnas_syncthing_gui_username: "dnas"
-dnas_syncthing_gui_password: "" # https://bcrypt-generator.com/
+service_dnas_syncthing_gui_address: "0.0.0.0:8384"
+service_dnas_syncthing_gui_username: "dnas"
+service_dnas_syncthing_gui_password: "" # https://bcrypt-generator.com/

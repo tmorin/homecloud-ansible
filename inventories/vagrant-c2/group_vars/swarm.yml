@@ -1,0 +1,19 @@
+---
+
+swarm_services:
+  - service_docker
+  - service_swarm
+  - service_keepalived
+
+swarm_stacks:
+  - stack_traefik
+  - stack_portainer
+  - stack_backup
+
+service_keepalived_interface: 'eth1'
+
+stack_backup_source_volumes:
+  - portainer_console
+
+action_restore_source_volumes:
+  - portainer_console

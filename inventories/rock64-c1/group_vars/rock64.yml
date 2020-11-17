@@ -9,7 +9,7 @@ image_armbian_image_url: "https://mirrors.netix.net/armbian/dl/rock64/archive/{{
 image_armbian_working_directory: "~/tmp/homecloud-ansible-images-armbian"
 image_armbian_ssh_pub_key_path: "~/.ssh/id_rsa.pub"
 
-swarm_node_labels:
+service_swarm_node_labels:
   board: rock64
   main_block_fs: emmc
 

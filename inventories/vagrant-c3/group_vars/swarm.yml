@@ -12,15 +12,10 @@ swarm_stacks:
   - stack_calibreweb
   - stack_backup
 
-backup_source_volumes:
+service_keepalived_keepalived_interface: 'eth1'
+
+stack_backup_source_volumes:
   - calibreweb_config
 
-restore_source_volumes:
+action_restore_source_volumes:
   - calibreweb_config
-
-backup_destination_volume:
-  driver: local
-  driver_opts:
-    type: "cifs"
-    device: "//192.168.11.33/dnas"
-    o: "username=dnas,password=dnas,uid=1000,gid=1000,file_mode=0777,dir_mode=0777"

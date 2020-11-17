@@ -29,6 +29,3 @@
       import_tasks: add-osds.yml
     - name: 'create volumes'
       import_tasks: create-volumes.yml
-
-#- name: 'install ceph-common'
-#  import_tasks: install-ceph-common.yml

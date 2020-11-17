@@ -10,7 +10,7 @@
 - name: 'download cephadm'
   become: yes
   get_url:
-    url: https://raw.githubusercontent.com/ceph/ceph/v{{ ceph_release }}/src/cephadm/cephadm
+    url: https://raw.githubusercontent.com/ceph/ceph/v{{ service_ceph_release }}/src/cephadm/cephadm
     dest: /usr/local/bin
     mode: '775'
   register: install_cephadm

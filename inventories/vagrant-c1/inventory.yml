@@ -12,3 +12,7 @@ all:
       children:
         swarm_mgr: {}
         swarm_wkr: {}
+    # DNAS
+    dnas:
+      hosts:
+        c1-n1:

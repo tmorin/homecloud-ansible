@@ -234,9 +234,9 @@
 # to the drivers directory for these users to have write rights in it
 ;   write list = root, @lpadmin
 
-[{{ dnas_username }}]
+[{{ service_dnas_username }}]
    comment = The NAS
-   path = /mnt/{{ dnas_username }}
+   path = /mnt/{{ service_dnas_username }}
    browseable = yes
    guest ok = no
    read only = no

@@ -3,22 +3,22 @@
 - name: 'Add the group'
   become: yes
   group:
-    name: "{{ dnas_username }}"
+    name: "{{ service_dnas_username }}"
 
 - name: 'Add the user'
   become: yes
   user:
-    name: "{{ dnas_username }}"
-    group: "{{ dnas_username }}"
-    home: "{{ dnas_mount_where }}"
+    name: "{{ service_dnas_username }}"
+    group: "{{ service_dnas_username }}"
+    home: "{{ service_dnas_mount_where }}"
     create_home: false
-    password: "{{ dnas_password }}"
+    password: "{{ service_dnas_password }}"
 
 - name: 'chown home directory'
   become: yes
   file:
-    path: "{{ dnas_mount_where }}"
+    path: "{{ service_dnas_mount_where }}"
     state: directory
     recurse: yes
-    owner: "{{ dnas_username }}"
-    group: "{{ dnas_username }}"
+    owner: "{{ service_dnas_username }}"
+    group: "{{ service_dnas_username }}"

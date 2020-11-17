@@ -1,13 +1,12 @@
 ---
 
 ansible_host: 192.168.11.33
-ansible_ssh_private_key_file: inventories/vagrant-c3/.vagrant/machines/c3-n3/virtualbox/private_key
+ansible_ssh_private_key_file: inventories/vagrant-c3/.vagrant/machines/c3-n3/libvirt/private_key
 
 homecloud_node_ip: "{{ ansible_host }}"
 
-swarm_node_labels:
+service_swarm_node_labels:
   green:
   type: generic
 
-ceph_osd_device: '/dev/sdc' # bionic
-dnas_mount_what: '/dev/sdc' # bionic
+service_dnas_mount_what: '/dev/vdb'

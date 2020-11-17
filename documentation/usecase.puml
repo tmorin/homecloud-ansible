@@ -1,26 +1,80 @@
-@startuml use-case_network
-' configures the library
-!global $LIB_BRANCH="master"
-!global $LIB_BASE_LOCATION="https://raw.githubusercontent.com/tmorin/plantuml-libs/" + $LIB_BRANCH + "/perso"
-' loads the library
-!includeurl $LIB_BASE_LOCATION/library.puml
+@startuml overview_cluster_boards
+!global $LIB_BASE_LOCATION="https://raw.githubusercontent.com/tmorin/plantuml-libs/master/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
 
-include('elements/materials/MaterialsBoard')
-include('elements/materials/MaterialsCloud')
-include('groups/materials/MaterialsGroupNetwork')
-include('elements/materials/MaterialsRouter')
+include('homecloud/bootstrap')
+include('homecloud/Element/Board')
+include('homecloud/Element/Cloud')
+include('homecloud/Group/GroupNetwork')
+include('homecloud/Element/Router')
 
-MaterialsCloud('internet', 'internet')
-MaterialsGroupNetwork('home', 'home') {
-  MaterialsRouter('router', 'router')
-  MaterialsBoard('n1', 'node-1', 'rock64')
-  MaterialsBoard('n2', 'node-2', 'rock64')
-  MaterialsBoard('n3', 'node-3', 'pine64')
-  MaterialsBoard('n4', 'node-4', 'pine64')
+Cloud('internet', 'Internet')
+GroupNetwork('home', 'home network') {
+  Router('router', 'router')
+  Board('n1', 'hc1-n1', 'rock64')
+  Board('n2', 'hc1-n2', 'rock64')
+  Board('n3', 'hc1-n3', 'rock64')
+  Board('n4', 'hc1-n4', 'pine64')
 }
 internet - router
 router -- n1
 router -- n2
 router -- n3
 router -- n4
+@enduml
+
+@startuml overview_services
+!global $LIB_BASE_LOCATION="https://raw.githubusercontent.com/tmorin/plantuml-libs/master/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+include('homecloud/bootstrap')
+include('homecloud/Brand/Nextcloud')
+include('homecloud/Brand/Syncthing')
+include('material-4.0/Image/AutoStories')
+include('homecloud/Element/Cloud')
+include('homecloud/Group/GroupNetwork')
+include('homecloud/Element/Router')
+
+Cloud('internet', 'Internet')
+GroupNetwork('home', 'home network') {
+  Router('router', 'router')
+  Syncthing('syncthing', 'Syncthing')
+  Nextcloud('nextcloud', 'Nextcloud')
+  AutoStories('calibreweb', 'Calibreweb')
+}
+internet - router
+router -- syncthing
+router -- nextcloud
+router -- calibreweb
+@enduml
+
+@startuml overview_building_blocks
+!global $LIB_BASE_LOCATION="https://raw.githubusercontent.com/tmorin/plantuml-libs/master/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+left to right direction
+
+include('homecloud/bootstrap')
+include('homecloud/Brand/Traefik')
+include('homecloud/Brand/Ceph')
+include('homecloud/Brand/Docker')
+include('homecloud/Brand/Influxdata')
+include('homecloud/Brand/Portainer')
+include('homecloud/Element/Cloud')
+include('homecloud/Element/Router')
+include('homecloud/Group/GroupNetwork')
+include('homecloud/Group/GroupSwarm')
+
+Cloud('internet', 'internet')
+GroupNetwork('home', 'home') {
+  Router('router', 'router')
+  Ceph('ceph', 'Ceph')
+  GroupSwarm('swarm', 'swarm') {
+    Traefik('traefik', 'Traefik')
+    Influxdata('influxdata', 'Influxdata')
+  }
+}
+internet -- router
+router -- swarm
+swarm -- ceph
 @enduml

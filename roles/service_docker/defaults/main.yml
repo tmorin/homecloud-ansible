@@ -1,3 +1,6 @@
 ---
 
 homecloud_ceph_is_enabled: false
+
+service_docker_username: ''
+service_docker_password: ''

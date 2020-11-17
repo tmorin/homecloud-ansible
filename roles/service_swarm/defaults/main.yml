@@ -1,6 +1,6 @@
 ---
 
-swarm_manager_ip: "{{ hostvars[groups['swarm_mgr'][0]].homecloud_node_ip }}"
+service_swarm_manager_ip: "{{ hostvars[groups['swarm_mgr'][0]].homecloud_node_ip }}"
 
 # The value should be overridden from a host variable.
-swarm_node_labels: {}
+service_swarm_node_labels: {}

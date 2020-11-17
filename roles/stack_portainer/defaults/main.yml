@@ -1,6 +1,7 @@
 ---
 
-homecloud_ceph_is_enabled: false
+homecloud_ceph_monitor_ips: ""
+homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
 homecloud_is_https: true
 
 portainer_host: 'portainer.homecloud.swarm'

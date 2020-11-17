@@ -1,0 +1,52 @@
+os: linux
+arch: amd64
+dist: bionic
+language: generic
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: 'deb [arch=amd64] https://apt.releases.hashicorp.com bionic main'
+        key_url: 'https://apt.releases.hashicorp.com/gpg'
+      - sourceline: 'ppa:ansible/ansible'
+    packages:
+      - ansible
+      - bridge-utils
+      - dnsmasq-base
+      - ebtables
+      - libvirt-bin
+      - libvirt-dev
+      - qemu-kvm
+      - qemu-utils
+      - ruby
+      - ruby-dev
+      - vagrant
+env:
+  global:
+    - VAGRANT_DEFAULT_PROVIDER=libvirt
+  matrix:
+    - TEST_NAME=test-vagrant-c1
+    - TEST_NAME=test-vagrant-c2
+cache:
+  apt: true
+  directories:
+    - /home/travis/.ansible/collections
+    - /home/travis/.ansible/roles
+    - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian9
+    - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian10
+    - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu1804
+install:
+  # configure libvirtd
+  - sudo sed -i 's/unix_sock_group = "libvirt"/unix_sock_group = "travis"/' /etc/libvirt/libvirtd.conf
+  - sudo systemctl restart libvirtd.service
+  # configure vagrant
+  - vagrant plugin install vagrant-libvirt
+  - vagrant box add generic/debian9 --provider=libvirt --box-version 3.1.6 || true
+  - vagrant box add generic/debian10 --provider=libvirt --box-version 3.1.6 || true
+  - vagrant box add generic/ubuntu1804 --provider=libvirt --box-version 3.1.6 || true
+  # configure ansible
+  - ansible-galaxy collection install community.general || true
+  - ansible-galaxy install dev-sec.os-hardening || true
+  - ansible-galaxy install dev-sec.ssh-hardening || true
+script:
+  - scripts/$TEST_NAME.sh

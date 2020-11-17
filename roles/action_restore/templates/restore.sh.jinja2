@@ -2,11 +2,11 @@
 
 set -xeo pipefail
 
-docker pull {{ restore_image }}
+docker pull {{ action_restore_duplicity_image }}
 
 docker run --rm --env-file restore.env \
--v "{{ restore_destination_volume }}:/mnt/destination:ro" \
-{% for docker_volume in restore_source_volumes %}
+-v "{{ action_restore_destination_volume }}:/mnt/destination:ro" \
+{% for docker_volume in action_restore_source_volumes %}
 -v "{{ docker_volume }}:/mnt/{{ docker_volume }}" \
 {% endfor %}
-{{ restore_image }} execute-restore
+{{ action_restore_duplicity_image }} execute-restore

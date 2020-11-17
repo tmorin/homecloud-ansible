@@ -1,22 +1,23 @@
 ---
 
-homecloud_ceph_is_enabled: false
+homecloud_ceph_monitor_ips: ""
+homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
 homecloud_is_https: true
 
-calibreweb_host: 'calibreweb.homecloud.swarm'
+stack_calibreweb_host: 'calibreweb.homecloud.swarm'
 
 
 # volumes
 
-calibreweb_volume_config: {}
-calibreweb_volume_books: {}
+stack_calibreweb_volume_config: {}
+stack_calibreweb_volume_books: {}
 
 
 # server
 
-calibreweb_server_image: 'linuxserver/calibre-web'
-calibreweb_server_replicas: 1
-calibreweb_server_memory: '128M'
+stack_calibreweb_server_image: 'linuxserver/calibre-web'
+stack_calibreweb_server_replicas: 1
+stack_calibreweb_server_memory: '128M'
 
 # for instance: Europe/Zurich
-calibreweb_server_timezone: ''
+stack_calibreweb_server_timezone: ''

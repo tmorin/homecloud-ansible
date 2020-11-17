@@ -2,4 +2,8 @@
 
 homecloud_virtual_ip: ""
 
-keepalived_docker_image: 'thibaultmorin/keepalived:latest'
+service_keepalived_image: 'thibaultmorin/keepalived:2'
+service_keepalived_interface: ''
+service_keepalived_password: ''
+service_keepalived_router_id: ''
+service_keepalived_notify: ''

@@ -1,24 +1,8 @@
 ---
 
 - name: 'create a ceph volume'
-  when: ansible_hostname == groups.swarm_mgr[0]
   become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/{{ volume_name }}"
-  loop:
-    - calibreweb_config
-  loop_control:
-    loop_var: "volume_name"
-  register: create_ceph_volumes
-
-- name: 'create a docker volume'
-  community.general.docker_volume:
-    name: "{{ volume_name }}"
-    driver: n0r1skcom/docker-volume-cephfs
-    driver_options:
-      name: admin
-      secret: "{{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}"
-      path: "/volumes/docker/{{ volume_name }}"
-      monitors: "{{ ceph_monitor_ips }}"
   loop:
     - calibreweb_config
   loop_control:

@@ -14,9 +14,9 @@ volumes:
       name: admin
       secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/calibreweb_config
-      monitors: {{ ceph_monitor_ips }}
-{% else %}{{ calibreweb_volume_config | to_json }}{% endif %}
-  books: {{ calibreweb_volume_books | to_json }}
+      monitors: {{ homecloud_ceph_monitor_ips }}
+{% else %}{{ stack_calibreweb_volume_config | to_json }}{% endif %}
+  books: {{ stack_calibreweb_volume_books | to_json }}
 
 networks:
   traefik_public:
@@ -25,7 +25,7 @@ networks:
 services:
 
   server:
-    image: {{ calibreweb_server_image }}
+    image: {{ stack_calibreweb_server_image }}
     env_file:
       - calibreweb.env
     volumes:
@@ -36,7 +36,7 @@ services:
     logging: *default-logging
     deploy:
       mode: replicated
-      replicas: {{ calibreweb_server_replicas }}
+      replicas: {{ stack_calibreweb_server_replicas }}
       restart_policy:
         condition: on-failure
       update_config:
@@ -45,13 +45,13 @@ services:
         order: stop-first
       resources:
         limits:
-          memory: {{ calibreweb_server_memory }}
+          memory: {{ stack_calibreweb_server_memory }}
         reservations:
-          memory: {{ calibreweb_server_memory }}
+          memory: {{ stack_calibreweb_server_memory }}
       labels:
         - "traefik.enable=true"
         # routers
-        - "traefik.http.routers.calibreweb.rule=Host(`{{ calibreweb_host }}`)"
+        - "traefik.http.routers.calibreweb.rule=Host(`{{ stack_calibreweb_host }}`)"
 {% if homecloud_is_https %}
         - "traefik.http.routers.calibreweb.entrypoints=https"
         - "traefik.http.routers.calibreweb.tls.certresolver=letsencrypt"

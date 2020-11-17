@@ -11,52 +11,52 @@
 - name: 'enable service'
   become: true
   systemd:
-    name: syncthing@{{ dnas_username }}.service
+    name: syncthing@{{ service_dnas_username }}.service
     daemon_reload: yes
     enabled: yes
   register: install_syncthing
 
 - name: 'start service'
   become: true
-  shell: "systemctl start syncthing@{{ dnas_username }}.service"
+  shell: "systemctl start syncthing@{{ service_dnas_username }}.service"
   register: install_syncthing
 
 - name: 'stop service'
   become: true
-  shell: "systemctl stop syncthing@{{ dnas_username }}.service"
+  shell: "systemctl stop syncthing@{{ service_dnas_username }}.service"
   register: install_syncthing
 
 - name: 'remove the Sync folder'
   become: yes
   community.general.xml:
-    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/folder[@id='default']
     state: absent
 
 - name: 'set address'
   become: yes
   community.general.xml:
-    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/address
-    value: "{{ dnas_syncthing_gui_address }}"
+    value: "{{ service_dnas_syncthing_gui_address }}"
 
 - name: 'set user'
   become: yes
   community.general.xml:
-    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/user
-    value: "{{ dnas_syncthing_gui_username }}"
+    value: "{{ service_dnas_syncthing_gui_username }}"
 
 - name: 'set password'
   become: yes
   community.general.xml:
-    path: "{{ dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/password
-    value: "{{ dnas_syncthing_gui_password }}"
+    value: "{{ service_dnas_syncthing_gui_password }}"
 
 - name: 'restart service'
   become: true
-  shell: "systemctl restart syncthing@{{ dnas_username }}.service"
+  shell: "systemctl restart syncthing@{{ service_dnas_username }}.service"
   register: install_syncthing
 
 - name: 'uninstall dependencies'

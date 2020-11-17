@@ -1,5 +1,7 @@
 # homecloud
 
+[![Build Status](https://travis-ci.org/tmorin/homecloud-ansible.svg?branch=master)](https://travis-ci.org/tmorin/homecloud-ansible)
+
 > `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home based on Docker Swarm, Ceph and Syncthing.
 
 ## Overview
@@ -142,6 +144,14 @@ Roles deploying ready-to-use Docker Swarm stacks:
 
 ## Ansible Playbooks
 
+### Hardening
+
+The playbook [cluster-hardening.yml](playbooks/cluster-hardening.yml) apply hardening recommendations on the operating system and SSH.
+The activities are managed by the Ansible collections [dev-sec.os-hardening] and [dev-sec.ssh-hardening].
+
+[dev-sec.os-hardening]: https://galaxy.ansible.com/dev-sec/os-hardening
+[dev-sec.ssh-hardening]: https://galaxy.ansible.com/dev-sec/ssh-hardening
+
 ### Bootstrap the cluster
 
 The playbook [cluster-bootstrap.yml](playbooks/cluster-bootstrap.yml) bootstraps the cluster, i.e. the Docker Swarm instance, the Ceph cluster, and the Decentralized NAS.
@@ -158,32 +168,24 @@ The playbook [stacks-restore-backups.yml](playbooks/stacks-restore-backup.yml) r
 
 Several examples are available in the [inventories](./inventories) directory.
 
-| |[vagrant-c1]|[vagrant-c3]|
-|---|---|---|
-|nodes|1|3|
-|https|no|no|
-|keepalived|no|yes|
-|ceph|no|yes|
-|portainer|yes|yes|
-|influxdata|yes|no|
-|nextcloud|yes|yes|
-|calibreweb|yes|yes|
-|backup|yes|yes|
-|restore|no|yes|
-|dans|no|yes|
+| |[vagrant-c1]|[vagrant-c2]|[vagrant-c3]|
+|---|---|---|---|
+|nodes|1|2|3|
+|https|no|no|no|
+|keepalived|no|yes|yes|
+|ceph|no|yes|yes|
+|portainer|yes|yes|yes|
+|influxdata|yes|no|no|
+|nextcloud|yes|no|yes|
+|calibreweb|yes|no|yes|
+|backup|yes|yes|yes|
+|restore|no|yes|yes|
+|dans|no|yes|yes|
+
+The examples rely on [vagrant] and [vagrant-libvirt].
 
 [vagrant-c1]: inventories/vagrant-c1/README.md
+[vagrant-c2]: inventories/vagrant-c2/README.md
 [vagrant-c3]: inventories/vagrant-c3/README.md
-
-## Development
-
-Install Vagrant
-```shell script
-apt-get --yes build-dep vagrant ruby-libvirt
-vagrant plugin install vagrant-libvirt
-```
-
-Install libvirt
-```shell script
-apt-get --yes install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev
-```
+[vagrant]: https://www.vagrantup.com/
+[vagrant-libvirt]: https://github.com/vagrant-libvirt/vagrant-libvirt

@@ -2,9 +2,9 @@
 
 - hosts: all
   vars:
-    ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, ['homecloud_node_ip']) | list }}"
-    ceph_monitor_ips: "{{ ceph_monitor_ips_as_array | join(',') }}"
-    homecloud_ceph_is_enabled: "{{ ceph_monitor_ips | length > 0 }}"
+    homecloud_ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, ['homecloud_node_ip']) | list }}"
+    homecloud_ceph_monitor_ips: "{{ homecloud_ceph_monitor_ips_as_array | join(',') }}"
+    homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
   tasks:
     - include_role:
         name: "action_restore"

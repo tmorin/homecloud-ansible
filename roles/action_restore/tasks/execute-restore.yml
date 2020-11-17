@@ -1,7 +1,7 @@
 ---
 
 - name: 'clear stacks'
-  when: restore_remove_stacks
+  when: action_restore_do_remove_stacks
   shell: |
     set -e -o pipefail
     stacks=$(docker stack ls --format {{'{{'}}.Name{{'}}'}})

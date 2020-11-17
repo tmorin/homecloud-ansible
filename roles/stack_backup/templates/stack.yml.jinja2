@@ -8,21 +8,27 @@ x-logging:
   driver: json-file
 
 volumes:
-  destination: {{ backup_destination_volume | to_json }}
-{% for docker_volume in backup_source_volumes %}
-  {{ docker_volume }}:
-    external: true
+  destination: {{ homecloud_destination_volume_definition | to_json }}
+{% for docker_volume in stack_backup_source_volumes %}
+  {{ docker_volume }}:{% if homecloud_ceph_is_enabled %}
+    driver: n0r1skcom/docker-volume-cephfs
+    driver_opts:
+      name: admin
+      secret: "{{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}"
+      path: "/volumes/docker/{{ docker_volume }}"
+      monitors: "{{ homecloud_ceph_monitor_ips }}"{% else %}
+    external: true{% endif %}
 {% endfor %}
-services:
 
+services:
   duplicity:
-    image: {{ backup_image }}
+    image: {{ stack_backup_image }}
     hostname: backup
     env_file:
       - duplicity.env
     volumes:
       - destination:/mnt/destination
-{% for docker_volume in backup_source_volumes %}
+{% for docker_volume in stack_backup_source_volumes %}
       - {{ docker_volume }}:/mnt/{{ docker_volume }}:ro
 {% endfor %}
     logging: *default-logging
@@ -31,6 +37,6 @@ services:
       replicas: 1
       resources:
         limits:
-          memory: {{ backup_memory }}
+          memory: {{ stack_backup_memory }}
         reservations:
-          memory: {{ backup_memory }}
+          memory: {{ stack_backup_memory }}

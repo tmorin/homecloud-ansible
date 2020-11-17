@@ -44,6 +44,12 @@
 - name: "reset ssh connection"
   meta: reset_connection
 
+- name: log into DockerHub
+  when: service_docker_username | length > 0
+  community.general.docker_login:
+    username: "{{ service_docker_username }}"
+    password: "{{ service_docker_password }}"
+
 - name: 'install docker plugin n0r1skcom/docker-volume-cephfs'
   become: yes
   when: homecloud_ceph_is_enabled

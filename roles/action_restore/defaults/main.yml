@@ -1,11 +1,18 @@
 ---
 
-homecloud_ceph_is_enabled: false
+homecloud_ceph_monitor_ips: ""
+homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
+homecloud_duplicity_passphrase: "passphrase"
+homecloud_destination_volume_definition:
+  driver: local
+  driver_opts:
+    o: bind
+    type: none
+    device: /tmp
 
-backup_destination_volume: {}
+action_restore_duplicity_image: "thibaultmorin/duplicity-cron:0.8.17"
 
-restore_image: "thibaultmorin/duplicity-cron:0.8.17"
-restore_passphrase: "passphrase"
-restore_source_volumes: []
-restore_destination_volume: "backup_destination"
-restore_remove_stacks: false
+action_restore_source_volumes: []
+action_restore_destination_volume: 'action_restore_destination'
+
+action_restore_do_remove_stacks: false

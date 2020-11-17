@@ -1,5 +1,7 @@
 .idea/
 .vagrant/
+.env
+extra-vars.json
 venv/
 *.log
 *.tar.gz

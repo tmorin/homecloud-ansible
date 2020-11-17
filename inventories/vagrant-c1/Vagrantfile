@@ -2,19 +2,34 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  # https://docs.vagrantup.com.
-#   config.vm.box = "debian/buster64"
-  config.vm.box = "ubuntu/bionic64"
+  # common
+  config.vm.provider "libvirt" do |libvirt|
+    libvirt.memory = 4096
+    libvirt.cpus = 2
+  end
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.memory = "4096"
     vb.cpus = "2"
   end
-  config.vm.provision "shell", inline: <<-SHELL
-    apt-get update
-  SHELL
+  # c1-n1
   config.vm.define "c1-n1" do |machine|
+    machine.vm.box = "generic/ubuntu1804"
     machine.vm.hostname = "c1-n1"
-    machine.vm.network "private_network", ip: "192.168.11.11"
+    machine.vm.network :private_network, :ip => "192.168.11.11", :libvirt__domain_name => "homecloud.local"
+    machine.vm.provider "libvirt" do |libvirt|
+      libvirt.storage :file, :size => '5G'
+    end
+    machine.vm.provider "virtualbox" do |vb|
+      vdi = '../../tmp/c1-n1.vdi'
+      unless File.exist?(vdi)
+        vb.customize ['createhd', '--filename', vdi, '--variant', 'Fixed', '--size', 5 * 1024]
+      end
+      vb.customize ['storageattach', :id,  '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', vdi]
+    end
+    machine.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      mkfs.ext4 /dev/vdb
+    SHELL
   end
 end

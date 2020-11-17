@@ -1,32 +1,33 @@
 ---
 
-homecloud_ceph_is_enabled: false
+homecloud_ceph_monitor_ips: ""
+homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
 homecloud_is_https: true
 
-influxdata_host: 'influxdata.homecloud.swarm'
+stack_influxdata_host: 'influxdata.homecloud.swarm'
 
 
 # volumes
 
-influxdata_volume_influxdb: {}
-influxdata_volume_kapacitor: {}
-influxdata_volume_chronograf: {}
+stack_influxdata_volume_influxdb: {}
+stack_influxdata_volume_kapacitor: {}
+stack_influxdata_volume_chronograf: {}
 
 
 # influxdb
 
-influxdata_influxdb_image: "influxdb"
-influxdata_influxdb_memory: "512M"
-influxdata_influxdb_admin_password: "admin_password"
-influxdata_influxdb_user_password: "user_password"
-influxdata_influxdb_read_user_password: "read_user_password"
-influxdata_influxdb_write_user_password: "write_user_password"
+stack_influxdata_influxdb_image: "influxdb"
+stack_influxdata_influxdb_memory: "512M"
+stack_influxdata_influxdb_admin_password: "admin_password"
+stack_influxdata_influxdb_user_password: "user_password"
+stack_influxdata_influxdb_read_user_password: "read_user_password"
+stack_influxdata_influxdb_write_user_password: "write_user_password"
 
 
 # telegraf
 
-influxdata_telegraf_image: "telegraf"
-influxdata_telegraf_memory: "64M"
+stack_stack_influxdata_kapacitor_image: "telegraf"
+stack_stack_influxdata_kapacitor_memory: "64M"
 
 
 # kapacitor
@@ -37,5 +38,5 @@ influxdata_kapacitor_memory: "64M"
 
 # chronograf
 
-influxdata_chronograf_docker: "chronograf"
-influxdata_chronograf_memory: "64M"
+stack_influxdata_chronograf_docker: "chronograf"
+stack_influxdata_chronograf_memory: "64M"

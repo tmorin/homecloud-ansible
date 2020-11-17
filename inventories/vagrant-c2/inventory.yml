@@ -1,0 +1,34 @@
+---
+
+all:
+  children:
+    # SWARM
+    swarm_mgr:
+      hosts:
+        c2-n1:
+    swarm_wkr:
+      hosts:
+        c2-n2:
+    swarm:
+      children:
+        swarm_mgr: {}
+        swarm_wkr: {}
+    # CEPH
+    ceph_mon:
+      hosts:
+        c2-n2:
+    ceph_mgr:
+      hosts:
+        c2-n1:
+    ceph_osd:
+      hosts:
+        c2-n2:
+    ceph:
+      children:
+        ceph_mon: {}
+        ceph_mgr: {}
+        ceph_osd: {}
+    # DNAS
+    dnas:
+      hosts:
+        c2-n1:

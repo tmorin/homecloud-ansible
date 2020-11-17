@@ -1,64 +1,69 @@
 ---
 
-homecloud_ceph_is_enabled: false
+homecloud_ceph_monitor_ips: ""
+homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
 homecloud_is_https: true
+homecloud_destination_volume_definition:
+  driver: local
+  driver_opts:
+    o: bind
+    type: none
+    device: /tmp
 
-backup_destination_volume: {}
-
-nextcloud_host: 'nextcloud.homecloud.swarm'
+stack_nextcloud_host: 'nextcloud.homecloud.swarm'
 
 # volumes
 
-nextcloud_volume_server: {}
-nextcloud_volume_database: {}
-nextcloud_volumes: {}
+stack_nextcloud_volume_server: {}
+stack_nextcloud_volume_database: {}
+stack_nextcloud_volumes: {}
 
 
 # database
 
-nextcloud_database_image: 'mariadb:10.4'
-nextcloud_database_memory: '256M'
-nextcloud_database_root_password: 'root_password'
-nextcloud_database_nextcoud_password: 'nextcloud_password'
+stack_nextcloud_database_image: 'mariadb:10.4'
+stack_nextcloud_database_memory: '256M'
+stack_nextcloud_database_root_password: 'root_password'
+stack_nextcloud_database_nextcoud_password: 'nextcloud_password'
 
 
 # backup
 
-nextcloud_backup_image: "thibaultmorin/duplicity-mariadb:0.8.17"
-nextcloud_backup_passphrase: "passphrase"
-nextcloud_backup_memory: "64M"
+stack_nextcloud_backup_image: "thibaultmorin/duplicity-mariadb:0.8.17"
+stack_nextcloud_backup_passphrase: "passphrase"
+stack_nextcloud_backup_memory: "64M"
 
 
 # cache
 
-nextcloud_cache_image: 'redis:5-alpine'
-nextcloud_cache_memory: '48M'
+stack_nextcloud_cache_image: 'redis:5-alpine'
+stack_nextcloud_cache_memory: '48M'
 
 
 # server
 
-nextcloud_server_image: 'nextcloud:stable'
-nextcloud_server_replicas: 1
-nextcloud_server_memory: '512M'
-nextcloud_cron_memory: '128M'
-nextcloud_server_admin_user: 'admin'
-nextcloud_server_admin_password: 'admin_password'
+stack_nextcloud_server_image: 'nextcloud:stable'
+stack_nextcloud_server_replicas: 1
+stack_nextcloud_server_memory: '512M'
+stack_nextcloud_cron_memory: '128M'
+stack_nextcloud_server_admin_user: 'admin'
+stack_nextcloud_server_admin_password: 'admin_password'
 
-nextcloud_server_trusted_domains: 'nextcloud.homecloud.swarm'
+stack_nextcloud_server_trusted_domains: 'nextcloud.homecloud.swarm'
 
 # (not set by default) hostname of the SMTP server
-nextcloud_server_smtp_host: ''
+stack_nextcloud_server_smtp_host: ''
 # (empty by default) set to 'ssl' to use SSL on the connection.
-nextcloud_server_smtp_secure: 'ssl'
+stack_nextcloud_server_smtp_secure: 'ssl'
 # (default: 465 for SSL and 25 for non-secure connection) Optional port for SMTP connection.
-nextcloud_server_smtp_port: ''
+stack_nextcloud_server_smtp_port: ''
 # (default: LOGIN) The method used for authentication.
-nextcloud_server_smtp_authtype: ''
+stack_nextcloud_server_smtp_authtype: ''
 # (empty by default) Username for the authentication.
-nextcloud_server_smtp_name:
+stack_nextcloud_server_smtp_name:
 # (empty by default) Password for the authentication.
-nextcloud_server_smtp_password:
+stack_nextcloud_server_smtp_password:
 # (not set by default) Use this address for the 'from' field in the mail envelopes sent by Nextcloud.
-nextcloud_server_mail_from: ''
+stack_nextcloud_server_mail_from: ''
 # (not set by default) Set a different domain for the emails than the domain where Nextcloud is installed.
-nextcloud_server_mail_domain: ''
+stack_nextcloud_server_mail_domain: ''

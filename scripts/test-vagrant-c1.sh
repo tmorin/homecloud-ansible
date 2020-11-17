@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export CLUSTER="c1"
-export homecloud_IP="192.168.11.11"
+export HOMECLOUD_IP="192.168.11.11"
 
 . $(pwd)/scripts/include.sh
 
@@ -16,12 +16,17 @@ waitForService "portainer" "portainer_console.1"
 waitForService "influxdata" "influxdata_influxdb.1"
 waitForService "influxdata" "influxdata_chronograf.1"
 waitForService "calibreweb" "calibreweb_server.1"
+waitForService "backup" "backup_duplicity.1"
 waitForService "nextcloud" "nextcloud_server.1"
 waitForService "nextcloud" "nextcloud_database.1"
 
+waitForLogs "traefik_server" "Configuration loaded from flags."
+waitForLogs "portainer_console" "server: Listening on 0.0.0.0:8000"
+waitForLogs "backup_duplicity" "INFO:setup-cron:process backup-PORTAINER-CONSOLE"
 waitForLogs "nextcloud_server" "apache2 -D FOREGROUND"
 
-vagrant.sh ${CLUSTER} ssh -c 'docker stack ls --format "{{.Name}} {{.Services}}" || true' ${CLUSTER}-n1 &> /tmp/test
+vagrant.sh ${CLUSTER} ssh -c 'docker stack ls --format "{{.Name}} {{.Services}}"' ${CLUSTER}-n1 &>/tmp/test
+IS "$?" == "0"
 RUNS cat /tmp/test
 GREP "backup 1"
 GREP "calibreweb 1"
