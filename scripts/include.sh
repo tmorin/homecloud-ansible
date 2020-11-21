@@ -40,9 +40,9 @@ if [[ -z "${HOMECLOUD_IP}" ]]; then
 fi
 
 if [[ -n "${DOCKER_USERNAME}" ]]; then
-  echo "{ \"service_docker_username\":\"$DOCKER_USERNAME\", \"service_docker_password\":\"$DOCKER_PASSWORD\" }" >test/extra-vars.json
+  echo "{ \"service_docker_username\":\"$DOCKER_USERNAME\", \"service_docker_password\":\"$DOCKER_PASSWORD\" }" >tmp/extra-vars.json
 else
-  echo "{}" >test/extra-vars.json
+  echo "{}" >tmp/extra-vars.json
 fi
 
 function bootstrapVagrant() {
@@ -65,7 +65,7 @@ function checkVM() {
 function playbook() {
   local book=$1
   ansible-playbook \
-    --extra-vars "@test/extra-vars.json" \
+    --extra-vars "@tmp/extra-vars.json" \
     -i "inventories/vagrant-${CLUSTER}/inventory.yml" \
     "playbooks/${book}"
   IS "$?" == "0"
