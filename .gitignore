@@ -1,7 +1,8 @@
-.idea/
-.vagrant/
 .env
 extra-vars.json
-venv/
+.gdiag
+.idea/
 *.log
 *.tar.gz
+.vagrant/
+node_modules/

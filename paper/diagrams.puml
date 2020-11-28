@@ -1,0 +1,204 @@
+@startuml cluster_layout
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+include('homecloud/bootstrap')
+include('homecloud/Element/Board')
+include('homecloud/Element/Cloud')
+include('homecloud/Group/GroupNetwork')
+include('homecloud/Element/Router')
+
+Cloud('internet', 'Internet')
+GroupNetwork('home', 'home network') {
+  Router('router', 'router')
+  Board('n1', 'hc1-n1', 'ROCK64')
+  Board('n2', 'hc1-n2', 'ROCK64')
+  Board('n3', 'hc1-n3', 'ROCK64')
+  Board('n4', 'hc1-n4', 'A64-LTS')
+}
+internet - router
+router -- n1
+router -- n2
+router -- n3
+router -- n4
+@enduml
+
+@startuml user_services_layout
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+include('homecloud/bootstrap')
+include('homecloud/Brand/Nextcloud')
+include('homecloud/Brand/Syncthing')
+include('homecloud/Element/Cloud')
+include('homecloud/Element/Share')
+include('homecloud/Brand/Calibreweb')
+include('homecloud/Group/GroupNetwork')
+include('homecloud/Element/Router')
+
+Cloud('internet', 'Internet')
+GroupNetwork('home', 'home network') {
+  Router('router', 'router')
+  Syncthing('syncthing', 'Syncthing')
+  Share('samba', 'Samba')
+  Nextcloud('nextcloud', 'Nextcloud')
+  Calibreweb('calibreweb', 'calibre-web')
+}
+internet - router
+router -- syncthing
+router -- samba
+router -- nextcloud
+router -- calibreweb
+@enduml
+
+@startuml user_services_and_building_blocks
+skinparam monochrome true
+skinparam DefaultTextAlignment center
+skinparam WrapWidth 125
+skinparam MaxMessageSize 125
+package homecloud {
+  file user_services [
+    <b>User Services
+    --
+    Technologies solving user concerns.
+  ]
+  file building_blocks [
+    <b>Building Blocks
+    --
+    Technologies solving technical concerns.
+  ]
+}
+user_services <- building_blocks : support the execution of
+@enduml
+
+@startuml building_blocks_keepalived
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+skinparam RectangleShadowing false
+skinparam RectangleBorderStyle dashed
+include('homecloud/bootstrap')
+include('material-4.0/Maps/Place')
+include('homecloud/Element/Board')
+include('homecloud/Element/Router')
+include('homecloud/Element/Container')
+include('homecloud/Brand/Keepalived')
+include('homecloud/Brand/Docker')
+include('homecloud/Brand/Ceph')
+rectangle virtual_server as "Virtual Server" {
+  BoardGroup('board_n1', 'hc1-n1') {
+    DockerGroup('docker_n1', 'Docker Engine') {
+      ContainerGroup('keepalived_container_1') {
+        Keepalived('keepalived_1', 'Keepalived')
+      }
+    }
+  }
+  BoardGroup('board_n2', 'hc1-n2') {
+    DockerGroup('docker_n2', 'Docker Engine') {
+      ContainerGroup('keepalived_container_2') {
+        Keepalived('keepalived_2', 'Keepalived')
+      }
+    }
+  }
+  BoardGroup('board_n3', 'hc1-n3') {
+    DockerGroup('docker_n3', 'Docker Engine') {
+      ContainerGroup('keepalived_container_3') {
+        Keepalived('keepalived_3', 'Keepalived')
+      }
+    }
+  }
+  BoardGroup('board_n4', 'hc1-n4') {
+    DockerGroup('docker_n4', 'Docker Engine') {
+      ContainerGroup('keepalived_container_4') {
+        Keepalived('keepalived_4', 'Keepalived')
+      }
+    }
+  }
+}
+Place('virtual_ip', 'Virtual IP')
+Router('router', 'Router')
+keepalived_1 --0 virtual_ip : Relationship('exposes')
+keepalived_2 --0 virtual_ip : Relationship('exposes')
+keepalived_3 --0 virtual_ip : Relationship('exposes')
+keepalived_4 --0 virtual_ip : Relationship('exposes')
+router -up-( virtual_ip : Relationship('routes to')
+@enduml
+
+@startuml building_blocks_ceph
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud/bootstrap')
+include('homecloud/Brand/Docker')
+include('homecloud/Element/SdCard')
+include('homecloud/Element/Container')
+include('homecloud/Brand/Ceph')
+DockerGroup('docker_engine', 'Docker Engine') {
+  Ceph('ceph', 'Ceph', 'set of containers')
+}
+SdCard('sd_card', 'Storage', 'Block Device')
+Docker('docker_swarm', 'Docker Swarm')
+docker_swarm -> ceph : Relationship('delegates the volume management to')
+ceph -> sd_card : Relationship('read/write data on')
+@enduml
+
+@startuml stack_traefik
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud/bootstrap')
+include('homecloud/Element/Router')
+include('homecloud/Element/Stack')
+include('homecloud/Element/Container')
+include('homecloud/Brand/Docker')
+include('homecloud/Brand/Traefik')
+DockerGroup('docker_swarm', 'Docker Swarm') {
+  StackGroup('traefik_stack', 'Traefik', 'Docker Stack') {
+    ContainerGroup('traefik_container', 'Traefik', 'Container') {
+      Traefik('traefik', 'Traefik', 'Application')
+    }
+  }
+  Stack('portainer', 'Portainer', 'Docker Stack')
+  Stack('influxdata', 'Influxdata', 'Docker Stack')
+  Stack('nextcloud', 'Nextcloud', 'Docker Stack')
+  Stack('calibreweb', 'calibre-web', 'Docker Stack')
+}
+Router('router', 'Router')
+router -> traefik : Relationship('routes traffic to')
+traefik --> portainer
+traefik --> influxdata
+traefik --> nextcloud
+traefik --> calibreweb
+@enduml
+
+@startwbs components_hierarchy
+skinparam monochrome true
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud/Brand/Docker')
+include('homecloud/Brand/Traefik')
+include('homecloud/Brand/Ceph')
+include('homecloud/Brand/Influxdata')
+include('homecloud/Brand/Portainer')
+include('homecloud/Brand/Nextcloud')
+include('homecloud/Brand/Syncthing')
+include('homecloud/Brand/Calibreweb')
+include('homecloud/Brand/Keepalived')
+include('homecloud/Element/Share')
+include('homecloud/Element/Home')
+* <$HomeMd> homecloud
+** <$DockerMd> Docker Engine
+*** <$KeepalivedMd> Keepalived
+*** <$CephMd> Ceph
+** <$DockerMd> Docker Swarm
+*** <$TraefikMd> Traefik
+*** <$InfluxdataMd> Influxdata
+*** <$PortainerMd> Portainer
+*** <$NextcloudMd> Nextcloud
+*** <$CalibrewebMd> calibre-web
+** <$SyncthingMd> Syncthing
+** <$ShareMd> Samba
+@endwbs
