@@ -14,8 +14,8 @@ swarm_stacks:
 
 service_keepalived_keepalived_interface: 'eth1'
 
-stack_backup_source_volumes:
+stack_backup_source_volume_names:
   - calibreweb_config
 
-action_restore_source_volumes:
+action_restore_volume_names_to_restore:
   - calibreweb_config

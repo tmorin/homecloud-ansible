@@ -12,7 +12,7 @@ swarm_stacks:
   - stack_calibreweb
   - stack_backup
 
-stack_backup_source_volumes:
+stack_backup_source_volume_names:
   - calibreweb_config
   - influxdata_influxdb
   - influxdata_kapacitor

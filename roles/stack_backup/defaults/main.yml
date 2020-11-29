@@ -3,7 +3,7 @@
 homecloud_ceph_monitor_ips: ""
 homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
 homecloud_duplicity_passphrase: "passphrase"
-homecloud_destination_volume_definition:
+homecloud_backup_volume:
   driver: local
   driver_opts:
     o: bind
@@ -13,4 +13,4 @@ homecloud_destination_volume_definition:
 stack_backup_image: "thibaultmorin/duplicity-cron:0.8.17"
 stack_backup_memory: "128M"
 
-stack_backup_source_volumes: []
+stack_backup_source_volume_names: []

@@ -24,7 +24,7 @@ volumes:
       path: /volumes/docker/nextcloud_database
       monitors: {{ homecloud_ceph_monitor_ips }}
 {% else %}{{ stack_nextcloud_volume_database | to_json }}{% endif %}
-  backup: {{ homecloud_destination_volume_definition | to_json }}
+  backup: {{ homecloud_backup_volume | to_json }}
 {% for key in stack_nextcloud_volumes %}
   {{ key }}: {{ stack_nextcloud_volumes[key] | to_json }}
 {% endfor %}

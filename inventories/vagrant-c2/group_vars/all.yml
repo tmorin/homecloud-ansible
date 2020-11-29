@@ -5,7 +5,7 @@ ansible_user: vagrant
 homecloud_virtual_ip: '192.168.11.20'
 homecloud_is_https: false
 
-homecloud_destination_volume_definition:
+homecloud_backup_volume:
   driver: local
   driver_opts:
     type: "cifs"

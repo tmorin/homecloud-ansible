@@ -12,7 +12,7 @@ swarm_stacks:
   - stack_calibreweb
   - stack_backup
 
-stack_backup_source_volumes:
+stack_backup_source_volume_names:
   - calibreweb_config
   - influxdata_influxdb
   - influxdata_kapacitor
@@ -30,7 +30,7 @@ stack_nextcloud_volumes:
       type: none
       device: /mnt
 
-homecloud_destination_volume_definition:
+homecloud_backup_volume:
   driver: local
   driver_opts:
     o: bind

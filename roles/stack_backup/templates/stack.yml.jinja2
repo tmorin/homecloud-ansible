@@ -8,8 +8,8 @@ x-logging:
   driver: json-file
 
 volumes:
-  destination: {{ homecloud_destination_volume_definition | to_json }}
-{% for docker_volume in stack_backup_source_volumes %}
+  destination: {{ homecloud_backup_volume | to_json }}
+{% for docker_volume in stack_backup_source_volume_names %}
   {{ docker_volume }}:{% if homecloud_ceph_is_enabled %}
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
@@ -28,7 +28,7 @@ services:
       - duplicity.env
     volumes:
       - destination:/mnt/destination
-{% for docker_volume in stack_backup_source_volumes %}
+{% for docker_volume in stack_backup_source_volume_names %}
       - {{ docker_volume }}:/mnt/{{ docker_volume }}:ro
 {% endfor %}
     logging: *default-logging

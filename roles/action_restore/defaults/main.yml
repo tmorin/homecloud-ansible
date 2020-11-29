@@ -3,7 +3,7 @@
 homecloud_ceph_monitor_ips: ""
 homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
 homecloud_duplicity_passphrase: "passphrase"
-homecloud_destination_volume_definition:
+homecloud_backup_volume:
   driver: local
   driver_opts:
     o: bind
@@ -12,7 +12,7 @@ homecloud_destination_volume_definition:
 
 action_restore_duplicity_image: "thibaultmorin/duplicity-cron:0.8.17"
 
-action_restore_source_volumes: []
-action_restore_destination_volume: 'action_restore_destination'
+action_restore_volume_names_to_restore: []
+action_restore_backup_volume_name: 'action_from_destination'
 
 action_restore_do_remove_stacks: false

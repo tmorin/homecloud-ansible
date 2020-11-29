@@ -2,7 +2,7 @@
 
 - name: "create the volume containing backups"
   docker_volume:
-    name: "{{ action_restore_destination_volume }}"
-    driver: "{{ homecloud_destination_volume_definition.driver }}"
-    driver_options: "{{ homecloud_destination_volume_definition.driver_opts | to_json }}"
+    name: "{{ action_restore_backup_volume_name }}"
+    driver: "{{ homecloud_backup_volume.driver }}"
+    driver_options: "{{ homecloud_backup_volume.driver_opts | to_json }}"
   register: create_backup_volume

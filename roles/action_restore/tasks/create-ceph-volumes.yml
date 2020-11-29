@@ -3,7 +3,7 @@
 - name: 'create a ceph volume'
   become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker/{{ volume_name }}"
-  loop: "{{ action_restore_source_volumes | default([]) }}"
+  loop: "{{ action_restore_volume_names_to_restore | default([]) }}"
   loop_control:
     loop_var: "volume_name"
   register: create_ceph_volumes
@@ -17,7 +17,7 @@
       secret: "{{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}"
       path: "/volumes/docker/{{ volume_name }}"
       monitors: "{{ homecloud_ceph_monitor_ips }}"
-  loop: "{{ action_restore_source_volumes | default([]) }}"
+  loop: "{{ action_restore_volume_names_to_restore | default([]) }}"
   loop_control:
     loop_var: "volume_name"
   register: create_ceph_volumes
