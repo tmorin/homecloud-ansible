@@ -37,12 +37,14 @@ include('homecloud/Element/Share')
 include('homecloud/Brand/Calibreweb')
 include('homecloud/Group/GroupNetwork')
 include('homecloud/Element/Router')
+include('homecloud/Element/Usb')
 
 Cloud('internet', 'Internet')
 GroupNetwork('home', 'home network') {
   Router('router', 'router')
   Syncthing('syncthing', 'Syncthing')
   Share('samba', 'Samba')
+  Usb('ssd', 'SSD Disk')
   Nextcloud('nextcloud', 'Nextcloud')
   Calibreweb('calibreweb', 'calibre-web')
 }
@@ -51,6 +53,8 @@ router -- syncthing
 router -- samba
 router -- nextcloud
 router -- calibreweb
+syncthing --> ssd
+samba --> ssd
 @enduml
 
 @startuml user_services_and_building_blocks
@@ -189,11 +193,13 @@ include('homecloud/Brand/Calibreweb')
 include('homecloud/Brand/Keepalived')
 include('homecloud/Element/Share')
 include('homecloud/Element/Home')
+include('homecloud/Element/Sync')
 * <$HomeMd> homecloud
 ** <$DockerMd> Docker Engine
 *** <$KeepalivedMd> Keepalived
 *** <$CephMd> Ceph
 ** <$DockerMd> Docker Swarm
+*** <$SyncMd> Backup
 *** <$TraefikMd> Traefik
 *** <$InfluxdataMd> Influxdata
 *** <$PortainerMd> Portainer

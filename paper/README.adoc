@@ -11,9 +11,10 @@
 
 == Introduction
 
-`homecloud` aims to provide a _cloud like_ <<cld>> at home, primarily hosted on ARM boards like Raspberry Pi and based on Docker Swarm, Ceph and Syncthing.
+`homecloud` aims to provide a <<g_cloud_computing, cloud like environment>>, especially an <<g_internal_cloud, internal cloud>>, at home. The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Docker Swarm, Ceph or Syncthing.
 
-The main artifact is an Ansible <<ans>> collection designed to bootstrap a ready to use _cloud like_ environment.
+The main artifact is an Ansible <<ans>> collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
+
 
 == The original use case
 
@@ -34,8 +35,14 @@ The `homecloud` cluster is a network of computers, especially servers, which wor
 
 Despite many providers offer ARM boards all around the world, this article focus exclusively{fn-p64_disclamer} on some boards manufactured by PINE64 <<p64>>.
 
-The next parts of this article may refer to the following cluster layout:
+The next parts of this article may refer to the following cluster layout.
 
+.The cluster layout
+image::cluster_layout.png[The cluster layout]
+
+The four boards are inter-connected using the home's router which is already connected to internet{fn-dmz_skipped}.
+
+.Description of the cluster's nodes
 |===
 |Hostname|Type|Architecture|Memory|Operating System
 
@@ -64,28 +71,27 @@ The next parts of this article may refer to the following cluster layout:
 |Armbian
 |===
 
-.The hc1 cluster layout
-image::cluster_layout.png[The hc1 cluster layout]
-
-The four boards are inter-connected using the home's router which is already connected to internet{fn-dmz_skipped}.
-
 == The user services
 
 The primarily purpose of the cluster is to host the following user services:
 
-- Nextcloud: a suite of client-server software for creating and using file hosting services <<ncd>>
-- calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <<caw>>
-- Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>
-- Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>
+- Nextcloud: a suite of client-server software for creating and using file hosting services <<ncd>>.
+- calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <<caw>>.
+- Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>.
+- Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>.
 
-.The provided user services of the hc1 cluster
-image::user_services_layout.png[The provided user services of the hc1 cluster]
+The Syncthing service replicates the data on an external SSD Disk.
+The same disk is _opened_ to the internal network as a Samba share.
+Therefore, Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.
+
+.The provided user services of the cluster
+image::user_services_layout.png[The provided user services of the cluster]
 
 However, to properly operate the above listed services, two hosting strategies are highly emphasis: containerized workloads and container orchestration.
 
 == The hosting strategies
 
-The first strategy, the containerized workload (i.e. the famous _containers_), provides many benefits about the packaging, distribution and usage of the services them-self <<rhc>>.
+The first strategy, the containerized workload (i.e. the <<g_containerization, containerization>>), provides many benefits about the packaging, distribution and usage of the services them-self <<rhc>>.
 
 The key characteristics are:
 
@@ -126,17 +132,17 @@ Nevertheless, additional building blocks have to be added to the virtual stack.
 
 === The cluster availability
 
-Basically when a request comes from Internet, the router has to redirect it to the cluster using the port forwarding technique <<pft>>.
+Basically when a request comes from Internet, the router has to redirect it to the cluster using the <<g_port_forwarding, port forwarding>> technique.
 Therefore, the router must be configured with an IP able to handle the forwarded requests.
 
 In the `homecloud` context, the configured IP is one of anyone of the cluster nodes, because Docker Swarm is internally able to forward requests to the right node whatever the entry point <<dnt>>.
 
 However, IP addresses can be dynamics and moreover the node availability cannot be guaranty.
 It means the configured IP could become unallocated in the future in case of dynamic IP, or pointing to a node which stops to work properly.
-Therefore, the cluster availability cannot be guaranty.
+Therefore, the cluster is not reliable because the cluster is not <<g_ha, highly available>> <<doha>>.
 
 One of the simplest solutions to prevent unavailability of the cluster is to use the virtual server technique <<vswt>>.
-That means, from the router point of view, the cluster is just a unique server which can be reached with a unique IP address which will never ever change.
+That means, from the router point of view, the cluster is in fact just a unique server which can be reached with a unique IP address which will never ever change.
 
 Keepalived is one of the most popular implementations of the virtual server technique <<kad>>.
 Moreover, it can be easily containerized and configured.
@@ -144,16 +150,16 @@ Therefore, Keepalived is a good candidate for the virtual server technique.
 
 An overview of the Keepalived integration is available in the appendix: <<appendix_keepalived_integration>>.
 
-Now the cluster is _highly available_, the next topic is to be sure the containerized workloads are _highly available_ too.
+Now the cluster is highly available, the next topic is to be sure the containerized workloads are fully highly available too.
 
 === The distributed file system
 
-Deploying containers and providing their high availabilities on a cluster is easy with Docker Swarm.
-However, it doesn't manage the availability of the containers' data among the nodes.
+Deploying a container and providing its high availabilities on a cluster is easy with Docker Swarm.
+However, it doesn't manage the availability of the container's data among the nodes.
 
 For instance, if a container hosting a database is destroyed and then re-created on a new node by the orchestrator, by default, the new container won't start with the data related to the destroyed one.
 
-In order to get the availability of the data among the nodes of the cluster, a distributed file system has to be configured.
+In order to get the availability of the data among the nodes of the cluster, a <<g_dfs, distributed file system>> has to be configured.
 
 Ceph is one of the most popular technology about distributed file system <<cep>>.
 Moreover, it can be easily integrated in a Docker environment <<dvc>>.
@@ -163,56 +169,96 @@ Now containers are able to recover their data over their lifecycles, there is an
 
 === The reverse proxy
 
-The purpose of a reverse proxy is to handle the requests coming from the external world.
-In the `homecloud` context, the reverse proxy handles the requests coming from Internet.
+A <<g_reverse_proxy_server, reverse proxy>> handles the requests coming from the external world and then dispatch them to the internal one.
+In the `homecloud` context, the reverse proxy handles the requests coming from Internet and then dispatch them to the containerized workloads.
 The handling of incoming requests can be straight forward or much complex: enhancement of requests, security, load balancing ...
-At the end, the reverse proxy routes the requests to the right _back end_ located in the internal world.
 
 Traefik is one of the most popular technology about reverse proxy <<tra>>.
 Moreover, it can be easily integrated in a Docker environment.
 Therefore, Traefik is a good candidate for the reverse proxy.
 
-Well, the cluster is strong enough to serve the user services, nevertheless unexpected events can occur and lead to unavailability of the cluster.
-Unavailability are not welcome and another building block should prevent them, monitoring the cluster's status and broadcasting alerts.
+Presently, the cluster is able to properly serve services within usual circumstances.
+Nevertheless, unexpected events can occur and lead to unavailability of the cluster.
+Unavailability is not welcome and another building block should prevent it: the monitoring of the cluster's status and the alerts broadcasting.
 
 === Monitoring and alerting
 
 The Influxdata stack is one of the most popular technology about monitoring and alerting <<inf>>.
-Especially because the Influxdata stack provide all expected components:
+Especially because the Influxdata stack provides all expected components:
 
 - Telegraf: an agent to collect metrics <<ite>>
 - InfluxDB: a database to store metrics <<idb>>
 - Chronograf: a front-end to render the metrics <<ich>>
 - Kapacitor: a data processing engine to detect anomalies and send alerts <<ika>>
 
-Therefore, Influxdata is a good candidate for the monitoring and alerting stack.
+Therefore, Influxdata is a good candidate for the <<g_cloud_monitoring, cloud monitoring>> stack.
 
-However, once the monitoring & alerting stack detects an anomaly and emits an alert then usually actions have to be executed.
-Therefore, a final build block has to be defined: the management of the Docker Swarm cluster.
+However, once the cloud monitoring stack detects an anomaly and emits an alert, then usually actions have to be executed.
+Therefore, another build block has to be defined: the management of the Docker Swarm cluster.
 
 === Docker Swarm management
 
-The management of a Docker Swarm cluster can be done using the command line interface provided by default.
-However, its usage requires access to the terminals of cluster's master nodes.
-Another way is to use a web-app connected to a backend which will be able to directly deals with Docker Swarm daemon.
-So that, the management of the Docker Swarm can be done without access to the cluster's master nodes.
+The management of a Docker Swarm cluster as well as the related Docker engines, can be done using the command line interface provided by default.
+However, its usage requires access to the terminals of cluster nodes.
+Another way is to use a web-app connected to a backend which will be able to directly deals with the Docker daemons.
+So that, the management activities can be done without direct access to the cluster nodes.
 
 Portainer is one of the most popular solutions to manage Docker Swarm clusters from a web-app <<por>>.
 Moreover, it provides natively the support of Docker Swarm for the expected architectures.
 Therefore, Portainer is a good candidate for the management of the Docker Swarm cluster.
 
+The management of the Docker resources cannot resolve all maintenance cases.
+The Murphy’s law is too strong, too true.
+_Anything that can go wrong will go wrong_, and it could be disaster.
+Therefore, a final building block has to be defined: the backup and restore.
+
+=== Backup and restore
+
+In the `homecloud` context, the term disaster means: data stored in Ceph have been lost.
+For instance, the Nextcloud database cannot be used anymore because of data corruption which cannot be resolved by the MariaDB engine it-self.
+Therefore, `homecloud` must provide a way <<g_disaster_recovery, to recover the disaster>>.
+The most affordable way to recover data is to regularly backup them and storing them into another system.
+
+Duplicity is one of the most popular tools to create secure backup <<dup>>.
+Moreover, Duplicity provides a large set of destinations like SFTP, AWS S3, Google Drive, ...
+Obviously, it provides the restoring action too.
+Therefore, Duplicity is a good candidate to execute the backup and restore processes.
+
 At this point, all building blocks have been introduced, it's time to summarize the cluster's components.
 
 == The components overview
 
-All `homecloud` components, services and building blocks, can breakdown in three categories:
+All `homecloud` services and building blocks, can be breakdown in three categories:
 
 1. services of Operating System
 2. orphan Docker containers
 3. stacks of Docker Swarm
 
 .The components hierarchy
-image::components_hierarchy.png[]
+image::components_hierarchy.png[The components hierarchy]
+
+Running a highly available cluster able to provide services to end users within isolated execution contexts and, moreover, protected by a modern reverse proxy from Internet accesses is good.
+However, it doesn't mean the cluster is secured against external threats ...
+
+== Security Hardening
+
+An internal cloud, 1) hosted on low cost ARM boards, 2) available from a domestic Internet access and, 3) managed with non-professional manners could be a target for external threats.
+Therefore, in the `homecloud` context, the best way is, by default, <<g_hardening, to harder>> every thing.
+
+However, the goals of the security hardening subject are wides and sometime not easily reachable.
+Could it be possible to easily harden a container image which is built by another entity?
+Or to easily harden application configuration without knowing the application it-self?
+Is it realistic to adapt the physical installation of a rent house because of security hardening principles?
+
+The present paper doesn't cover the security hardening of the `homecloud` external world: the router, the ethernet/wireless networks, the electromagnetic fields ... <<hwn>>.
+It focuses only on the virtual world, i.e. from the operating systems to the applications providing the services.
+
+Resources exist to deal with the security hardening subject in the scope of a cluster of servers.
+One of the most popular projects is the DevSec Project <<dsp>>.
+It covers two hardening area with the Ansible collection `devsec.hardening` <<acsh>> :
+
+- the operating system GNU/Linux
+- the SSH configuration
 
 [appendix]
 [#appendix_keepalived_integration]
@@ -225,22 +271,60 @@ Therefore, each Keepalived instance can manage the virtual network interface of 
 .Overview of the Keepalived integration
 image::building_blocks_keepalived.png[Overview of the Keepalived integration]
 
+[glossary]
+== Glossary
+
+[glossary]
+[[g_cloud_computing]]Cloud Computing::
+Cloud computing is the the use of various services, such as software development platforms, servers, storage and software, over the internet, often referred to as the "cloud." +
+https://www.techopedia.com/definition/2/cloud-computing
+[[g_cloud_monitoring]]Cloud Monitoring::
+Cloud monitoring is the process of reviewing, monitoring and managing the operational workflow and processes within a cloud-based IT asset or infrastructure. It is the use of manual or automated IT monitoring and management techniques to ensure that a cloud infrastructure or platform performs optimally. +
+https://www.techopedia.com/definition/29862/cloud-monitoring
+[[g_containerization]]Containerization::
+Containerization is a type of virtualization strategy that emerged as an alternative to traditional hypervisor-based virtualization. +
+https://www.techopedia.com/definition/31234/containerization-computers
+[[g_dfs]]Distributed File System (DFS)::
+A distributed file system (DFS) is a file system with data stored on a server. The data is accessed and processed as if it was stored on the local client machine. +
+https://www.techopedia.com/definition/1825/distributed-file-system-dfs
+[[g_disaster_recovery]]Disaster Recovery::
+Disaster recovery is a set of policies and procedures which focus on protecting an organization from any significant effects in case of a negative event, which may include cyberattacks, natural disasters or building or device failures. +
+https://www.techopedia.com/definition/31989/disaster-recovery
+[[g_hardening]]Hardening::
+Hardening refers to providing various means of protection in a computer system. Protection is provided in various layers and is often referred to as defense in depth. +
+https://www.techopedia.com/definition/24833/hardening
+[[g_ha]]High Availability (HA)::
+High availability refers to systems that are durable and likely to operate continuously without failure for a long time. +
+https://www.techopedia.com/definition/1021/high-availability-ha
+[[g_internal_cloud]]Internal Cloud::
+An internal cloud is a cloud computing service model that is implemented within an organization's dedicated resources and infrastructure. +
+https://www.techopedia.com/definition/26648/internal-cloud
+[[g_port_forwarding]]Port Forwarding::
+Port forwarding is a networking technique through which a gateway or similar device transmits all incoming communication/traffic of a specific port to the same port on any internal network node. +
+https://www.techopedia.com/definition/4057/port-forwarding
+[[g_reverse_proxy_server]]Reverse Proxy Server::
+A reverse proxy server is a type of proxy server that manages a connection or any specific requests coming from an external network/Internet toward an internal network. +
+https://www.techopedia.com/definition/16048/reverse-proxy-server
+
 [bibliography]
 == References
 
 *Opinions*
 
-- [[[dgo]]] De-google-ify Internet, https://degooglisons-internet.org/en
 - [[[cpa]]] Contributopia, https://contributopia.org/en
+- [[[dgo]]] De-google-ify Internet, https://degooglisons-internet.org/en
 
 *Concepts*
 
-- [[[cld]]] The NIST Definition of Cloud Computing, https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-145.pdf
+- [[[doha]]] What is High Availability?, https://www.digitalocean.com/community/tutorials/what-is-high-availability
 - [[[rhco]]] What is container orchestration?, https://www.redhat.com/en/topics/containers/what-is-container-orchestration
 - [[[rhc]]] What's a Linux container?, https://www.redhat.com/en/topics/containers/whats-a-linux-container
-- [[[doha]]] What is High Availability?, https://www.digitalocean.com/community/tutorials/what-is-high-availability
-- [[[pft]]] Port Forwarding, https://en.wikipedia.org/wiki/Port_forwarding
-- [[[vswt]]] What is virtual server?, http://www.linux-vs.org/whatis.html
+- [[[vswt]]] What is a virtual server?, http://www.linux-vs.org/whatis.html
+
+*Security Hardening*
+
+- [[[hwn]]] How To Harden Your Home Wireless Network?, https://informationhacker.com/how-to-harden-your-home-wireless-network
+- [[[dsp]]] DevSec Project, https://dev-sec.io
 
 *Hardware*
 
@@ -250,19 +334,21 @@ image::building_blocks_keepalived.png[Overview of the Keepalived integration]
 
 *Technologies*
 
+- [[[acsh]]] Ansible Collection - devsec.hardening, https://galaxy.ansible.com/devsec/hardening
 - [[[ans]]] Ansible, https://www.ansible.com
 - [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
 - [[[cep]]] Ceph, https://ceph.io
-- [[[kad]]] Keepalived, https://www.keepalived.org
+- [[[dnt]]] Docker - Networking overview, https://docs.docker.com/network
 - [[[dok]]] Docker, https://www.docker.com
 - [[[dsw]]] Docker Swarm, https://docs.docker.com/engine/swarm
-- [[[dnt]]] Docker - Networking overview, https://docs.docker.com/network
+- [[[dup]]] duplicity, http://duplicity.nongnu.org
 - [[[dvc]]] docker-volume-cephfs https://gitlab.com/n0r1sk/docker-volume-cephfs
 - [[[ich]]] Chronograf, https://www.influxdata.com/time-series-platform/chronograf
 - [[[idb]]] InfluxDB, https://www.influxdata.com/time-series-platform/
 - [[[ika]]] Kapacitor, https://www.influxdata.com/time-series-platform/kapacitor
 - [[[inf]]] Influxdata, https://www.influxdata.com
 - [[[ite]]] Telegraf, https://www.influxdata.com/time-series-platform/telegraf
+- [[[kad]]] Keepalived, https://www.keepalived.org
 - [[[ncd]]] Nextcloud, https://nextcloud.com
 - [[[por]]] Portainer, https://www.portainer.io
 - [[[smb]]] Samba, https://www.samba.org
