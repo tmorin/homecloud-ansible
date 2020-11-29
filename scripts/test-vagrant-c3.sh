@@ -23,7 +23,7 @@ waitForService "nextcloud" "nextcloud_database.1"
 
 waitForLogs "traefik_server" "Configuration loaded from flags."
 waitForLogs "portainer_console" "server: Listening on 0.0.0.0:8000"
-waitForLogs "backup_duplicity" "INFO:setup-cron:process backup-PORTAINER-CONSOLE"
+waitForLogs "backup_duplicity" "INFO:setup-cron:process backup-CALIBREWEB-CONFIG"
 waitForLogs "nextcloud_server" "apache2 -D FOREGROUND"
 
 echo "--- check swarm stacks"
