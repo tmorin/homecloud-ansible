@@ -1,4 +1,3 @@
 collections:
   - name: community.general
-  - name: dev-sec.os-hardening
-  - name: dev-sec.ssh-hardening
+  - name: devsec.hardening

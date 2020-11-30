@@ -17,8 +17,7 @@ homepage: https://github.com/tmorin/homecloud-ansible#readme
 issues: https://github.com/tmorin/homecloud-ansible/issues
 dependencies:
   'community.general': '*'
-  'dev-sec.os-hardening': '*'
-  'dev-sec.ssh-hardenin': '*'
+  'devsec.hardening': '*'
 build_ignore:
   - .*
   - ansible.cfg

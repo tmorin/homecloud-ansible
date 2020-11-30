@@ -40,9 +40,7 @@ If `ceph` is enabled:
 
 The collection's roles can be dependent of the following ansible collection:
 ```shell script
-ansible-galaxy collection install community.general --force
-ansible-galaxy install dev-sec.os-hardening --force
-ansible-galaxy install dev-sec.ssh-hardening --force
+ansible-galaxy collection install -r requirements.yml
 ```
 
 To build the Armbian images, the following dependencies are required:
@@ -147,10 +145,9 @@ Roles deploying ready-to-use Docker Swarm stacks:
 ### Hardening
 
 The playbook [cluster-hardening.yml](playbooks/cluster-hardening.yml) apply hardening recommendations on the operating system and SSH.
-The activities are managed by the Ansible collections [dev-sec.os-hardening] and [dev-sec.ssh-hardening].
+The activities are managed by the Ansible collection [devsec.hardening].
 
-[dev-sec.os-hardening]: https://galaxy.ansible.com/dev-sec/os-hardening
-[dev-sec.ssh-hardening]: https://galaxy.ansible.com/dev-sec/ssh-hardening
+[dev-sec.os-hardening]: https://galaxy.ansible.com/devsec/hardening
 
 ### Bootstrap the cluster
 

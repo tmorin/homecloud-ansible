@@ -2,6 +2,8 @@
 
 - hosts: all
   become: yes
+  collections:
+    - devsec.hardening
   roles:
-    - dev-sec.ssh-hardening
-    - dev-sec.os-hardening
+    - devsec.hardening.os_hardening
+    - devsec.hardening.ssh_hardening
