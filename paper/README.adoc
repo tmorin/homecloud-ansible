@@ -22,8 +22,8 @@ The intentions which led to the `homecloud` creation match ones related to the F
 
 Therefore, the original use case is:
 
-- be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, personal projects, ...
-- ba able to manage a human size of users, basically a family.
+* be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, personal projects, ...
+* ba able to manage a human size of users, basically a family.
 
 Because big names of cloud computing are de facto discarded, the most affordable solution is to host all those services in a cluster of low cost ARM boards, especially at home.
 
@@ -75,17 +75,16 @@ The four boards are inter-connected using the home's router which is already con
 
 The primarily purpose of the cluster is to host the following user services:
 
-- Nextcloud: a suite of client-server software for creating and using file hosting services <<ncd>>.
-- calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <<caw>>.
-- Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>.
-- Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>.
-
-The Syncthing service replicates the data on an external SSD Disk.
-The same disk is _opened_ to the internal network as a Samba share.
-Therefore, Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.
+* Nextcloud: a suite of client-server software for creating and using file hosting services <<ncd>>.
+* calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <<caw>>.
+* dnas: a decentralized NAS (c.f. appendix <<appendix_dnas>>) based on:
+** Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>.
+** Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>.
 
 .The provided user services of the cluster
 image::user_services_layout.png[The provided user services of the cluster]
+
+The Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.
 
 However, to properly operate the above listed services, two hosting strategies are highly emphasis: containerized workloads and container orchestration.
 
@@ -95,19 +94,19 @@ The first strategy, the containerized workload (i.e. the <<g_containerization, c
 
 The key characteristics are:
 
-- Portability : a container can be easily deployed in a container environment whatever the host's operating system within the respect of the container's and host's architecture.
-- Configurability : a container can be easily configured about its infrastructure (cpu, memory ...) but also about the underlying workload (overriding containerized file or environment variables).
-- Isolation : a container cannot exceed its infrastructure limit and so cannot impact sibling running containers.
-- Efficient disk usage : a containerized workload needs less disk usage than virtualized one.
+* Portability : a container can be easily deployed in a container environment whatever the host's operating system within the respect of the container's and host's architecture.
+* Configurability : a container can be easily configured about its infrastructure (cpu, memory ...) but also about the underlying workload (overriding containerized file or environment variables).
+* Isolation : a container cannot exceed its infrastructure limit and so cannot impact sibling running containers.
+* Efficient disk usage : a containerized workload needs less disk usage than virtualized one.
 
 The second one, the container orchestration, provides also many benefits about the overall handling of containerized workloads <<rhco>>.
 
 The key characteristics are:
 
-- Automatic deployments : a container orchestrator manages it-self the deployment process of containerized workloads across the nodes.
-- Container management : a container orchestrator provides services to monitor and interact with containerized workloads deployed among the cluster nodes.
-- Resource allocation : a container orchestrator monitors and manages the resources to satisfy the requirements of the deployed containerized workloads.
-- Networking configuration : a container orchestrator manages it-self the networking configuration to provide isolation and/or inter-connection between containerized workloads according to their needs.
+* Automatic deployments : a container orchestrator manages it-self the deployment process of containerized workloads across the nodes.
+* Container management : a container orchestrator provides services to monitor and interact with containerized workloads deployed among the cluster nodes.
+* Resource allocation : a container orchestrator monitors and manages the resources to satisfy the requirements of the deployed containerized workloads.
+* Networking configuration : a container orchestrator manages it-self the networking configuration to provide isolation and/or inter-connection between containerized workloads according to their needs.
 
 However, a wish list of services, and a couple of hosting strategies are not enough to provide an efficient cluster.
 Some pieces are still missing: a set of building blocks able to support the services embracing the hosting strategies.
@@ -186,10 +185,10 @@ Unavailability is not welcome and another building block should prevent it: the 
 The Influxdata stack is one of the most popular technology about monitoring and alerting <<inf>>.
 Especially because the Influxdata stack provides all expected components:
 
-- Telegraf: an agent to collect metrics <<ite>>
-- InfluxDB: a database to store metrics <<idb>>
-- Chronograf: a front-end to render the metrics <<ich>>
-- Kapacitor: a data processing engine to detect anomalies and send alerts <<ika>>
+* Telegraf: an agent to collect metrics <<ite>>
+* InfluxDB: a database to store metrics <<idb>>
+* Chronograf: a front-end to render the metrics <<ich>>
+* Kapacitor: a data processing engine to detect anomalies and send alerts <<ika>>
 
 Therefore, Influxdata is a good candidate for the <<g_cloud_monitoring, cloud monitoring>> stack.
 
@@ -257,8 +256,31 @@ Resources exist to deal with the security hardening subject in the scope of a cl
 One of the most popular projects is the DevSec Project <<dsp>>.
 It covers two hardening area with the Ansible collection `devsec.hardening` <<acsh>> :
 
-- the operating system GNU/Linux
-- the SSH configuration
+* the operating system GNU/Linux
+* the SSH configuration
+
+== Implementation
+=== The Ansible inventory
+=== The Armbian image customization
+=== The common configuration of the cluster nodes
+=== The Docker service
+=== The Docker Swarm service
+=== The DNAS service
+=== The Keepalived service
+
+[appendix]
+[#appendix_dnas]
+== dnas: a decentralized NAS
+
+The purpose of _dnas_ is to expose personal files over the local network like a usual <<g_nas, NAS>>  but also from Internet.
+Samba provides remote accesses from the local network.
+On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.
+
+.The DNAS overview
+image::dnas_overview.png[The DNAS overview]
+
+The Syncthing service replicates data to the external SSD Disk.
+The same disk is _opened_ to the internal network as a Samba share.
 
 [appendix]
 [#appendix_keepalived_integration]
@@ -299,6 +321,9 @@ https://www.techopedia.com/definition/1021/high-availability-ha
 [[g_internal_cloud]]Internal Cloud::
 An internal cloud is a cloud computing service model that is implemented within an organization's dedicated resources and infrastructure. +
 https://www.techopedia.com/definition/26648/internal-cloud
+[[g_nas]]Network-attached storage (NAS)::
+Network attached storage (NAS) is a dedicated server, also referred to as an appliance, used for file storage and sharing. NAS is a hard drive attached to a network, used for storage and accessed through an assigned network address. +
+https://www.techopedia.com/definition/26197/network-attached-storage-nas
 [[g_port_forwarding]]Port Forwarding::
 Port forwarding is a networking technique through which a gateway or similar device transmits all incoming communication/traffic of a specific port to the same port on any internal network node. +
 https://www.techopedia.com/definition/4057/port-forwarding
@@ -311,46 +336,46 @@ https://www.techopedia.com/definition/16048/reverse-proxy-server
 
 *Opinions*
 
-- [[[cpa]]] Contributopia, https://contributopia.org/en
-- [[[dgo]]] De-google-ify Internet, https://degooglisons-internet.org/en
+* [[[cpa]]] Contributopia, https://contributopia.org/en
+* [[[dgo]]] De-google-ify Internet, https://degooglisons-internet.org/en
 
 *Concepts*
 
-- [[[doha]]] What is High Availability?, https://www.digitalocean.com/community/tutorials/what-is-high-availability
-- [[[rhco]]] What is container orchestration?, https://www.redhat.com/en/topics/containers/what-is-container-orchestration
-- [[[rhc]]] What's a Linux container?, https://www.redhat.com/en/topics/containers/whats-a-linux-container
-- [[[vswt]]] What is a virtual server?, http://www.linux-vs.org/whatis.html
+* [[[doha]]] What is High Availability?, https://www.digitalocean.com/community/tutorials/what-is-high-availability
+* [[[rhco]]] What is container orchestration?, https://www.redhat.com/en/topics/containers/what-is-container-orchestration
+* [[[rhc]]] What's a Linux container?, https://www.redhat.com/en/topics/containers/whats-a-linux-container
+* [[[vswt]]] What is a virtual server?, http://www.linux-vs.org/whatis.html
 
 *Security Hardening*
 
-- [[[hwn]]] How To Harden Your Home Wireless Network?, https://informationhacker.com/how-to-harden-your-home-wireless-network
-- [[[dsp]]] DevSec Project, https://dev-sec.io
+* [[[hwn]]] How To Harden Your Home Wireless Network?, https://informationhacker.com/how-to-harden-your-home-wireless-network
+* [[[dsp]]] DevSec Project, https://dev-sec.io
 
 *Hardware*
 
-- [[[p64]]] PINE64, https://www.pine64.org
-- [[[plts]]] PINE A64-LTS, https://www.pine64.org/devices/single-board-computers/pine-a64-lts
-- [[[r64]]] ROCK64, https://www.pine64.org/devices/single-board-computers/rock64
+* [[[p64]]] PINE64, https://www.pine64.org
+* [[[plts]]] PINE A64-LTS, https://www.pine64.org/devices/single-board-computers/pine-a64-lts
+* [[[r64]]] ROCK64, https://www.pine64.org/devices/single-board-computers/rock64
 
 *Technologies*
 
-- [[[acsh]]] Ansible Collection - devsec.hardening, https://galaxy.ansible.com/devsec/hardening
-- [[[ans]]] Ansible, https://www.ansible.com
-- [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
-- [[[cep]]] Ceph, https://ceph.io
-- [[[dnt]]] Docker - Networking overview, https://docs.docker.com/network
-- [[[dok]]] Docker, https://www.docker.com
-- [[[dsw]]] Docker Swarm, https://docs.docker.com/engine/swarm
-- [[[dup]]] duplicity, http://duplicity.nongnu.org
-- [[[dvc]]] docker-volume-cephfs https://gitlab.com/n0r1sk/docker-volume-cephfs
-- [[[ich]]] Chronograf, https://www.influxdata.com/time-series-platform/chronograf
-- [[[idb]]] InfluxDB, https://www.influxdata.com/time-series-platform/
-- [[[ika]]] Kapacitor, https://www.influxdata.com/time-series-platform/kapacitor
-- [[[inf]]] Influxdata, https://www.influxdata.com
-- [[[ite]]] Telegraf, https://www.influxdata.com/time-series-platform/telegraf
-- [[[kad]]] Keepalived, https://www.keepalived.org
-- [[[ncd]]] Nextcloud, https://nextcloud.com
-- [[[por]]] Portainer, https://www.portainer.io
-- [[[smb]]] Samba, https://www.samba.org
-- [[[syt]]] Syncthing, https://syncthing.net
-- [[[tra]]] Traefik, https://traefik.io
+* [[[acsh]]] Ansible Collection - devsec.hardening, https://galaxy.ansible.com/devsec/hardening
+* [[[ans]]] Ansible, https://www.ansible.com
+* [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
+* [[[cep]]] Ceph, https://ceph.io
+* [[[dnt]]] Docker - Networking overview, https://docs.docker.com/network
+* [[[dok]]] Docker, https://www.docker.com
+* [[[dsw]]] Docker Swarm, https://docs.docker.com/engine/swarm
+* [[[dup]]] duplicity, http://duplicity.nongnu.org
+* [[[dvc]]] docker-volume-cephfs https://gitlab.com/n0r1sk/docker-volume-cephfs
+* [[[ich]]] Chronograf, https://www.influxdata.com/time-series-platform/chronograf
+* [[[idb]]] InfluxDB, https://www.influxdata.com/time-series-platform/
+* [[[ika]]] Kapacitor, https://www.influxdata.com/time-series-platform/kapacitor
+* [[[inf]]] Influxdata, https://www.influxdata.com
+* [[[ite]]] Telegraf, https://www.influxdata.com/time-series-platform/telegraf
+* [[[kad]]] Keepalived, https://www.keepalived.org
+* [[[ncd]]] Nextcloud, https://nextcloud.com
+* [[[por]]] Portainer, https://www.portainer.io
+* [[[smb]]] Samba, https://www.samba.org
+* [[[syt]]] Syncthing, https://syncthing.net
+* [[[tra]]] Traefik, https://traefik.io

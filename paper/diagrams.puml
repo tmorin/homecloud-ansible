@@ -29,6 +29,9 @@ router -- n4
 !global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
 !include $LIB_BASE_LOCATION/bootstrap.puml
 
+skinparam RectangleShadowing false
+skinparam RectangleBorderStyle dotted
+
 include('homecloud/bootstrap')
 include('homecloud/Brand/Nextcloud')
 include('homecloud/Brand/Syncthing')
@@ -37,14 +40,14 @@ include('homecloud/Element/Share')
 include('homecloud/Brand/Calibreweb')
 include('homecloud/Group/GroupNetwork')
 include('homecloud/Element/Router')
-include('homecloud/Element/Usb')
 
 Cloud('internet', 'Internet')
 GroupNetwork('home', 'home network') {
   Router('router', 'router')
-  Syncthing('syncthing', 'Syncthing')
-  Share('samba', 'Samba')
-  Usb('ssd', 'SSD Disk')
+  rectangle dnas {
+    Syncthing('syncthing', 'Syncthing')
+    Share('samba', 'Samba')
+  }
   Nextcloud('nextcloud', 'Nextcloud')
   Calibreweb('calibreweb', 'calibre-web')
 }
@@ -53,8 +56,6 @@ router -- syncthing
 router -- samba
 router -- nextcloud
 router -- calibreweb
-syncthing --> ssd
-samba --> ssd
 @enduml
 
 @startuml user_services_and_building_blocks

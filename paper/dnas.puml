@@ -1,0 +1,42 @@
+@startuml dnas_overview
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+skinparam RectangleShadowing false
+skinparam RectangleBorderStyle dotted
+
+include('homecloud/bootstrap')
+include('homecloud/Brand/Syncthing')
+include('homecloud/Element/Board')
+include('homecloud/Element/Cloud')
+include('homecloud/Element/Router')
+include('homecloud/Element/Share')
+include('homecloud/Element/Smartphone')
+include('homecloud/Group/GroupNetwork')
+include('homecloud/Element/Laptop')
+include('homecloud/Element/Usb')
+
+Cloud('internet', 'Internet')
+SmartphoneGroup('smartphone', 'Smartphone') {
+  Syncthing('syncthing_phone', 'Syncthing')
+}
+GroupNetwork('home', 'home network') {
+  Router('router', 'router')
+  Laptop('laptop', 'Laptop')
+  rectangle dnas {
+    Syncthing('syncthing', 'Syncthing')
+    Share('samba', 'Samba')
+    Usb('ssd', 'SSD Disk')
+  }
+}
+internet -left- router
+internet -- syncthing_phone
+router -- syncthing
+router -- samba
+router -- laptop
+laptop .right.> samba : Relationship('read/write')
+syncthing_phone <.left.> syncthing : Relationship('replication')
+syncthing --> ssd
+samba --> ssd
+@enduml
