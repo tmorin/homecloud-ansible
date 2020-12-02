@@ -15,7 +15,6 @@
 
 The main artifact is an Ansible <<ans>> collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
 
-
 == The original use case
 
 The intentions which led to the `homecloud` creation match ones related to the Framasoft initiative: De-google-ify Internet <<dgo>>; and its following one: Contributopia <<cpa>>.
@@ -262,7 +261,7 @@ It covers two hardening area with the Ansible collection `devsec.hardening` <<ac
 == Implementation
 === The Ansible inventory
 === The Armbian image customization
-=== The common configuration of the cluster nodes
+=== The cluster nodes
 === The Docker service
 === The Docker Swarm service
 === The DNAS service

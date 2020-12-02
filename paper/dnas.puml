@@ -7,27 +7,32 @@ skinparam RectangleShadowing false
 skinparam RectangleBorderStyle dotted
 
 include('homecloud/bootstrap')
-include('homecloud/Brand/Syncthing')
-include('homecloud/Element/Board')
-include('homecloud/Element/Cloud')
-include('homecloud/Element/Router')
-include('homecloud/Element/Share')
-include('homecloud/Element/Smartphone')
-include('homecloud/Group/GroupNetwork')
-include('homecloud/Element/Laptop')
-include('homecloud/Element/Usb')
 
-Cloud('internet', 'Internet')
+include('homecloud/Hardware/Board')
+include('homecloud/Hardware/Smartphone')
+include('homecloud/Hardware/Laptop')
+include('homecloud/Hardware/Hdd')
+include('homecloud/Network/Internet')
+include('homecloud/Network/LocalNetwork')
+include('homecloud/Network/Router')
+
+include('homecloud/Brand/Nextcloud')
+include('homecloud/Brand/Syncthing')
+include('homecloud/Brand/Samba')
+include('homecloud/Brand/Calibreweb')
+include('homecloud/Brand/Dnas')
+
+Internet('internet', 'Internet')
 SmartphoneGroup('smartphone', 'Smartphone') {
   Syncthing('syncthing_phone', 'Syncthing')
 }
-GroupNetwork('home', 'home network') {
+LocalNetworkGroup('home', 'home network') {
   Router('router', 'router')
   Laptop('laptop', 'Laptop')
   rectangle dnas {
     Syncthing('syncthing', 'Syncthing')
-    Share('samba', 'Samba')
-    Usb('ssd', 'SSD Disk')
+    Samba('samba', 'Samba')
+    Hdd('ssd', 'SSD Disk')
   }
 }
 internet -left- router

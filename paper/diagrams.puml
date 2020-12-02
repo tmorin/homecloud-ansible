@@ -4,13 +4,13 @@
 !include $LIB_BASE_LOCATION/bootstrap.puml
 
 include('homecloud/bootstrap')
-include('homecloud/Element/Board')
-include('homecloud/Element/Cloud')
-include('homecloud/Group/GroupNetwork')
-include('homecloud/Element/Router')
+include('homecloud/Hardware/Board')
+include('homecloud/Network/Internet')
+include('homecloud/Network/LocalNetwork')
+include('homecloud/Network/Router')
 
-Cloud('internet', 'Internet')
-GroupNetwork('home', 'home network') {
+Internet('internet', 'Internet')
+LocalNetworkGroup('home', 'home network') {
   Router('router', 'router')
   Board('n1', 'hc1-n1', 'ROCK64')
   Board('n2', 'hc1-n2', 'ROCK64')
@@ -33,20 +33,21 @@ skinparam RectangleShadowing false
 skinparam RectangleBorderStyle dotted
 
 include('homecloud/bootstrap')
+include('homecloud/Network/Internet')
+include('homecloud/Network/LocalNetwork')
+include('homecloud/Network/Router')
 include('homecloud/Brand/Nextcloud')
 include('homecloud/Brand/Syncthing')
-include('homecloud/Element/Cloud')
-include('homecloud/Element/Share')
+include('homecloud/Brand/Samba')
 include('homecloud/Brand/Calibreweb')
-include('homecloud/Group/GroupNetwork')
-include('homecloud/Element/Router')
+include('homecloud/Brand/Dnas')
 
-Cloud('internet', 'Internet')
-GroupNetwork('home', 'home network') {
+Internet('internet', 'Internet')
+LocalNetworkGroup('home', 'home network') {
   Router('router', 'router')
-  rectangle dnas {
+  DnasGroup('dans') {
     Syncthing('syncthing', 'Syncthing')
-    Share('samba', 'Samba')
+    Samba('samba', 'Samba')
   }
   Nextcloud('nextcloud', 'Nextcloud')
   Calibreweb('calibreweb', 'calibre-web')
@@ -85,10 +86,10 @@ user_services <- building_blocks : support the execution of
 skinparam RectangleShadowing false
 skinparam RectangleBorderStyle dashed
 include('homecloud/bootstrap')
-include('material-4.0/Maps/Place')
-include('homecloud/Element/Board')
-include('homecloud/Element/Router')
-include('homecloud/Element/Container')
+include('fontawesome-5.15/Solid/Circle')
+include('homecloud/Hardware/Board')
+include('homecloud/Network/Router')
+include('homecloud/Container/Container')
 include('homecloud/Brand/Keepalived')
 include('homecloud/Brand/Docker')
 include('homecloud/Brand/Ceph')
@@ -122,12 +123,12 @@ rectangle virtual_server as "Virtual Server" {
     }
   }
 }
-Place('virtual_ip', 'Virtual IP')
+Circle('virtual_ip', 'Virtual IP')
 Router('router', 'Router')
-keepalived_1 --0 virtual_ip : Relationship('exposes')
-keepalived_2 --0 virtual_ip : Relationship('exposes')
-keepalived_3 --0 virtual_ip : Relationship('exposes')
-keepalived_4 --0 virtual_ip : Relationship('exposes')
+keepalived_1 -- virtual_ip : Relationship('exposes')
+keepalived_2 -- virtual_ip : Relationship('exposes')
+keepalived_3 -- virtual_ip : Relationship('exposes')
+keepalived_4 -- virtual_ip : Relationship('exposes')
 router -up-( virtual_ip : Relationship('routes to')
 @enduml
 
@@ -137,29 +138,31 @@ router -up-( virtual_ip : Relationship('routes to')
 !include $LIB_BASE_LOCATION/bootstrap.puml
 include('homecloud/bootstrap')
 include('homecloud/Brand/Docker')
-include('homecloud/Element/SdCard')
-include('homecloud/Element/Container')
+include('homecloud/Brand/DockerSwarm')
+include('homecloud/Hardware/Hdd')
 include('homecloud/Brand/Ceph')
 DockerGroup('docker_engine', 'Docker Engine') {
   Ceph('ceph', 'Ceph', 'set of containers')
 }
-SdCard('sd_card', 'Storage', 'Block Device')
-Docker('docker_swarm', 'Docker Swarm')
+Hdd('storage', 'Storage', 'Block Device')
+DockerSwarm('docker_swarm', 'Docker Swarm')
 docker_swarm -> ceph : Relationship('delegates the volume management to')
-ceph -> sd_card : Relationship('read/write data on')
+ceph -> storage : Relationship('read/write data on')
 @enduml
 
 @startuml stack_traefik
+left to right direction
 !global $INCLUSION_MODE="local"
 !global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
 !include $LIB_BASE_LOCATION/bootstrap.puml
 include('homecloud/bootstrap')
-include('homecloud/Element/Router')
-include('homecloud/Element/Stack')
-include('homecloud/Element/Container')
-include('homecloud/Brand/Docker')
+include('homecloud/Network/Router')
+include('homecloud/Container/Stack')
+include('homecloud/Container/Container')
+include('homecloud/Container/Volume')
+include('homecloud/Brand/DockerSwarm')
 include('homecloud/Brand/Traefik')
-DockerGroup('docker_swarm', 'Docker Swarm') {
+DockerSwarmGroup('docker_swarm', 'Docker Swarm') {
   StackGroup('traefik_stack', 'Traefik', 'Docker Stack') {
     ContainerGroup('traefik_container', 'Traefik', 'Container') {
       Traefik('traefik', 'Traefik', 'Application')
@@ -171,7 +174,7 @@ DockerGroup('docker_swarm', 'Docker Swarm') {
   Stack('calibreweb', 'calibre-web', 'Docker Stack')
 }
 Router('router', 'Router')
-router -> traefik : Relationship('routes traffic to')
+router --> traefik : Relationship('routes traffic to')
 traefik --> portainer
 traefik --> influxdata
 traefik --> nextcloud
@@ -184,6 +187,7 @@ skinparam monochrome true
 !global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
 !include $LIB_BASE_LOCATION/bootstrap.puml
 include('homecloud/Brand/Docker')
+include('homecloud/Brand/DockerSwarm')
 include('homecloud/Brand/Traefik')
 include('homecloud/Brand/Ceph')
 include('homecloud/Brand/Influxdata')
@@ -192,20 +196,20 @@ include('homecloud/Brand/Nextcloud')
 include('homecloud/Brand/Syncthing')
 include('homecloud/Brand/Calibreweb')
 include('homecloud/Brand/Keepalived')
-include('homecloud/Element/Share')
-include('homecloud/Element/Home')
-include('homecloud/Element/Sync')
+include('homecloud/Brand/Samba')
+include('homecloud/Brand/Backup')
+include('fontawesome-5.15/Solid/Home')
 * <$HomeMd> homecloud
 ** <$DockerMd> Docker Engine
 *** <$KeepalivedMd> Keepalived
 *** <$CephMd> Ceph
-** <$DockerMd> Docker Swarm
-*** <$SyncMd> Backup
+** <$DockerSwarmMd> Docker Swarm
+*** <$BackupMd> Backup
 *** <$TraefikMd> Traefik
 *** <$InfluxdataMd> Influxdata
 *** <$PortainerMd> Portainer
 *** <$NextcloudMd> Nextcloud
 *** <$CalibrewebMd> calibre-web
 ** <$SyncthingMd> Syncthing
-** <$ShareMd> Samba
+** <$SambaMd> Samba
 @endwbs
