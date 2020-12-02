@@ -21,8 +21,9 @@ dependencies:
 build_ignore:
   - .*
   - ansible.cfg
-  - images/
   - inventories/
+  - node_modules/
+  - playbooks/images/
   - playbooks/vault/
   - scripts/
-  - venv/
+  - tmp/

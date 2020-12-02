@@ -24,51 +24,24 @@ Therefore, the original use case is:
 * be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, personal projects, ...
 * ba able to manage a human size of users, basically a family.
 
-Because big names of cloud computing are de facto discarded, the most affordable solution is to host all those services in a cluster of low cost ARM boards, especially at home.
+Because big names of cloud computing are de facto discarded, the most affordable solution is to host all those services in a <<g_cluster, cluster>> of low cost ARM boards, especially at home.
 
 Nevertheless, many other use cases could match the need of a self-hosted cluster, of low cost ARM boards, which provides the principal characteristics of cloud computing.
 
-== The cluster
+== The original cluster layout
 
-The `homecloud` cluster is a network of computers, especially servers, which work together in order to provide services available from Internet, to end users.
+Originally{fn-p64_disclamer}, the cluster was composed of four ARM boards manufactured by PINE64 <<p64>>.
+However, there are no constraints about the number of nodes.
+A `homecloud` cluster can be composed of one or many nodes.
 
-Despite many providers offer ARM boards all around the world, this article focus exclusively{fn-p64_disclamer} on some boards manufactured by PINE64 <<p64>>.
-
-The next parts of this article may refer to the following cluster layout.
-
-.The cluster layout
-image::cluster_layout.png[The cluster layout]
+.The original cluster layout
+image::original_cluster_layout.png[The original cluster layout]
 
 The four boards are inter-connected using the home's router which is already connected to internet{fn-dmz_skipped}.
+Each node is a PINE A64-LTS board <<plts>> embedding an `aarch64` CPU and 2G of memory.
+The used operating system is based on Debian: Armbian <<abn>>.
 
-.Description of the cluster's nodes
-|===
-|Hostname|Type|Architecture|Memory|Operating System
-
-|hc1-n1
-|ROCK64 <<r64>>
-|aarch64
-|4G
-|Armbian
-
-|hc1-n2
-|ROCK64 <<r64>>
-|aarch64
-|4G
-|Armbian
-
-|hc1-n3
-|ROCK64 <<r64>>
-|aarch64
-|4G
-|Armbian
-
-|hc1-n4
-|PINE A64-LTS <<plts>>
-|aarch64
-|2G
-|Armbian
-|===
+Because of lack of compatibility with newer versions of the Linux kernel, four new boards (ROCK64 <<r64>>) have been added to the cluster.
 
 == The user services
 
@@ -116,7 +89,7 @@ The purpose of the building blocks is to support the execution of the user servi
 Some building blocks are parts of the virtual world whereas others to the physical one.
 
 .User Services and Building Blocks
-image::user_services_and_building_blocks.png[User Services and Building Blocks]
+image::building_blocks_and_user_services.png[User Services and Building Blocks]
 
 === The container engine and orchestrator
 
@@ -233,7 +206,7 @@ All `homecloud` services and building blocks, can be breakdown in three categori
 3. stacks of Docker Swarm
 
 .The components hierarchy
-image::components_hierarchy.png[The components hierarchy]
+image::components_overview_hierarchy.png[The components hierarchy]
 
 Running a highly available cluster able to provide services to end users within isolated execution contexts and, moreover, protected by a modern reverse proxy from Internet accesses is good.
 However, it doesn't mean the cluster is secured against external threats ...
@@ -258,14 +231,18 @@ It covers two hardening area with the Ansible collection `devsec.hardening` <<ac
 * the operating system GNU/Linux
 * the SSH configuration
 
-== Implementation
-=== The Ansible inventory
+== The Ansible collection
+
+=== The cluster layouts
+
 === The Armbian image customization
+
 === The cluster nodes
 === The Docker service
 === The Docker Swarm service
 === The DNAS service
 === The Keepalived service
+=== The Ansible inventory
 
 [appendix]
 [#appendix_dnas]
@@ -276,7 +253,7 @@ Samba provides remote accesses from the local network.
 On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.
 
 .The DNAS overview
-image::dnas_overview.png[The DNAS overview]
+image::user_services_dnas.png[The DNAS overview]
 
 The Syncthing service replicates data to the external SSD Disk.
 The same disk is _opened_ to the internal network as a Samba share.
@@ -305,6 +282,9 @@ https://www.techopedia.com/definition/29862/cloud-monitoring
 [[g_containerization]]Containerization::
 Containerization is a type of virtualization strategy that emerged as an alternative to traditional hypervisor-based virtualization. +
 https://www.techopedia.com/definition/31234/containerization-computers
+[[g_cluster]]Cluster::
+A cluster, in the context of servers, is a group of computers that are connected with each other and operate closely to act as a single computer. +
+https://www.techopedia.com/definition/997/cluster-servers
 [[g_dfs]]Distributed File System (DFS)::
 A distributed file system (DFS) is a file system with data stored on a server. The data is accessed and processed as if it was stored on the local client machine. +
 https://www.techopedia.com/definition/1825/distributed-file-system-dfs
@@ -360,6 +340,7 @@ https://www.techopedia.com/definition/16048/reverse-proxy-server
 
 * [[[acsh]]] Ansible Collection - devsec.hardening, https://galaxy.ansible.com/devsec/hardening
 * [[[ans]]] Ansible, https://www.ansible.com
+* [[[abn]]] Armbian, https://www.armbian.com
 * [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
 * [[[cep]]] Ceph, https://ceph.io
 * [[[dnt]]] Docker - Networking overview, https://docs.docker.com/network

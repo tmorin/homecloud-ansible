@@ -1,0 +1,25 @@
+@startuml original_cluster_layout
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+include('homecloud/bootstrap')
+include('homecloud/Hardware/Board')
+include('homecloud/Network/Internet')
+include('homecloud/Network/LocalNetwork')
+include('homecloud/Network/Router')
+
+Internet('internet', 'Internet')
+LocalNetworkGroup('home', 'home network') {
+  Router('router', 'router')
+  Board('n1', 'hc1-n1', 'A64-LTS')
+  Board('n2', 'hc1-n2', 'A64-LTS')
+  Board('n3', 'hc1-n3', 'A64-LTS')
+  Board('n4', 'hc1-n4', 'A64-LTS')
+}
+internet - router
+router -- n1
+router -- n2
+router -- n3
+router -- n4
+@enduml

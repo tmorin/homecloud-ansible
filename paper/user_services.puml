@@ -1,4 +1,39 @@
-@startuml dnas_overview
+@startuml user_services_layout
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+skinparam RectangleShadowing false
+skinparam RectangleBorderStyle dotted
+
+include('homecloud/bootstrap')
+include('homecloud/Network/Internet')
+include('homecloud/Network/LocalNetwork')
+include('homecloud/Network/Router')
+include('homecloud/Brand/Nextcloud')
+include('homecloud/Brand/Syncthing')
+include('homecloud/Brand/Samba')
+include('homecloud/Brand/Calibreweb')
+include('homecloud/Brand/Dnas')
+
+Internet('internet', 'Internet')
+LocalNetworkGroup('home', 'home network') {
+  Router('router', 'router')
+  DnasGroup('dans') {
+    Syncthing('syncthing', 'Syncthing')
+    Samba('samba', 'Samba')
+  }
+  Nextcloud('nextcloud', 'Nextcloud')
+  Calibreweb('calibreweb', 'calibre-web')
+}
+internet - router
+router -- syncthing
+router -- samba
+router -- nextcloud
+router -- calibreweb
+@enduml
+
+@startuml user_services_dnas
 !global $INCLUSION_MODE="local"
 !global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
 !include $LIB_BASE_LOCATION/bootstrap.puml
@@ -29,7 +64,7 @@ SmartphoneGroup('smartphone', 'Smartphone') {
 LocalNetworkGroup('home', 'home network') {
   Router('router', 'router')
   Laptop('laptop', 'Laptop')
-  rectangle dnas {
+  DnasGroup('dnas', 'DNAS') {
     Syncthing('syncthing', 'Syncthing')
     Samba('samba', 'Samba')
     Hdd('ssd', 'SSD Disk')

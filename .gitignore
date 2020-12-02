@@ -3,6 +3,7 @@ extra-vars.json
 .gdiag
 .idea/
 *.log
+*.swp
 *.tar.gz
 .vagrant/
 node_modules/

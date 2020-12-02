@@ -1,0 +1,30 @@
+@startuml sandbox_stack_traefik
+left to right direction
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud/bootstrap')
+include('homecloud/Network/Router')
+include('homecloud/Container/Stack')
+include('homecloud/Container/Container')
+include('homecloud/Container/Volume')
+include('homecloud/Brand/DockerSwarm')
+include('homecloud/Brand/Traefik')
+DockerSwarmGroup('docker_swarm', 'Docker Swarm') {
+  StackGroup('traefik_stack', 'Traefik', 'Docker Stack') {
+    ContainerGroup('traefik_container', 'Traefik', 'Container') {
+      Traefik('traefik', 'Traefik', 'Application')
+    }
+  }
+  Stack('portainer', 'Portainer', 'Docker Stack')
+  Stack('influxdata', 'Influxdata', 'Docker Stack')
+  Stack('nextcloud', 'Nextcloud', 'Docker Stack')
+  Stack('calibreweb', 'calibre-web', 'Docker Stack')
+}
+Router('router', 'Router')
+router --> traefik : Relationship('routes traffic to')
+traefik --> portainer
+traefik --> influxdata
+traefik --> nextcloud
+traefik --> calibreweb
+@enduml
