@@ -233,9 +233,26 @@ It covers two hardening area with the Ansible collection `devsec.hardening` <<ac
 
 == The Ansible collection
 
-=== The cluster layouts
+An Ansible collection is mainly composed of Ansible Roles.
+A role helps to bundle resources like variables, tasks or templates.
+The purpose of a role is to mutate the state of a system (i.e. a host): change file content, install packages, execute command, etc.
+Ansible Roles are usually used in Ansible Playbook.
+An Ansible Playbook helps to orchestrate roles according to an inventory of hosts.
+In the `homecloud` context, the inventory describes the nodes of the cluster.
+
+The purpose of the `homecloud` Ansible Collection is to provide a set of Roles as well as a set of Playbooks helping to bootstrap the main building blocks of an internal cloud.
 
 === The Armbian image customization
+
+==== The network configuration
+
+In order to mutate hosts using <<g_ssh, SSH>>, Ansible needs to resolve their _addresses_ (i.e. the IP).
+Usually, local network rely on <<g_dhcp, DHCP>> to automatically assigned IPs to new devices.
+In the `homecloud` context, this solution is not the efficient because the nodes' IPs could change over the time and then create issues with the building blocks operations.
+Therefore, the best way is to be sure each node of the cluster has a static IP which will never ever change over the time.
+
+By default, Armbian is configured to get an IP using DHCP, however a static IP can be easily configured from a configuration file.
+
 
 === The cluster nodes
 === The Docker service
@@ -288,6 +305,9 @@ https://www.techopedia.com/definition/997/cluster-servers
 [[g_dfs]]Distributed File System (DFS)::
 A distributed file system (DFS) is a file system with data stored on a server. The data is accessed and processed as if it was stored on the local client machine. +
 https://www.techopedia.com/definition/1825/distributed-file-system-dfs
+[[g_dhcp]]Dynamic Host Configuration Protocol (DHCP)::
+Dynamic Host Configuration Protocol (DHCP) is a network management protocol used to dynamically assign an IP address to any new node entering the network. DHCP permits a node to be configured automatically, thereby avoiding the necessity of involvement by a network administrator. +
+https://www.techopedia.com/definition/11337/dynamic-host-configuration-protocol-dhcp
 [[g_disaster_recovery]]Disaster Recovery::
 Disaster recovery is a set of policies and procedures which focus on protecting an organization from any significant effects in case of a negative event, which may include cyberattacks, natural disasters or building or device failures. +
 https://www.techopedia.com/definition/31989/disaster-recovery
@@ -309,6 +329,9 @@ https://www.techopedia.com/definition/4057/port-forwarding
 [[g_reverse_proxy_server]]Reverse Proxy Server::
 A reverse proxy server is a type of proxy server that manages a connection or any specific requests coming from an external network/Internet toward an internal network. +
 https://www.techopedia.com/definition/16048/reverse-proxy-server
+[[g_ssh]]Secure Shell (SSH)::
+SSH is a cryptographic protocol and interface for executing network services, shell services and secure network communication with a remote computer. +
+https://www.techopedia.com/definition/4127/secure-shell-ssh
 
 [bibliography]
 == References
