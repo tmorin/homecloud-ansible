@@ -44,9 +44,7 @@ install:
   - vagrant box add generic/debian9 --provider=libvirt --box-version 3.1.6 || true
   - vagrant box add generic/debian10 --provider=libvirt --box-version 3.1.6 || true
   - vagrant box add generic/ubuntu1804 --provider=libvirt --box-version 3.1.6 || true
-  # configure ansible
-  - ansible-galaxy collection install community.general || true
-  - ansible-galaxy install dev-sec.os-hardening || true
-  - ansible-galaxy install dev-sec.ssh-hardening || true
+  # install ansible dependencies
+  - ansible-galaxy collection install -r requirements.yml
 script:
   - scripts/$TEST_NAME.sh
