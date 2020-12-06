@@ -11,7 +11,8 @@
 
 == Introduction
 
-`homecloud` aims to provide a <<g_cloud_computing, cloud like environment>>, especially an <<g_internal_cloud, internal cloud>>, at home. The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Docker Swarm, Ceph or Syncthing.
+`homecloud` aims to provide a <<g_cloud_computing, cloud like environment>>, especially an <<g_internal_cloud, internal cloud>>, at home.
+The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Docker Swarm, Ceph or Syncthing.
 
 The main artifact is an Ansible <<ans>> collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
 
@@ -96,8 +97,7 @@ image::building_blocks_and_user_services.png[User Services and Building Blocks]
 Docker is one of the most popular technology about _container_, and moreover, ready-to-use to almost all architectures <<dok>>.
 Therefore, because `homecloud` must be easy to bootstrap and configure for at least `amd64` and `aarch64` architectures, Docker is a good candidate for the container engine.
 
-Luckily Docker shipped a ready-to-use container orchestrator: Docker Swarm <<dsw>>.applications will be hi
-Therefore, according to the _domestic_ usage of `homecloud`, Docker Swarm is a good candidate for the container orchestration especially because no overhead will be added to the technical stack.
+Luckily Docker shipped a ready-to-use container orchestrator: Docker Swarm <<dsw>>.applications will be hi Therefore, according to the _domestic_ usage of `homecloud`, Docker Swarm is a good candidate for the container orchestration especially because no overhead will be added to the technical stack.
 
 Nevertheless, additional building blocks have to be added to the virtual stack.
 
@@ -231,6 +231,17 @@ It covers two hardening area with the Ansible collection `devsec.hardening` <<ac
 * the operating system GNU/Linux
 * the SSH configuration
 
+== Infrastructure as code
+
+A `homecloud` cluster can be fully installed manually node by node, task by task, package by package ...
+However, this approach, even if highly instructive, is time-consuming and error prone.
+In the IT industry there is more efficient way to install and even manage infrastructure stuff: the infrastructure as code <<rhic>>.
+
+There are many solutions which embraces infrastructure as code.
+One of the most popular one is Ansible.
+It is an open source tool to automate IT tasks with a declarative model.
+Ansible projects can be stored in a Version Control System but also easily tested in virtual environments, especially within a <<g_continuous_integration, continuous integration>> process.
+
 == The Ansible collection
 
 An Ansible collection is mainly composed of Ansible Roles.
@@ -244,21 +255,16 @@ The purpose of the `homecloud` Ansible Collection is to provide a set of Roles a
 
 === The Armbian image customization
 
-==== The network configuration
-
-In order to mutate hosts using <<g_ssh, SSH>>, Ansible needs to resolve their _addresses_ (i.e. the IP).
-Usually, local network rely on <<g_dhcp, DHCP>> to automatically assigned IPs to new devices.
-In the `homecloud` context, this solution is not the efficient because the nodes' IPs could change over the time and then create issues with the building blocks operations.
-Therefore, the best way is to be sure each node of the cluster has a static IP which will never ever change over the time.
-
-By default, Armbian is configured to get an IP using DHCP, however a static IP can be easily configured from a configuration file.
-
-
 === The cluster nodes
+
 === The Docker service
+
 === The Docker Swarm service
+
 === The DNAS service
+
 === The Keepalived service
+
 === The Ansible inventory
 
 [appendix]
@@ -293,47 +299,70 @@ image::building_blocks_keepalived.png[Overview of the Keepalived integration]
 [[g_cloud_computing]]Cloud Computing::
 Cloud computing is the the use of various services, such as software development platforms, servers, storage and software, over the internet, often referred to as the "cloud." +
 https://www.techopedia.com/definition/2/cloud-computing
+
 [[g_cloud_monitoring]]Cloud Monitoring::
-Cloud monitoring is the process of reviewing, monitoring and managing the operational workflow and processes within a cloud-based IT asset or infrastructure. It is the use of manual or automated IT monitoring and management techniques to ensure that a cloud infrastructure or platform performs optimally. +
+Cloud monitoring is the process of reviewing, monitoring and managing the operational workflow and processes within a cloud-based IT asset or infrastructure.
+It is the use of manual or automated IT monitoring and management techniques to ensure that a cloud infrastructure or platform performs optimally. +
 https://www.techopedia.com/definition/29862/cloud-monitoring
+
 [[g_containerization]]Containerization::
 Containerization is a type of virtualization strategy that emerged as an alternative to traditional hypervisor-based virtualization. +
 https://www.techopedia.com/definition/31234/containerization-computers
+
+[[g_continuous_integration]]Continuous Integration (CI)::
+Continuous integration (CI) is a software development practice in which each member of a development team integrates his work with that produced by others on a continuous basis. +
+https://www.techopedia.com/definition/24368/continuous-integration-ci
+
 [[g_cluster]]Cluster::
 A cluster, in the context of servers, is a group of computers that are connected with each other and operate closely to act as a single computer. +
 https://www.techopedia.com/definition/997/cluster-servers
+
 [[g_dfs]]Distributed File System (DFS)::
-A distributed file system (DFS) is a file system with data stored on a server. The data is accessed and processed as if it was stored on the local client machine. +
+A distributed file system (DFS) is a file system with data stored on a server.
+The data is accessed and processed as if it was stored on the local client machine. +
 https://www.techopedia.com/definition/1825/distributed-file-system-dfs
+
 [[g_dhcp]]Dynamic Host Configuration Protocol (DHCP)::
-Dynamic Host Configuration Protocol (DHCP) is a network management protocol used to dynamically assign an IP address to any new node entering the network. DHCP permits a node to be configured automatically, thereby avoiding the necessity of involvement by a network administrator. +
+Dynamic Host Configuration Protocol (DHCP) is a network management protocol used to dynamically assign an IP address to any new node entering the network.
+DHCP permits a node to be configured automatically, thereby avoiding the necessity of involvement by a network administrator. +
 https://www.techopedia.com/definition/11337/dynamic-host-configuration-protocol-dhcp
+
 [[g_disaster_recovery]]Disaster Recovery::
 Disaster recovery is a set of policies and procedures which focus on protecting an organization from any significant effects in case of a negative event, which may include cyberattacks, natural disasters or building or device failures. +
 https://www.techopedia.com/definition/31989/disaster-recovery
+
 [[g_hardening]]Hardening::
-Hardening refers to providing various means of protection in a computer system. Protection is provided in various layers and is often referred to as defense in depth. +
+Hardening refers to providing various means of protection in a computer system.
+Protection is provided in various layers and is often referred to as defense in depth. +
 https://www.techopedia.com/definition/24833/hardening
+
 [[g_ha]]High Availability (HA)::
 High availability refers to systems that are durable and likely to operate continuously without failure for a long time. +
 https://www.techopedia.com/definition/1021/high-availability-ha
+
 [[g_internal_cloud]]Internal Cloud::
 An internal cloud is a cloud computing service model that is implemented within an organization's dedicated resources and infrastructure. +
 https://www.techopedia.com/definition/26648/internal-cloud
+
 [[g_nas]]Network-attached storage (NAS)::
-Network attached storage (NAS) is a dedicated server, also referred to as an appliance, used for file storage and sharing. NAS is a hard drive attached to a network, used for storage and accessed through an assigned network address. +
+Network attached storage (NAS) is a dedicated server, also referred to as an appliance, used for file storage and sharing.
+NAS is a hard drive attached to a network, used for storage and accessed through an assigned network address. +
 https://www.techopedia.com/definition/26197/network-attached-storage-nas
+
 [[g_port_forwarding]]Port Forwarding::
 Port forwarding is a networking technique through which a gateway or similar device transmits all incoming communication/traffic of a specific port to the same port on any internal network node. +
 https://www.techopedia.com/definition/4057/port-forwarding
+
 [[g_reverse_proxy_server]]Reverse Proxy Server::
 A reverse proxy server is a type of proxy server that manages a connection or any specific requests coming from an external network/Internet toward an internal network. +
 https://www.techopedia.com/definition/16048/reverse-proxy-server
+
 [[g_ssh]]Secure Shell (SSH)::
 SSH is a cryptographic protocol and interface for executing network services, shell services and secure network communication with a remote computer. +
 https://www.techopedia.com/definition/4127/secure-shell-ssh
 
 [bibliography]
+
 == References
 
 *Opinions*
@@ -346,6 +375,7 @@ https://www.techopedia.com/definition/4127/secure-shell-ssh
 * [[[doha]]] What is High Availability?, https://www.digitalocean.com/community/tutorials/what-is-high-availability
 * [[[rhco]]] What is container orchestration?, https://www.redhat.com/en/topics/containers/what-is-container-orchestration
 * [[[rhc]]] What's a Linux container?, https://www.redhat.com/en/topics/containers/whats-a-linux-container
+* [[[rhic]]] What is Infrastructure as Code (IaC)?, https://www.redhat.com/en/topics/automation/what-is-infrastructure-as-code-iac
 * [[[vswt]]] What is a virtual server?, http://www.linux-vs.org/whatis.html
 
 *Security Hardening*
