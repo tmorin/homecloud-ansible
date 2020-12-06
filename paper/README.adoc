@@ -235,25 +235,34 @@ It covers two hardening area with the Ansible collection `devsec.hardening` <<ac
 
 A `homecloud` cluster can be fully installed manually node by node, task by task, package by package ...
 However, this approach, even if highly instructive, is time-consuming and error prone.
-In the IT industry there is more efficient way to install and even manage infrastructure stuff: the infrastructure as code <<rhic>>.
+In the IT industry there is more efficient way to manage infrastructure stuff: the infrastructure as code <<rhic>>.
 
 There are many solutions which embraces infrastructure as code.
 One of the most popular one is Ansible.
 It is an open source tool to automate IT tasks with a declarative model.
-Ansible projects can be stored in a Version Control System but also easily tested in virtual environments, especially within a <<g_continuous_integration, continuous integration>> process.
+Ansible projects can be stored in a Version Control System but also easily tested in virtual environments, especially in a <<g_continuous_integration, continuous integration>> process.
 
 == The Ansible collection
 
 An Ansible collection is mainly composed of Ansible Roles.
 A role helps to bundle resources like variables, tasks or templates.
 The purpose of a role is to mutate the state of a system (i.e. a host): change file content, install packages, execute command, etc.
-Ansible Roles are usually used in Ansible Playbook.
+Ansible Roles are usually executed in Ansible Playbook.
 An Ansible Playbook helps to orchestrate roles according to an inventory of hosts.
 In the `homecloud` context, the inventory describes the nodes of the cluster.
 
 The purpose of the `homecloud` Ansible Collection is to provide a set of Roles as well as a set of Playbooks helping to bootstrap the main building blocks of an internal cloud.
 
 === The Armbian image customization
+
+In order to mutate a host using <<g_ssh, SSH>>, Ansible expects a location (e.g. its IP), and a remote user properly configured.
+
+In the context of the original cluster layout, it means each node of the cluster must be manually configured before to execute the playbooks of the `homecloud` collection.
+
+In fact, Armbian is by default configured to get an IP by <<g_dhcp, DHCP>> and to configure users at the first boot.
+Therefore, to save time, it is better to implement an Ansible role able to generate a customized `.img` file per cluster node.
+So that, a static IP and a proper user can be configured automatically for each cluster node.
+The last remaining action is to manually writes the `.img` file on the respective eMMC or SD-Card.
 
 === The cluster nodes
 
