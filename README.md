@@ -4,6 +4,10 @@
 
 > `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home based on Docker Swarm, Ceph and Syncthing.
 
+## The paper
+
+An in-depth explanation is available in the [paper](./paper/README.adoc).
+
 ## Overview
 
 This ansible collection provides the following building blocks:
@@ -16,11 +20,11 @@ This ansible collection provides the following building blocks:
 
 The collection provides also ready-to-use stacks:
 
-- `influxdata`: a set of components to monitor the Docker Swarm.
-- `portainer`: a lightweight management UI to easily manage the Docker Swarm.
-- `nextcloud`: a platform providing the benefits of online collaboration without the compliance and security risks.
-- `calibreweb`:  a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
-- `backup`: a system based on Duplicity and CRON which backups Docker volumes. 
+- `influxdata` : a set of components to monitor the Docker Swarm.
+- `portainer` : a lightweight management UI to easily manage the Docker Swarm.
+- `nextcloud` : a platform providing the benefits of online collaboration without the compliance and security risks.
+- `calibreweb` :  a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
+- `backup` : a system based on Duplicity and CRON which backups Docker volumes. 
 
 Additionally, Armbian images can be created for each host of the inventory.
 
@@ -121,24 +125,24 @@ The collection provides several roles.
 
 Roles configuring hosts' system:
 
-- `cluster_node`: apply basic configurations (hostname, deactivate the swap ...)
+- `cluster_node` : apply basic configurations (hostname, deactivate the swap ...)
 
 Roles installing ready-to-use services:
 
-- `service_docker`: install and configure Docker
-- `service_swarm`: install and configure Docker Swarm
-- `service_ceph`: install and configure a Ceph cluster with cephadm
-- `service_keepalived`: install and configure Keepalived with Docker container
-- `service_dnas`: install and configure Samba and syncthing
+- `service_docker` : install and configure Docker
+- `service_swarm` : install and configure Docker Swarm
+- `service_ceph` : install and configure a Ceph cluster with cephadm
+- `service_keepalived` : install and configure Keepalived with Docker container
+- `service_dnas` : install and configure Samba and syncthing
 
 Roles deploying ready-to-use Docker Swarm stacks:
 
-- `stack_traefik`: deploy a Docker Swarm stack running Traefik
-- `stack_portainer`: deploy a Docker Swarm stack running Portainer
-- `stack_influxdata`: deploy a Docker Swarm stack based on influxdata products (Influxdb, Telegraf, Kapacitor, Chronograf)
-- `stack_calibreweb`: deploy a Docker Swarm stack running Calibreweb
-- `stack_nextcloud`: deploy a Docker Swarm stack running Nextcloud
-- `stack_backup`: deploy a Docker Swarm stack running Duplicity in order to backup Docker volumes
+- `stack_traefik` : deploy a Docker Swarm stack running Traefik
+- `stack_portainer` : deploy a Docker Swarm stack running Portainer
+- `stack_influxdata` : deploy a Docker Swarm stack based on influxdata products (Influxdb, Telegraf, Kapacitor, Chronograf)
+- `stack_calibreweb` : deploy a Docker Swarm stack running Calibreweb
+- `stack_nextcloud` : deploy a Docker Swarm stack running Nextcloud
+- `stack_backup` : deploy a Docker Swarm stack running Duplicity in order to backup Docker volumes
 
 ## Ansible Playbooks
 
