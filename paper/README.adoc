@@ -22,7 +22,7 @@ The intentions which led to the `homecloud` creation match ones related to the F
 
 Therefore, the original use case is:
 
-* be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, personal projects, ...
+* be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, private projects, ...
 * ba able to manage a human size of users, basically a family.
 
 Because big names of cloud computing are de facto discarded, the most affordable solution is to host all those services in a <<g_cluster, cluster>> of low cost ARM boards, especially at home.
@@ -253,26 +253,106 @@ In the `homecloud` context, the inventory describes the nodes of the cluster.
 
 The purpose of the `homecloud` Ansible Collection is to provide a set of Roles as well as a set of Playbooks helping to bootstrap the main building blocks of an internal cloud.
 
-=== The Armbian image customization
+=== The customization of Armbian images
 
 In order to mutate a host using <<g_ssh, SSH>>, Ansible expects a location (e.g. its IP), and a remote user properly configured.
-
-In the context of the original cluster layout, it means each node of the cluster must be manually configured before to execute the playbooks of the `homecloud` collection.
+According to the original cluster layout, it means each node of the cluster must be manually configured before to execute the playbooks of the `homecloud` collection.
 
 In fact, Armbian is by default configured to get an IP by <<g_dhcp, DHCP>> and to configure users at the first boot.
 Therefore, to save time, it is better to implement an Ansible role able to generate a customized `.img` file per cluster node.
 So that, a static IP and a proper user can be configured automatically for each cluster node.
 The last remaining action is to manually writes the `.img` file on the respective eMMC or SD-Card.
 
-=== The cluster nodes
+The Ansible role `image_armbian` manages the whole processing:
 
+* download the `.img` files
+* for each node patch a dedicated `.img` file
+
+=== The common configurations
+
+Some configurations have to be applied to all nodes of the cluster.
+They deal with hostnames, memory management or even package management.
+It is the purpose of the Ansible role `cluster_node`.
+
+Basically, all nodes should know the hostname of all cluster nodes.
+
+About memory, Armbian enables by default <<g_memory_swapping, memory swapping>>.
+However, its usage on ARM boards leads to poor performances.
+Therefore, the Swap must be disabled on each node of the cluster.
+
+Finally, it can be necessary to freeze packages.
+For instance, the PINE A64-LTS cannot work with eMMC on recent Linux releases.
+Therefore, the respective packages have to be frozen otherwise the system couldn't restart.
+
+[#role_docker_service]
 === The Docker service
+
+The Docker service is one of the main building block of `homecloud`.
+The service must be available on each host of both clusters Docker Swarm and Ceph.
+The Ansible role `service_docker` configures the hosts accordingly.
+
+Due to the Docker Hub limitation, the role expects a username and a password.
 
 === The Docker Swarm service
 
-=== The DNAS service
+The Ansible role `service_swarm` turns the host to a node of the Docker Swarm cluster.
+It expects a working Docker Engine, c.f. <<role_docker_service, the Docker Service>>.
+
+A host can be a manager or a worker.
+The inventory groups of the hosts define the Docker Swarm roles.
+
+* `swarm_mgr` contains the manager nodes.
+* `swarm_wkr` contains the worker nodes.
 
 === The Keepalived service
+
+The Ansible role `service_keepalived` ships Keepalived to the host within Docker container.
+Therefore, it expects a working Docker Engine, c.f. <<role_docker_service, the Docker Service>>.
+
+The role configures also the load of the kernel module `ip_vs` on system boot.
+
+=== The Ceph service
+
+The Ansible role `service_ceph` turns the host to a node of the Ceph cluster.
+Therefore, it expects a working Docker Engine, c.f. <<role_docker_service, the Docker Service>>.
+
+A host can have many Ceph roles.
+The inventory groups of the hosts define the Ceph roles.
+
+* `ceph_mon` contains the monitor nodes.
+* `ceph_mgr` contains the manager nodes.
+* `ceph_osd` contains the OSD nodes.
+
+According to the Ceph requirements, an OSD node must provide a free block device of at least 5GO.
+
+=== The DNAS service
+
+The Ansible role `service_dnas` installs and configures Syncthing and Samba on the host.
+It manages the mount of the block device which contains the files to expose over Syncthing and Samba.
+It manages also basic configuration of Syncthing and Samba related to credentials.
+
+=== The stacks
+
+There is a dedicated Ansible role by stacks.
+Each role provides the definition of the stack as well as its deployment process.
+It manages also the creation of the expected Ceph volumes.
+
+The building blocks:
+
+* `stack_backup` defines a stack which backups Docker volumes with Duplicity on regular basis.
+* `stack_influxdata` defines the stack providing the monitoring and altering feature.
+* `stack_portainer` defines the stack providing the Docker Swarm management feature.
+* `tack_traefik` defines the stack providing the reverse proxy feature.
+
+The end-user services:
+
+* `stack_calibreweb` defines the stack providing the calibre-web feature.
+* `stack_nextcloud` defines the stack providing the nextcloud feature.
+
+=== Backup and restore
+
+As seen above, the Ansible role `stack_backup` manages the backup operations.
+Its counterpart, the Ansible role `action_restore` manages the restoration of backed Docker volumes.
 
 === The Ansible inventory
 
@@ -280,7 +360,7 @@ The last remaining action is to manually writes the `.img` file on the respectiv
 [#appendix_dnas]
 == dnas: a decentralized NAS
 
-The purpose of _dnas_ is to expose personal files over the local network like a usual <<g_nas, NAS>>  but also from Internet.
+The purpose of _dnas_ is to expose private files over the local network like a usual <<g_nas, NAS>>  but also from Internet.
 Samba provides remote accesses from the local network.
 On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.
 
@@ -306,7 +386,7 @@ image::building_blocks_keepalived.png[Overview of the Keepalived integration]
 
 [glossary]
 [[g_cloud_computing]]Cloud Computing::
-Cloud computing is the the use of various services, such as software development platforms, servers, storage and software, over the internet, often referred to as the "cloud." +
+Cloud computing is the use of various services, such as software development platforms, servers, storage and software, over the internet, often referred to as the "cloud." +
 https://www.techopedia.com/definition/2/cloud-computing
 
 [[g_cloud_monitoring]]Cloud Monitoring::
@@ -350,8 +430,13 @@ High availability refers to systems that are durable and likely to operate conti
 https://www.techopedia.com/definition/1021/high-availability-ha
 
 [[g_internal_cloud]]Internal Cloud::
-An internal cloud is a cloud computing service model that is implemented within an organization's dedicated resources and infrastructure. +
+An internal cloud is a cloud computing service model implemented within an organization's dedicated resources and infrastructure. +
 https://www.techopedia.com/definition/26648/internal-cloud
+
+[[g_memory_swapping]]Memory Swapping::
+Memory swapping is a memory reclamation method wherein memory contents not currently in use are swapped to a disk to make the memory available for other applications or processes.
+The exact state or "page" of memory is copied to the disk to make the data contiguous and easy to restore later. +
+https://www.techopedia.com/definition/30467/memory-swapping
 
 [[g_nas]]Network-attached storage (NAS)::
 Network attached storage (NAS) is a dedicated server, also referred to as an appliance, used for file storage and sharing.
