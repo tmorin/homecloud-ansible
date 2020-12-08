@@ -2,7 +2,7 @@
 // METADATA
 :doctype: article
 :author: Thibault Morin
-:revdate: 2020-11-28
+:revdate: 2020-12-08
 :homepage: https://github.com/tmorin/homecloud-ansible
 :toc:
 // FOOTNOTES

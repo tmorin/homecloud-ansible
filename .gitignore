@@ -1,9 +1,10 @@
+dist/
 .env
 extra-vars.json
 .gdiag
 .idea/
 *.log
+node_modules/
 *.swp
 *.tar.gz
 .vagrant/
-node_modules/
