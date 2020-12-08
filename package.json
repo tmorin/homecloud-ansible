@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "1.5.0-alpha.0",
+  "version": "1.5.0-beta.0",
   "scripts": {
     "gdiag": "gdiag --wd=paper",
     "release:alpha": "standard-version --commit-all --prerelease alpha --skip.changelog --skip.tag",
