@@ -1,16 +1,17 @@
 #!/bin/bash
 
-pushd . > /dev/null
-SCRIPT_PATH="${BASH_SOURCE[0]}";
+pushd . >/dev/null
+SCRIPT_PATH="${BASH_SOURCE[0]}"
 if [ -h "$SCRIPT_PATH" ]; then
-  while [ -h "$SCRIPT_PATH" ] ; do cd "$(dirname "$SCRIPT_PATH")"; SCRIPT_PATH=$(readlink "$SCRIPT_PATH"); done
+  while [ -h "$SCRIPT_PATH" ]; do
+    cd "$(dirname "$SCRIPT_PATH")" && SCRIPT_PATH=$(readlink "$SCRIPT_PATH")
+  done
 fi
-cd "$(dirname "$SCRIPT_PATH")" > /dev/null
-SCRIPT_PATH="$(pwd)";
-popd  > /dev/null
+cd "$(dirname "$SCRIPT_PATH")" >/dev/null && SCRIPT_PATH="$(pwd)"
+popd >/dev/null || true
 
 export CLUSTER="c1"
-export HOMECLOUD_IP="192.168.11.11"
+export HOMECLOUD_IP="192.168.11.10"
 
 source "$SCRIPT_PATH/include.sh"
 

@@ -3,6 +3,7 @@
 swarm_services:
   - service_docker
   - service_swarm
+  - service_keepalived
 
 swarm_stacks:
   - stack_traefik
