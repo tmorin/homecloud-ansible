@@ -4,6 +4,6 @@
     "gdiag": "gdiag --wd=paper"
   },
   "dependencies": {
-    "@tmorin/plantuml-libs": "^2.3.0"
+    "@tmorin/plantuml-libs": "^2.4.0"
   }
 }
