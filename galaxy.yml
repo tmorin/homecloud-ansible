@@ -1,7 +1,7 @@
 namespace: tmorin
 name: homecloud
 version: 1.5.0-beta.0
-readme: README.md
+readme: README.Ansible.md
 authors:
   - Thibault Morin (https://tmorin.github.io)
 description: The collection provides a ready-to-use set of resources to
