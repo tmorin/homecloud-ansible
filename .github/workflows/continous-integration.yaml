@@ -1,8 +1,11 @@
 name: Continous Integration
+
 on: [ push, pull_request ]
+
 jobs:
+
   paper:
-    name: Build paper
+    name: Build the paper
     runs-on: ubuntu-20.04
     container: asciidoctor/docker-asciidoctor
     steps:
@@ -23,3 +26,24 @@ jobs:
         with:
           name: paper-website
           path: dist/paper
+
+  collection:
+    name: Build the Ansible collection
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install Ansible
+        run: pip install --user 'ansible>=2.10'
+      - name: Build the collection
+        run: ansible-galaxy collection build --force --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+      - name: Upload collection
+        uses: actions/upload-artifact@v2
+        with:
+          name: collection
+          path: tmorin-homecloud-*.tar.gz
+      - name: Publish the collection
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        run: ansible-galaxy collection publish --token ${{ secrets.ANSIBLE_GALAXY_API_KEY }} tmorin-homecloud-*.tar.gz

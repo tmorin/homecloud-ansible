@@ -1,7 +1,7 @@
 ---
 namespace: tmorin
 name: homecloud
-version: 1.5.0
+version: 1.5.0-alpha.0
 readme: README.md
 authors:
   - Thibault Morin (https://tmorin.github.io)
@@ -11,7 +11,6 @@ tags:
   - docker
   - swarm
   - cloud
-  - internal cloud
   - ceph
   - syncthing
   - samba
@@ -23,10 +22,12 @@ dependencies:
   'devsec.hardening': '*'
 build_ignore:
   - .*
+  - inventories
+  - paper
+  - node_modules
+  - playbooks/images/*
+  - playbooks/vault/*
+  - scripts
+  - tmp/*
   - ansible.cfg
-  - inventories/
-  - node_modules/
-  - playbooks/images/
-  - playbooks/vault/
-  - scripts/
-  - tmp/
+  - postbump.log

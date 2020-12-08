@@ -1,9 +1,22 @@
 {
   "private": true,
+  "version": "1.5.0-alpha.0",
   "scripts": {
-    "gdiag": "gdiag --wd=paper"
+    "gdiag": "gdiag --wd=paper",
+    "release:alpha": "standard-version --commit-all --prerelease alpha --skip.changelog --skip.tag",
+    "release:beta": "standard-version --commit-all --prerelease beta --skip.changelog",
+    "release:publish": "git push --tags && git push --all",
+    "release:standard": "standard-version --commit-all"
+  },
+  "standard-version": {
+    "scripts": {
+      "postbump": "node ./scripts/postbump.js > postbump.log",
+      "precommit": "git add -A"
+    }
   },
   "dependencies": {
-    "@tmorin/plantuml-libs": "^2.4.0"
+    "@tmorin/plantuml-libs": "^2.4.0",
+    "standard-version": "^9.0.0",
+    "yaml": "^1.10.0"
   }
 }
