@@ -331,7 +331,7 @@ The Ansible role `service_dnas` installs and configures Syncthing and Samba on t
 It manages the mount of the block device which contains the files to expose over Syncthing and Samba.
 It manages also basic configuration of Syncthing and Samba related to credentials.
 
-=== The stacks
+=== The Docker stacks
 
 There is a dedicated Ansible role by stacks.
 Each role provides the definition of the stack as well as its deployment process.
@@ -427,7 +427,7 @@ For instance, the variable `homecloud_is_https` is common because it drives the 
 
 [appendix]
 [#appendix_dnas]
-== dnas: a decentralized NAS
+== dnas, a decentralized NAS
 
 The purpose of _dnas_ is to expose private files over the local network like a usual <<g_nas, NAS>>  but also from Internet.
 Samba provides remote accesses from the local network.
