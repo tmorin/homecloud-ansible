@@ -1,0 +1,5 @@
+---
+
+#- import_playbook: '../resources/playbooks/cluster-hardening.yml'
+- import_playbook: '../resources/playbooks/cluster-bootstrap.yml'
+#- import_playbook: '../resources/playbooks/stacks-deploy.yml'

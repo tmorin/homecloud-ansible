@@ -1,0 +1,112 @@
+---
+
+dependency:
+  name: galaxy
+#  options:
+#    requirements-file: collections.yml
+
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+
+platforms:
+  - name: hc1-n1
+    box: "${MOLECULE_N1_BOX-generic/ubuntu1804}"
+    provider_options:
+      driver: "'kvm'"
+    memory: 4096
+    cpu: 2
+    interfaces:
+      - network_name: 'private_network'
+        ip: '192.168.11.11'
+        libvirt__domain_name: 'homecloud.local'
+    instance_raw_config_args:
+      - "vm.provision 'shell', inline: 'apt update && mkfs.ext4 /dev/vdb'"
+    provider_raw_config_args:
+      - "storage :file, :size => '5G'"
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: "$MOLECULE_PROJECT_DIRECTORY/roles"
+  inventory:
+    group_vars:
+      all:
+        homecloud_virtual_ip: '192.168.11.10'
+        homecloud_is_https: false
+        homecloud_backup_volume:
+          driver: local
+          driver_opts:
+            type: "cifs"
+            device: "//192.168.11.11/dnas"
+            o: "username=dnas,password=dnas,uid=1000,gid=1000,file_mode=0777,dir_mode=0777"
+        cluster_node_do_upgrade: no
+        # dev-sec.ssh-hardening
+        ssh_allow_users: "{{ ansible_user }}"
+        ssh_use_pam: true
+        ssh_max_auth_retries: 10
+        sftp_enabled: yes
+        # dev-sec.os-hardening
+        os_auditd_enabled: false
+        ufw_manage_defaults: false
+        sysctl_overwrite:
+          net.ipv4.ip_forward: 1
+      dnas:
+        dnas_services:
+          - service_dnas
+      swarm:
+        swarm_services:
+          - service_docker
+          - service_swarm
+          - service_keepalived
+        swarm_stacks:
+          - stack_traefik
+          - stack_influxdata
+          - stack_portainer
+          - stack_nextcloud
+          - stack_calibreweb
+          - stack_backup
+        stack_backup_source_volume_names:
+          - calibreweb_config
+          - influxdata_influxdb
+          - influxdata_kapacitor
+          - influxdata_chronograf
+          - nextcloud_database
+          - nextcloud_server
+          - portainer_console
+          - traefik_letsencrypt
+        stack_nextcloud_volumes:
+          mnt:
+            driver: local
+            driver_opts:
+              o: bind
+              type: none
+              device: /mnt
+    host_vars:
+      hc1-n1:
+        homecloud_node_ip: "{{ ansible_host }}"
+        service_swarm_node_labels:
+          blue:
+          type: generic
+        service_dnas_mount_what: '/dev/vdb'
+    hosts:
+      all:
+        children:
+          # SWARM
+          swarm_mgr:
+            hosts:
+              hc1-n1:
+          swarm_wkr:
+            hosts: {}
+          swarm:
+            children:
+              swarm_mgr: {}
+              swarm_wkr: {}
+          # DNAS
+          dnas:
+            hosts:
+              hc1-n1:
+
+verifier:
+  name: ansible

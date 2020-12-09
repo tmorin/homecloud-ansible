@@ -18,4 +18,14 @@
     upgrade: "yes"
     force_apt_get: "yes"
   register: upgrade_system
-- debug: var=upgrade_system
+
+- name: 'update the system'
+  become: yes
+  when: not cluster_node_do_upgrade
+  apt:
+    update_cache: "yes"
+    autoclean: "yes"
+    autoremove: "yes"
+    upgrade: "no"
+    force_apt_get: "yes"
+  register: upgrade_system
