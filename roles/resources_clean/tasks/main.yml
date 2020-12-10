@@ -5,9 +5,11 @@
     paths: /tmp/resources
     patterns: "*"
   register: files_to_delete
+  changed_when: false
 
 - name: 'delete resources'
   file:
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ files_to_delete.files }}"
+  changed_when: false

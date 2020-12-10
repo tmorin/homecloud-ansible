@@ -1,0 +1,34 @@
+---
+
+service_keepalived_interface: 'eth1'
+
+swarm_services:
+  - service_docker
+  - service_keepalived
+  - service_swarm
+
+swarm_stacks:
+  - stack_traefik
+  - stack_portainer
+  - stack_influxdata
+  - stack_nextcloud
+  - stack_calibreweb
+  - stack_backup
+
+stack_backup_source_volume_names:
+  - traefik_letsencrypt
+  - portainer_console
+  - influxdata_influxdb
+  - influxdata_kapacitor
+  - influxdata_chronograf
+  - nextcloud_database
+  - nextcloud_server
+  - calibreweb_config
+
+stack_nextcloud_volumes:
+  mnt:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /mnt

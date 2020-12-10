@@ -390,41 +390,6 @@ In order to avoid confusions, by convention, the prefix of common variables is `
 
 For instance, the variable `homecloud_is_https` is common because it drives the configuration of Traefik as well as declarations of Docker Stacks exposing services from Internet.
 
-.The common variable
-|===
-|Name |Description
-
-|homecloud_backup_volume
-|The definition of the Docker volume used to store backups.
-
-|homecloud_ceph_is_enabled
-|`true` means the `homecloud` handles a Ceph cluster.
-
-|homecloud_ceph_monitor_ips
-|The list of the monitor IPs of the Ceph cluster.
-
-|homecloud_duplicity_passphrase
-|The passphrase used by Duplicity to crypt the backups.
-
-|homecloud_is_https
-|`true` means HTTPS is handled with Let's Encrypt.
-
-|homecloud_network_gateway
-|The IP of the local network's gateway.
-
-|homecloud_network_nameserver
-|A list of DNS.
-
-|homecloud_network_netmask
-|The netmask of the local network.
-
-|homecloud_node_ip
-|The IP of the node.
-
-|homecloud_virtual_ip
-|The IP of the virtual service managed by Keepalived.
-|===
-
 [appendix]
 [#appendix_dnas]
 == dnas, a decentralized NAS

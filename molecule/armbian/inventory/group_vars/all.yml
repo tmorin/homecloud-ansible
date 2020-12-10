@@ -1,0 +1,13 @@
+---
+
+homecloud_vault_path: "/tmp/molecule/vault"
+image_armbian_working_directory: "/tmp/molecule/image_armbian/working_directory"
+image_armbian_release_directory: "/tmp/molecule/image_armbian/release_directory"
+
+homecloud_virtual_ip: '192.168.100.10'
+homecloud_network_netmask: '255.255.255.0'
+homecloud_network_gateway: '192.168.0.1'
+homecloud_network_nameservers: [ '1.1.1.1', '1.0.0.1' ]
+homecloud_is_https: false
+
+image_armbian_ssh_pub_key_path: "/tmp/dummy_pub_rsa"

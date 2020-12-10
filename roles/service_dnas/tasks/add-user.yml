@@ -1,11 +1,11 @@
 ---
 
-- name: 'Add the group'
+- name: Add the group
   become: yes
   group:
     name: "{{ service_dnas_username }}"
 
-- name: 'Add the user'
+- name: Add the user
   become: yes
   user:
     name: "{{ service_dnas_username }}"
@@ -14,7 +14,7 @@
     create_home: false
     password: "{{ service_dnas_password }}"
 
-- name: 'chown home directory'
+- name: Chown the home directory
   become: yes
   file:
     path: "{{ service_dnas_mount_where }}"

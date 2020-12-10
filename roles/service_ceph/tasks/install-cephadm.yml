@@ -1,13 +1,13 @@
 ---
 
-- name: 'install ceph dependencies'
+- name: Install ceph dependencies
   become: yes
   package:
     name: curl,lvm2
     state: present
     force_apt_get: "yes"
 
-- name: 'download cephadm'
+- name: Download cephadm
   become: yes
   get_url:
     url: https://raw.githubusercontent.com/ceph/ceph/v{{ service_ceph_release }}/src/cephadm/cephadm

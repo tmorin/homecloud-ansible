@@ -1,0 +1,3 @@
+---
+
+- import_playbook: ../resources/playbooks/stacks-deploy.yml

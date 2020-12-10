@@ -1,5 +1,7 @@
 ---
 
+homecloud_vault_path: "/tmp/homecloud/vault"
+
 service_swarm_manager_ip: "{{ hostvars[groups['swarm_mgr'][0]].homecloud_node_ip }}"
 
 # The value should be overridden from a host variable.

@@ -31,3 +31,8 @@ rules:
     type: unix
   trailing-spaces: disable
   truthy: disable
+
+
+ignore: |
+  node_modules
+  env

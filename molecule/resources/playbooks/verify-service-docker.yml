@@ -1,0 +1,13 @@
+---
+
+- hosts: swarm:ceph
+  tasks:
+    - name: Get Docker info
+      community.general.docker_host_info:
+      ignore_errors: yes
+      register: docker_info
+    - name: Verify Docker installation
+      assert:
+        quiet: true
+        that:
+          - not docker_info.failed

@@ -1,11 +1,11 @@
 ---
 
-- name: 'get /etc/ceph/ceph.conf stat'
+- name: Get /etc/ceph/ceph.conf stat
   stat:
     path: /etc/ceph/ceph.conf
   register: ceph_conf_file
 
-- name: 'initialize the ceph cluster'
+- name: Initialize the ceph cluster
   when: not ceph_conf_file.stat.exists
   block:
     - name: 'create /etc/ceph'

@@ -1,9 +1,15 @@
 ---
 
-- name: 'install cephadm'
+- name: Create the vault directory
+  delegate_to: localhost
+  file:
+    path: "{{ homecloud_vault_path }}"
+    state: directory
+
+- name: Install cephadm
   import_tasks: install-cephadm.yml
 
-- name: 'setup the main manager node'
+- name: Setup the main manager node
   when: inventory_hostname in groups.ceph_mon[0:1]
   block:
     - name: 'initialize cluster'
@@ -15,12 +21,12 @@
     - name: 'configure cluster'
       import_tasks: configure-cluster.yml
 
-- name: 'populate remaining hosts'
+- name: Populate remaining hosts
   when: inventory_hostname in groups.ceph_mgr,groups.ceph_mon,groups.ceph_osd
   block:
     - import_tasks: push-ssh-pubkey.yml
 
-- name: 'setup the other nodes'
+- name: Setup the other nodes
   when: inventory_hostname in groups.ceph_mon[0:1]
   block:
     - name: 'add hosts'

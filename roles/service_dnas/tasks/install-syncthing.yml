@@ -1,31 +1,27 @@
 ---
 
-- name: 'install dependencies'
+- name: Install dependencies
   become: yes
   package:
-    pkg: apt-transport-https
+    name: apt-transport-https
     state: present
-    force_apt_get: 'yes'
-  register: install_syncthing
+    force_apt_get: "yes"
 
-- name: 'import syncthing GPG key to apt'
+- name: Import syncthing GPG key to apt
   become: yes
   apt_key:
     url: 'https://syncthing.net/release-key.txt'
     state: present
-  register: install_syncthing
 
-- name: 'add syncthing repository'
+- name: Add syncthing repository
   become: yes
   apt_repository:
     repo: 'deb https://apt.syncthing.net/ syncthing stable'
     state: present
-  register: install_syncthing
 
-- name: 'install syncthing'
+- name: Install syncthing
   become: yes
   package:
     name: syncthing
     state: present
-    force_apt_get: 'yes'
-  register: install_syncthing
+    force_apt_get: "yes"

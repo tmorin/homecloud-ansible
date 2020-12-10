@@ -1,0 +1,13 @@
+---
+
+- hosts: swarm_mgr[0]
+  tasks:
+    - shell: "docker stack rm {{ item[6:] }}"
+      loop: "{{ swarm_stacks | default([]) | reverse }}"
+
+- hosts: all
+  tasks:
+    - name: Prune all unsued images, containers, networks ...
+      shell: "docker system prune -af"
+    - name: Prune all unsued volumes
+      shell: "docker volume prune -f"

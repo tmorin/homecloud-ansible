@@ -6,8 +6,6 @@ homecloud_network_gateway: ''
 homecloud_network_nameserver: []
 
 # the url to get the armbian archive (c.f. https://dl.armbian.com)
-# https://dl.armbian.com/rock64/archive/Armbian_20.02.1_Rock64_buster_legacy_4.4.213.7z
-# https://dl.armbian.com/rock64/archive/Armbian_20.05.1_Rock64_bionic_current_5.4.43_desktop.img.xz
 image_armbian_image_url: ""
 # the name of the armbian archive (for instance Armbian_20.05.1_Rock64_bionic_current_5.4.43_desktop.img.xz)
 image_armbian_archive_name: ""
@@ -16,10 +14,10 @@ image_armbian_image_name: ""
 # clean the working directory of each host
 image_armbian_clean_working_directory: true
 # the directory where images will be temporary mounted and patched
-image_armbian_working_directory: "/tmp/homecloud-ansible-images-armbian"
+image_armbian_working_directory: "/tmp/homecloud/armbian_workdir"
 # the path to the SSH public key used by ansible
 image_armbian_ssh_pub_key_path: "~/.ssh/id_rsa.pub"
 # the username of the user which will be used by ansible
 image_armbian_username: "homecloud"
 # the directory where images will be released
-image_armbian_release_directory: "{{ playbook_dir }}/images"
+image_armbian_release_directory: "/tmp/homecloud/armbian_release"

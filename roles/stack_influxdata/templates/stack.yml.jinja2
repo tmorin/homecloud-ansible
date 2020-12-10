@@ -18,7 +18,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/influxdata_influxdb
       monitors: {{ homecloud_ceph_monitor_ips }}
 {% else %}{{ stack_influxdata_volume_influxdb | to_json }}{% endif %}
@@ -26,7 +26,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/influxdata_kapacitor
       monitors: {{ homecloud_ceph_monitor_ips }}
 {% else %}{{ stack_influxdata_volume_kapacitor | to_json }}{% endif %}
@@ -34,7 +34,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/influxdata_chronograf
       monitors: {{ homecloud_ceph_monitor_ips }}
 {% else %}{{ stack_influxdata_volume_chronograf | to_json }}{% endif %}

@@ -1,6 +1,6 @@
 ---
 
-- name: 'configure ceph'
+- name: Configure ceph
   become: yes
   shell: |
     set -exo pipefail
@@ -34,3 +34,4 @@
   args:
     executable: /bin/bash
   register: configure_cluster
+  changed_when: false

@@ -1,83 +1,88 @@
 ---
 
-- name: 'install dependencies from apt'
+- name: Install dependencies from apt
   become: yes
   package:
-    name: curl,nfs-common,cifs-utils,git
+    name: curl,nfs-common,cifs-utils
     state: present
     force_apt_get: "yes"
-  register: install_docker
 
-- name: 'install dependencies from pip'
-  pip:
-    name:
-      - docker
-      - jsondiff
-      - pyaml
-    extra_args: --user
-  register: install_docker
-
-- name: 'get /usr/bin/docker stat'
+- name: Stat /usr/bin/docker
   become: yes
   stat:
     path: /usr/bin/docker
   register: docker_binnary_file
 
-- name: 'install docker'
-  become: yes
+- name: Install Docker
   when: not docker_binnary_file.stat.exists
-  shell: |
-    set -o pipefail
-    curl -o- https://get.docker.com | bash
-  args:
-    executable: /bin/bash
-    creates: /usr/bin/docker
-    warn: false
-  register: install_docker
+  block:
+    - name: 'install Docker dependencies from pip'
+      pip:
+        name:
+          - docker
+          - jsondiff
+          - pyaml
+        extra_args: --user
+    - name: Execute docker install script
+      become: yes
+      shell: |
+        set -o pipefail
+        curl -o- https://get.docker.com | bash
+      args:
+        executable: /bin/bash
+        creates: /usr/bin/docker
+        warn: false
 
-- name: 'configure current user'
+- name: Configure current user
   become: yes
   user:
-    user: "{{ ansible_user }}"
+    name: "{{ ansible_user }}"
     groups: docker
-  register: install_docker
 - name: "reset ssh connection"
   meta: reset_connection
 
-- name: log into DockerHub
+- name: Log into DockerHub
   when: service_docker_username | length > 0
-  community.general.docker_login:
+  community.docker.docker_login:
     username: "{{ service_docker_username }}"
     password: "{{ service_docker_password }}"
 
-- name: 'install docker plugin n0r1skcom/docker-volume-cephfs'
-  become: yes
-  when: homecloud_ceph_is_enabled
-  shell: |
-    set -ex
-    plugin_installed=$(docker plugin ls | grep n0r1skcom/docker-volume-cephfs || echo "")
-    if [[ -z $plugin_installed ]]; then
-      rm -Rf /tmp/docker-volume-cephfs
-      git clone https://gitlab.com/n0r1sk/docker-volume-cephfs.git /tmp/docker-volume-cephfs
-      cd /tmp/docker-volume-cephfs
-      docker build --pull -t docker-volume-cephfs:rootfs .
-      mkdir -p ./plugin/rootfs
-      docker create --name tmp docker-volume-cephfs:rootfs
-      docker export tmp | tar -x -C ./plugin/rootfs
-      cp config.json ./plugin/
-      docker rm -vf tmp
-      docker plugin create n0r1skcom/docker-volume-cephfs ./plugin
-      docker plugin enable n0r1skcom/docker-volume-cephfs
-    fi
+- name: Get Ceph plugin status
+  shell: "docker plugin ls | grep n0r1skcom/docker-volume-cephfs &>/dev/null && echo installed || echo not_installed"
   args:
     executable: /bin/bash
+  register: ceph_plugin_status
   changed_when: false
-  register: install_docker
 
-- name: 'uninstall dependencies from apt'
-  become: yes
-  package:
-    name: git
-    state: absent
-    force_apt_get: "yes"
-  register: install_docker
+- name: Install docker plugin n0r1skcom/docker-volume-cephfs
+  when: ceph_plugin_status.stdout == "not_installed" and homecloud_ceph_is_enabled
+  block:
+    - name: Install build dependencies from apt
+      become: yes
+      package:
+        name: git
+        state: present
+        force_apt_get: "yes"
+    - name: Build docker plugin n0r1skcom/docker-volume-cephfs
+      shell: |
+        set -ex
+        rm -Rf /tmp/docker-volume-cephfs
+        git clone https://gitlab.com/n0r1sk/docker-volume-cephfs.git /tmp/docker-volume-cephfs
+        cd /tmp/docker-volume-cephfs
+        docker build --pull -t docker-volume-cephfs:rootfs .
+        mkdir -p ./plugin/rootfs
+        docker create --name tmp docker-volume-cephfs:rootfs
+        docker export tmp | tar -x -C ./plugin/rootfs
+        cp config.json ./plugin/
+        docker rm -vf tmp
+        docker plugin create n0r1skcom/docker-volume-cephfs ./plugin
+        docker plugin enable n0r1skcom/docker-volume-cephfs
+        rm -Rf /tmp/docker-volume-cephfs
+      args:
+        executable: /bin/bash
+    - name: Uninstall build dependencies
+      become: yes
+      package:
+        name: git
+        state: absent
+        force_apt_get: "yes"

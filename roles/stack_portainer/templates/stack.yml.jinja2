@@ -19,7 +19,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/portainer_console
       monitors: {{ homecloud_ceph_monitor_ips }}
 {% else %}{{ portainer_volume_console | to_json }}{% endif %}

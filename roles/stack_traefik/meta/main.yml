@@ -2,7 +2,7 @@ galaxy_info:
   author: Thibault Morin
   description: deploy a Docker Swarm stack propulsing Traefik
   license: MIT
-  min_ansible_version: 2.4
+  min_ansible_version: 2.9
 
   platforms:
     - name: Debian

@@ -1,6 +1,6 @@
 ---
 
-- name: 'copy the load_ip_vs service'
+- name: Copy load_ip_vs.service
   become: yes
   template:
     src: load_ip_vs.service
@@ -10,9 +10,10 @@
     mode: 0644
   register: install_load_ip_vs
 
-- name: 'enable and start the load_ip_vs service'
+- name: Enable and start load_ip_vs.service
   become: yes
   service:
+    daemon_reload: true
     name: load_ip_vs
     enabled: yes
     state: started

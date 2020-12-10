@@ -1,11 +1,13 @@
 ---
 
-- name: 'create the volume swarm'
+- name: Create the volume swarm
   become: yes
   shell: "cephadm shell -- ceph fs volume create swarm"
   register: create_volumes
+  changed_when: false
 
-- name: 'create the subvolumegroup docker'
+- name: Create the subvolumegroup docker
   become: yes
   shell: "cephadm shell -- ceph fs subvolumegroup create swarm docker"
   register: create_volumes
+  changed_when: false

@@ -4,3 +4,4 @@
   file:
     path: /tmp/resources
     state: directory
+  changed_when: false

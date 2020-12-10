@@ -1,0 +1,23 @@
+---
+
+- hosts: localhost
+  gather_facts: no
+  become: no
+  tasks:
+    - name: Install dependencies
+      become: yes
+      shell: apt-get install -y jq qemu-system-arm qemu-user-static
+    - name: "delete {{ image_armbian_working_directory }}"
+      become: yes
+      file:
+        path: "{{ image_armbian_working_directory }}"
+        state: absent
+    - name: "delete {{ image_armbian_release_directory }}"
+      become: yes
+      file:
+        path: "{{ image_armbian_release_directory }}"
+        state: absent
+    - name: Create the dummy rsa key
+      copy:
+        dest: /tmp/dummy_pub_rsa
+        content: dummy key

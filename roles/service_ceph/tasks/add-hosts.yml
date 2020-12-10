@@ -1,6 +1,6 @@
 ---
 
-- name: 'add the monitors to the ceph cluster'
+- name: Add the monitors to the ceph cluster
   become: yes
   shell: |
     set -exo pipefail
@@ -14,8 +14,9 @@
     executable: /bin/bash
   loop: "{{ groups.ceph_mon | default([]) }}"
   register: add_hosts
+  changed_when: false
 
-- name: 'add managers to the ceph cluster'
+- name: Add managers to the ceph cluster
   become: yes
   shell: |
     set -exo pipefail
@@ -29,8 +30,9 @@
     executable: /bin/bash
   loop: "{{ groups.ceph_mgr | default([]) }}"
   register: add_hosts
+  changed_when: false
 
-- name: 'add the osd to the ceph cluster'
+- name: Add the osd to the ceph cluster
   become: yes
   shell: |
     set -exo pipefail
@@ -44,8 +46,9 @@
     executable: /bin/bash
   loop: "{{ groups.ceph_osd | default([]) }}"
   register: add_hosts
+  changed_when: false
 
-- name: 'deploy mgr and mon'
+- name: Deploy mgr and mon
   become: yes
   shell: |
     set -exo pipefail
@@ -54,3 +57,4 @@
   args:
     executable: /bin/bash
   register: add_hosts
+  changed_when: false

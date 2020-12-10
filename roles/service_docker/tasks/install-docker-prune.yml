@@ -1,6 +1,6 @@
 ---
 
-- name: 'copy the service'
+- name: Copy docker-prune.service
   become: yes
   template:
     src: docker-prune.service
@@ -9,9 +9,8 @@
     group: root
     mode: 0644
     force: true
-  register: intall_docker_prune
 
-- name: 'copy the timer'
+- name: Copy docker-prune.timer
   become: yes
   template:
     src: docker-prune.timer
@@ -20,9 +19,8 @@
     group: root
     mode: 0644
     force: true
-  register: intall_docker_prune
 
-- name: 'copy the script'
+- name: Copy the script
   become: yes
   template:
     src: docker-prune.sh
@@ -31,25 +29,18 @@
     group: root
     mode: 0755
     force: true
-  register: intall_docker_prune
 
-- name: 'activate the service'
+- name: Activate docker-prune.service
   become: yes
   systemd:
     daemon_reload: true
-    enabled: yes
     name: docker-prune.service
-  register: intall_docker_prune
+    enabled: yes
 
-- name: 'activate the timer'
+- name: Enable and start docker-prune.timer
   become: yes
   systemd:
     daemon_reload: true
-    enabled: yes
     name: docker-prune.timer
-  register: intall_docker_prune
-
-- name: 'start the timer'
-  become: true
-  shell: systemctl start docker-prune.timer
-  register: intall_docker_prune
+    enabled: yes
+    state: started

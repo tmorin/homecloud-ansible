@@ -9,12 +9,12 @@
   register: create_ceph_volumes
 
 - name: 'create a docker volume'
-  community.general.docker_volume:
+  community.docker.docker_volume:
     name: "{{ volume_name }}"
     driver: n0r1skcom/docker-volume-cephfs
     driver_options:
       name: admin
-      secret: "{{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}"
+      secret: "{{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}"
       path: "/volumes/docker/{{ volume_name }}"
       monitors: "{{ homecloud_ceph_monitor_ips }}"
   loop: "{{ action_restore_volume_names_to_restore | default([]) }}"

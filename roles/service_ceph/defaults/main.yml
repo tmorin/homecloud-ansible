@@ -1,5 +1,7 @@
 ---
 
+homecloud_vault_path: "/tmp/homecloud/vault"
+
 service_ceph_osd_device: ""
 
 # https://docs.ceph.com/docs/master/start/hardware-recommendations/

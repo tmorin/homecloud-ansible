@@ -16,7 +16,7 @@ volumes:
     driver: n0r1skcom/docker-volume-cephfs
     driver_opts:
       name: admin
-      secret: {{ lookup('file', playbook_dir~'/vault/ceph.client.admin.secret') | trim }}
+      secret: {{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/traefik_letsencrypt
       monitors: {{ homecloud_ceph_monitor_ips }}
 {% else %}{{ traefik_volume_letsencrypt | to_json }}{% endif %}

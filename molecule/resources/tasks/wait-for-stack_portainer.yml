@@ -1,0 +1,45 @@
+---
+
+- name: "{{ swarm_stack }} - Get stack info"
+  set_fact: stack_info="{{ stacks_info | community.general.json_query('results[?Name==`portainer`]') | first }}"
+  until: stack_info is defined
+
+- name: "{{ swarm_stack }} - Verify Docker Stack installation"
+  assert:
+    quiet: true
+    that:
+      - stack_info is defined
+      - stack_info.Services == "2"
+
+- name: "{{ swarm_stack }} - Verify stack services"
+  shell: "{% raw %}docker stack ps portainer --format='{{.Name}} {{.CurrentState}}' || true{% endraw %}"
+  register: stack_service_info
+  until: stack_service_info.stdout.find(item~' Running') > -1
+  retries: 60
+  delay: 3
+  loop:
+    - 'portainer_console.1'
+
+- name: "{{ swarm_stack }} - Verify logs services"
+  shell: "docker service logs {{ item.svc }} --no-trunc --raw || true"
+  args:
+    executable: /bin/bash
+  register: logs_service_info
+  until: logs_service_info.stdout.find(item.log) > -1
+  retries: 60
+  delay: 3
+  loop:
+    - svc: 'portainer_console'
+      log: 'server: Listening on 0.0.0.0:8000'
+
+- name: "{{ swarm_stack }} - Verify web service"
+  shell: "curl -sILH host:{{ item.host }} http://{{ homecloud_virtual_ip }} || true"
+  args:
+    warn: false
+  register: web_service_info
+  until: web_service_info.stdout.find(item.status) > -1
+  retries: 60
+  delay: 3
+  loop:
+    - host: 'portainer.homecloud.swarm'
+      status: 'HTTP/1.1 200 OK'

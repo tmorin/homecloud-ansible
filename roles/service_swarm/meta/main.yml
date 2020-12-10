@@ -2,16 +2,17 @@ galaxy_info:
   author: Thibault Morin
   description: install and configure Docker Swarm
   license: MIT
-  min_ansible_version: 2.4
+  min_ansible_version: 2.9
 
   platforms:
     - name: Debian
       versions:
-        - stretch
         - buster
+        - stretch
     - name: Ubuntu
       versions:
         - bionic
+        - focal
 
   galaxy_tags:
     - debian

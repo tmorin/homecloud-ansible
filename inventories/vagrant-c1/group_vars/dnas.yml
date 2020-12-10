@@ -1,6 +1,0 @@
----
-
-dnas_services:
-  - service_dnas
-
-service_dnas_syncthing_gui_password: "$2y$12$DtmSEehiQvc3x6ujg1lSz.9loInMX.ZWRIc7fiH.6J.PdfWbxkXry"

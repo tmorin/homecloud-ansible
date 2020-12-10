@@ -1,16 +1,16 @@
 ---
 
-- name: 'get SSH public key'
+- name: Get SSH public key
   become: yes
   fetch:
     src: "/etc/ceph/ceph.pub"
-    dest: "{{ playbook_dir }}/vault/ceph.pub"
+    dest: "{{ homecloud_vault_path }}/ceph.pub"
     flat: yes
   register: get_ssh_pubkey
 
-- name: 'push SSH public key to the current user'
+- name: Push SSH public key to the current user
   ansible.posix.authorized_key:
     user: "{{ ansible_user }}"
     state: present
-    key: "{{ lookup('file', playbook_dir~'/vault/ceph.pub') }}"
+    key: "{{ lookup('file', homecloud_vault_path~'/ceph.pub') }}"
   register: get_ssh_pubkey

@@ -1,10 +1,9 @@
 ---
 
-- name: 'join as manager'
-  community.general.docker_swarm:
+- name: Join as manager
+  community.docker.docker_swarm:
     remote_addrs: ["{{ service_swarm_manager_ip }}"]
     advertise_addr: "{{ hostvars[inventory_hostname].homecloud_node_ip }}"
-    join_token: "{{ lookup('file', playbook_dir~'/vault/token_manager') }}"
+    join_token: "{{ lookup('file', homecloud_vault_path~'/token_manager') }}"
     state: join
     labels: "{{ service_swarm_node_labels }}"
-  register: join_as_manager

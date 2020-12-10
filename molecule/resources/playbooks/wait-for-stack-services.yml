@@ -1,0 +1,12 @@
+---
+
+- hosts: swarm_mgr[0]
+  tasks:
+    - name: "Get stacks info"
+      community.docker.docker_stack_info:
+      register: stacks_info
+    - name: "verify swarm stacks"
+      include_tasks: "../tasks/wait-for-{{ swarm_stack }}.yml"
+      loop: "{{ swarm_stacks | default([]) }}"
+      loop_control:
+        loop_var: "swarm_stack"

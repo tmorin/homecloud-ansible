@@ -1,0 +1,59 @@
+---
+
+- hosts: all
+  tasks:
+    - name: get portainer node
+      when: ansible_hostname == groups.swarm_mgr[0]
+      shell: "docker service ps portainer_console --filter desired-state=running --format {% raw %}'{{.Node}}'{% endraw %}"
+      register: get_portainer_node
+    - name: copy portainer node
+      when: ansible_hostname == groups.swarm_mgr[0]
+      delegate_to: localhost
+      copy:
+        content: "{{ get_portainer_node.stdout }}"
+        dest: "/tmp/portainer_node"
+
+    - name: get backup node
+      when: ansible_hostname == groups.swarm_mgr[0]
+      shell: "docker service ps backup_duplicity --filter desired-state=running --format {% raw %}'{{.Node}}'{% endraw %}"
+      register: get_backup_node
+    - name: copy backup node
+      when: ansible_hostname == groups.swarm_mgr[0]
+      delegate_to: localhost
+      copy:
+        content: "{{ get_backup_node.stdout }}"
+        dest: "/tmp/backup_node"
+
+    - set_fact:
+        portainer_node: "{{ lookup('file', '/tmp/portainer_node') }}"
+    - set_fact:
+        backup_node: "{{ lookup('file', '/tmp/backup_node') }}"
+
+    - name: add /data/test_file in portainer_console
+      when: ansible_hostname == portainer_node
+      shell: docker run --rm -v portainer_console:/data busybox touch /data/test_file
+
+    - name: force backup_duplicity backup
+      when: ansible_hostname == backup_node
+      shell: docker run --rm -v portainer_console:/data busybox touch /data/test_file
+
+    - name: remove /data/test_file from portainer_console
+      when: ansible_hostname == portainer_node
+      shell: docker run --rm -v portainer_console:/data busybox rm /data/test_file
+
+- import_playbook: ./stacks-restore-backup.yml
+
+- hosts: all
+  tasks:
+    - set_fact:
+        portainer_node: "{{ lookup('file', '/tmp/portainer_node') }}"
+    - name: list /data/test_file from portainer_console
+      when: ansible_hostname == portainer_node
+      shell: "docker run --rm -v portainer_console:/data busybox ls -l /data | grep /data/test_file || true"
+      register: list_test_file
+    - name: "Verify restore action"
+      when: ansible_hostname == portainer_node
+      assert:
+        quiet: true
+        that:
+          - list_test_file.stdout == ""

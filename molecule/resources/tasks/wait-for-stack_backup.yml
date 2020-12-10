@@ -1,0 +1,33 @@
+---
+
+- name: "{{ swarm_stack }} - Get stack info"
+  set_fact: stack_info="{{ stacks_info | community.general.json_query('results[?Name==`backup`]') | first }}"
+  until: stack_info is defined
+
+- name: "{{ swarm_stack }} - Verify Docker Stack installation"
+  assert:
+    quiet: true
+    that:
+      - stack_info is defined
+      - stack_info.Services == "1"
+
+- name: "{{ swarm_stack }} - Verify stack services"
+  shell: "{% raw %}docker stack ps backup --format='{{.Name}} {{.CurrentState}}' || true{% endraw %}"
+  register: stack_service_info
+  until: stack_service_info.stdout.find(item~' Running') > -1
+  retries: 60
+  delay: 3
+  loop:
+    - 'backup_duplicity.1'
+
+#- name: "{{ swarm_stack }} - Verify logs services"
+#  shell: "docker service logs {{ item.svc }} --no-trunc --raw || true"
+#  args:
+#    executable: /bin/bash
+#  register: logs_service_info
+#  until: logs_service_info.stdout.find(item.log) > -1
+#  retries: 60
+#  delay: 3
+#  loop:
+#    - svc: 'backup_duplicity'
+#      log: 'PORTAINER'

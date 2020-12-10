@@ -1,20 +1,21 @@
 galaxy_info:
   author: Thibault Morin
-  description: apply basic configurations (hostname, deactivate swap ...)
+  description: Apply basic configurations (hostname, deactivate swap ...).
   license: MIT
-  min_ansible_version: 2.4
+  min_ansible_version: 2.9
 
   platforms:
     - name: Debian
       versions:
-        - stretch
         - buster
+        - stretch
     - name: Ubuntu
       versions:
         - bionic
+        - focal
 
   galaxy_tags:
     - debian
     - ubuntu
 
-dependencies: []
+dependencies: [ ]

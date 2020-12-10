@@ -1,0 +1,5 @@
+---
+
+homecloud_node_ip: "{{ ansible_host }}"
+
+service_dnas_mount_what: '/dev/vdb'

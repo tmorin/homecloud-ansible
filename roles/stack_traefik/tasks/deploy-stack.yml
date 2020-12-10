@@ -1,7 +1,7 @@
 ---
 
 - name: "deploy the task"
-  community.general.docker_stack:
+  community.docker.docker_stack:
     state: present
     name: "traefik"
     prune: true

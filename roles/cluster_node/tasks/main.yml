@@ -2,7 +2,7 @@
 
 - import_tasks: configure-hostname.yml
 
-- import_tasks: upgrade-system.yml
+- import_tasks: hold-packages.yml
 
 - import_tasks: install-dependencies.yml
 

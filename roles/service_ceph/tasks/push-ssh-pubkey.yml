@@ -1,8 +1,8 @@
 ---
 
-- name: 'push SSH public key to the current user'
+- name: Push SSH public key to the current user
   ansible.posix.authorized_key:
     user: "{{ ansible_user }}"
     state: present
-    key: "{{ lookup('file', playbook_dir~'/vault/ceph.pub') }}"
+    key: "{{ lookup('file', homecloud_vault_path~'/ceph.pub') }}"
   register: push_ssh_pubkey

@@ -1,10 +1,9 @@
 ---
 
-- name: 'check parameters'
+- name: Check parameters
   assert:
     that:
       - service_dnas_mount_what | length > 0
-      - service_dnas_syncthing_gui_password | length > 0
 
 - import_tasks: install-mount.yml
 - import_tasks: add-user.yml

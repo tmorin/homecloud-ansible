@@ -48,9 +48,9 @@ If `ceph` is enabled:
 
 ## Dependencies
 
-The collection dependencies are bundled in [./requirements.yml](./requirements.yml).
+The collection dependencies are bundled in [./collections.yml](collections.yml).
 ```shell script
-ansible-galaxy collection install -r requirements.yml
+ansible-galaxy collection install -r collections.yml
 ```
 
 In order to build the custom Armbian images, additional dependencies are required:
@@ -58,115 +58,62 @@ In order to build the custom Armbian images, additional dependencies are require
 apt-get install jq qemu-system-arm qemu-user-static
 ```
 
-## Inventory
+## Testing
 
-The following inventory define a cluster of five nodes.
+Several cases are tested by continuous integration using [molecule], [vagrant] and the plugin [vagrant-libvirt].
 
-All of them are parts of the Docker Swarm.
-The first three ones are managers of the swarm whereas the remaining ones are simple workers.
-The Ceph setup use the first three nodes.
-Finally, the "decentralized" NAS uses the last two nodes.
+### Tested layouts
 
-```yaml
-all:
-  children:
-    # BOARDS
-    rock64:
-      hosts:
-        n1:
-        n2:
-        n3:
-    pine64:
-      host:
-        n4:
-        n5:
-    # SWARM
-    swarm_mgr:
-      hosts:
-        n1:
-        n2:
-        n3:
-    swarm_wkr:
-      hosts:
-        n4:
-        n5:
-    swarm:
-      children:
-        swarm_mgr:
-        swarm_wkr:
-    # CEPH
-    ceph_mon:
-      hosts:
-        n1:
-        n2:
-        n3:
-    ceph_mgr:
-      hosts:
-        n1:
-        n2:
-        n3:
-    ceph_osd:
-      hosts:
-        n1:
-        n2:
-        n3:
-    ceph:
-      children:
-        ceph_mon:
-        ceph_mgr:
-        ceph_osd:
-    # CEPH
-    dnas:
-      hosts:
-        n4:
-        n5:
-```
+The test suite targets the following operating systems:
 
-## Ansible Playbooks
+- Ubuntu Bionic/Focal
+- Debian Stretch/Buster
 
-### Hardening
+| |[c1]|[c2]|[armbian]|
+|---|---|---|---|
+|nodes|1|2|2|
+|https|no|no|no|
+|keepalived|yes|yes|no|
+|ceph|no|yes|no|
+|portainer|yes|yes|no|
+|influxdata|yes|no|no|
+|nextcloud|yes|no|no|
+|calibreweb|yes|no|no|
+|backup|yes|yes|no|
+|restore|no|yes|no|
+|dans|yes|yes|no|
+|Armbian image|no|no|yes|
 
-The playbook [playbooks/cluster-hardening.yml](playbooks/cluster-hardening.yml) apply hardening recommendations on the operating system and SSH.
+Examples starting with `vagrant-` can be fully deployed and tested using [vagrant] and [vagrant-libvirt].
+
+[c1]: molecule/c1
+[c2]: molecule/c1
+[armbian]: molecule/armbian
+[molecule]: https://github.com/ansible-community/molecule
+[vagrant]: https://www.vagrantup.com/
+[vagrant-libvirt]: https://github.com/vagrant-libvirt/vagrant-libvirt
+
+### Tested playbooks
+
+The test suite plays several playbooks to configure the cluster nodes, to deploy the stacks and to perform restore operations.
+
+They are located in the molecule directory: [molecule/resources/playbooks](molecule/resources/playbooks).
+
+#### Hardening
+
+The playbook [cluster-hardening.yml](molecule/resources/playbooks/cluster-hardening.yml) apply hardening recommendations on the operating system and SSH.
 The activities are managed by the Ansible collection [devsec.hardening].
 
 [devsec.hardening]: https://galaxy.ansible.com/devsec/hardening
 
-### Bootstrap the cluster
+#### Bootstrap the cluster
 
-The playbook [playbooks/cluster-bootstrap.yml](playbooks/cluster-bootstrap.yml) bootstraps the cluster, i.e. the Docker Swarm instance, the Ceph cluster, and the Decentralized NAS.
+The playbook [cluster-bootstrap.yml](molecule/resources/playbooks/cluster-bootstrap.yml) bootstraps the cluster, i.e. the Docker Swarm instance, the Ceph cluster, and the Decentralized NAS.
 
-### Deploy the Docker stacks
+#### Deploy the Docker stacks
 
-The playbook [playbooks/stacks-deploy.yml](playbooks/stacks-deploy.yml) deploys the Docker stacks.
+The playbook [stacks-deploy.yml](molecule/resources/playbooks/stacks-deploy.yml) deploys the Docker stacks.
 
-### Restore stacks backups
+#### Restore stacks backups
 
-The playbook [playbooks/stacks-restore-backups.yml](playbooks/stacks-restore-backup.yml) restores backups of stacks.
-
-## Virtual environments
-
-Several cases are available in the [inventories](./inventories) directory.
-
-| |[vagrant-c1]|[vagrant-c2]|[vagrant-c3]|[rock64-c1]|
-|---|---|---|---|---|
-|nodes|1|2|3|1|
-|https|no|no|no|no|
-|keepalived|no|yes|yes|no|
-|ceph|no|yes|yes|no|
-|portainer|yes|yes|yes|yes|
-|influxdata|yes|no|no|yes|
-|nextcloud|yes|no|yes|yes|
-|calibreweb|yes|no|yes|yes|
-|backup|yes|yes|yes|yes|
-|restore|no|yes|yes|no|
-|dans|no|yes|yes|no|
-|Armbian image|no|no|no|yes|
-
-Examples starting with `vagrant-` can be fully deployed and tested using [vagrant] and [vagrant-libvirt].
-
-[vagrant-c1]: inventories/vagrant-c1/README.md
-[vagrant-c2]: inventories/vagrant-c2/README.md
-[vagrant-c3]: inventories/vagrant-c3/README.md
-[rock64-c1]: inventories/rock64-c1/README.md
-[vagrant]: https://www.vagrantup.com/
-[vagrant-libvirt]: https://github.com/vagrant-libvirt/vagrant-libvirt
+The playbook [stacks-restore-backups.yml](molecule/resources/playbooks/stacks-restore-backup.yml) restores backups of stacks.

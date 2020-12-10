@@ -1,6 +1,6 @@
 ---
 
-- name: 'add osds'
+- name: Add osds
   become: yes
   shell: |
     set -o pipefail
@@ -28,5 +28,6 @@
     executable: /bin/bash
   loop: "{{ groups.ceph_osd }}"
   register: add_osds
+  changed_when: false
 
 - debug: var=add_osds

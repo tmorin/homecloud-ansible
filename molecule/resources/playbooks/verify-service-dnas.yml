@@ -1,0 +1,40 @@
+---
+
+- hosts: dnas
+  tasks:
+    # MOUNT
+    - name: Get DNAS mount status
+      shell: "mount | grep '{{ service_dnas_mount_what }}'>/dev/null && echo ok || echo ko"
+      register: dnas_mount_status
+    - name: Verify DNAS mount output
+      assert:
+        quiet: true
+        that:
+          - dnas_mount_status.stdout == 'ok'
+    # GUI
+    - name: Get DNAS GUI status
+      shell: "curl --user dnas:dnas http://localhost:8384>/dev/null && echo ok || echo ko"
+      args:
+        warn: false
+      register: dnas_gui_status
+    - name: Verify DNAS GUI output
+      assert:
+        quiet: true
+        that:
+          - dnas_gui_status.stdout == 'ok'
+    # SHARE
+    - name: Get DNAS share status
+      become: true
+      ansible.posix.mount:
+        path: /mnt/test_share
+        src: //localhost/dnas
+        fstype: cifs
+        opts: username=dnas,password=dnas
+        state: present
+      register: dnas_share_status
+    - name: Get DNAS share status
+      become: true
+      ansible.posix.mount:
+        path: /mnt/test_share
+        state: absent
+      register: dnas_share_status

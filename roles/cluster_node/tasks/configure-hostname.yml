@@ -1,11 +1,11 @@
 ---
 
-- name: "set hostname"
+- name: Set hostname
   become: yes
   hostname:
     name: "{{ inventory_hostname }}"
 
-- name: "build hosts file"
+- name: Build hosts file
   become: yes
   lineinfile:
     dest: /etc/hosts

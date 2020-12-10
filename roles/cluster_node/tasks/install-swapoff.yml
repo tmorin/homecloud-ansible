@@ -1,6 +1,6 @@
 ---
 
-- name: 'copy the service'
+- name: Copy swapoff.service
   become: yes
   template:
     src: swapoff.service
@@ -8,17 +8,11 @@
     owner: root
     group: root
     mode: 0644
-  register: install_swapoff
 
-- name: 'activate the service'
+- name: Enable and start swapoff.service
   become: yes
   systemd:
     daemon_reload: true
-    enabled: yes
     name: swapoff.service
-  register: install_swapoff
-
-- name: 'start service'
-  become: true
-  shell: "systemctl start swapoff.service"
-  register: install_swapoff
+    enabled: yes
+    state: started

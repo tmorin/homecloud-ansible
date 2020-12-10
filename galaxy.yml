@@ -18,16 +18,15 @@ repository: https://github.com/tmorin/homecloud-ansible
 homepage: https://github.com/tmorin/homecloud-ansible#readme
 issues: https://github.com/tmorin/homecloud-ansible/issues
 dependencies:
+  community.docker: "*"
   community.general: "*"
   devsec.hardening: "*"
 build_ignore:
   - .*
-  - inventories
-  - paper
+  - env
+  - molecule
   - node_modules
-  - playbooks/images/*
-  - playbooks/vault/*
+  - paper
   - scripts
-  - tmp/*
   - ansible.cfg
   - postbump.log

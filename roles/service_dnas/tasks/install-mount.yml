@@ -1,47 +1,18 @@
 ---
 
-- name: 'transfer the mount configuration'
-  become: true
+- name: Transfer the mount configuration
+  become: yes
   template:
     src: mnt-dnas.mount.jinja2
     dest: /etc/systemd/system/{{ service_dnas_mount_name }}.mount
     owner: root
     group: root
     mode: 0644
-  register: install_service_dnas_mount
 
-- name: 'enable the mount configuration'
+- name: Enable and start the mount configuration
   become: yes
   systemd:
     daemon_reload: true
-    enabled: yes
     name: "{{ service_dnas_mount_name }}.mount"
-  register: install_service_dnas_mount
-
-- name: 'start the mount configuration'
-  become: true
-  shell: systemctl start {{ service_dnas_mount_name }}.mount
-  register: install_nas_mount
-
-#- name: 'check nas drive already mounted'
-#  become: true
-#  shell: mount | grep "{{ service_dnas_mount_where }}"
-#  args:
-#    warn: no
-#  ignore_errors: yes
-#  register: check_already_mount
-#- debug: var=check_already_mount
-
-#- name: 'start the mount configuration'
-#  become: yes
-#  when: check_already_mount.failed
-#  systemd:
-#    state: started
-#    name: "{{ service_dnas_mount_name }}.mount"
-#  register: install_service_dnas_mount
-
-#- name: 'start the mount configuration'
-#  become: true
-#  when: check_already_mount.failed
-#  shell: systemctl restart {{ service_dnas_mount_name }}.mount
-#  register: install_service_dnas_mount
+    enabled: yes
+    state: started

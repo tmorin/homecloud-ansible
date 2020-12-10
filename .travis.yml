@@ -1,33 +1,44 @@
 os: linux
 arch: amd64
 dist: bionic
-language: generic
+language: python
+python:
+  - 3.8
 addons:
   apt:
     update: true
     sources:
       - sourceline: 'deb [arch=amd64] https://apt.releases.hashicorp.com bionic main'
         key_url: 'https://apt.releases.hashicorp.com/gpg'
-      - sourceline: 'ppa:ansible/ansible'
     packages:
-      - ansible
       - bridge-utils
       - dnsmasq-base
       - ebtables
+      - jq
+      - libssl-dev
       - libvirt-bin
       - libvirt-dev
       - qemu-kvm
+      - qemu-system-arm
+      - qemu-user-static
       - qemu-utils
       - ruby
       - ruby-dev
       - vagrant
+      - xz-utils
 env:
   global:
     - VAGRANT_DEFAULT_PROVIDER=libvirt
   matrix:
-    - TEST_NAME=test-vagrant-c1
-    - TEST_NAME=test-vagrant-c2
+    #- TEST_NAME=armbian # chroot fails on travis
+    - TEST_NAME=c1 MOLECULE_N1_BOX=generic/ubuntu1804
+    - TEST_NAME=c1 MOLECULE_N1_BOX=generic/ubuntu2004
+    - TEST_NAME=c1 MOLECULE_N1_BOX=generic/debian9
+    - TEST_NAME=c1 MOLECULE_N1_BOX=generic/debian10
+    #- TEST_NAME=c2 MOLECULE_N1_BOX=generic/ubuntu1804 MOLECULE_N2_BOX=generic/ubuntu2004 # longer than 50 minutes:(
+    - TEST_NAME=c2 MOLECULE_N1_BOX=generic/debian9 MOLECULE_N2_BOX=generic/debian10
 cache:
+  pip: true
   apt: true
   directories:
     - /home/travis/.ansible/collections
@@ -35,8 +46,12 @@ cache:
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian9
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian10
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu1804
+    - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu2004
 install:
-  # configure libvirtd
+  # configure python
+  - pip install --upgrade setuptools
+  - pip install -r requirements.txt
+  # configure libvirt
   - sudo sed -i 's/unix_sock_group = "libvirt"/unix_sock_group = "travis"/' /etc/libvirt/libvirtd.conf
   - sudo systemctl restart libvirtd.service
   # configure vagrant
@@ -44,7 +59,6 @@ install:
   - vagrant box add generic/debian9 --provider=libvirt --box-version 3.1.6 || true
   - vagrant box add generic/debian10 --provider=libvirt --box-version 3.1.6 || true
   - vagrant box add generic/ubuntu1804 --provider=libvirt --box-version 3.1.6 || true
-  # install ansible dependencies
-  - ansible-galaxy collection install -r requirements.yml
+  - vagrant box add generic/ubuntu2004 --provider=libvirt --box-version 3.1.6 || true
 script:
-  - scripts/$TEST_NAME.sh
+  - molecule test -s $TEST_NAME

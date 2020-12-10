@@ -1,0 +1,30 @@
+---
+
+- hosts: swarm_mgr
+  tasks:
+    - name: Get Docker Swarm info
+      community.general.docker_swarm_info:
+      ignore_errors: yes
+      register: docker_swarm_info
+    - name: Verify Docker Swarm installation
+      assert:
+        quiet: true
+        that:
+          - not docker_swarm_info.failed
+          - docker_swarm_info.can_talk_to_docker
+          - docker_swarm_info.docker_swarm_active
+          - docker_swarm_info.docker_swarm_manager
+
+- hosts: swarm_wkr
+  tasks:
+    - name: Get Docker Swarm info
+      community.general.docker_host_info:
+      ignore_errors: yes
+      register: docker_info
+    - name: Verify Docker Swarm installation
+      assert:
+        quiet: true
+        that:
+          - not docker_info.failed
+          - not docker_info.host_info.Swarm.ControlAvailable
+          - docker_info.host_info.Swarm.LocalNodeState == "active"

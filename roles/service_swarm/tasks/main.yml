@@ -1,5 +1,11 @@
 ---
 
+- name: 'create the vault directory'
+  delegate_to: localhost
+  file:
+    path: "{{ homecloud_vault_path }}"
+    state: directory
+
 - name: 'initialize the main manager'
   when: inventory_hostname in groups.swarm_mgr[:1]
   block:

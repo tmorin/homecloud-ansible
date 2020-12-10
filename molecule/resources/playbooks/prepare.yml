@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  tasks:
+
+    - name: Update packages
+      become: yes
+      apt:
+        update_cache: yes
+        autoclean: yes
+        autoremove: yes
+        force_apt_get: yes
+
+    - name: Format the block device of DNAS
+      when: service_dnas_mount_what is defined
+      become: yes
+      community.general.filesystem:
+        dev: "{{ service_dnas_mount_what }}"
+        force: false
+        fstype: ext4
