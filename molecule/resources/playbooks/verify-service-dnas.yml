@@ -3,9 +3,14 @@
 - hosts: dnas
   tasks:
     # MOUNT
-    - name: Get DNAS mount status
-      shell: "mount | grep '{{ service_dnas_mount_what }}'>/dev/null && echo ok || echo ko"
+    - name: Get DNAS mount status # noqa 303
+      shell: |
+        set -o pipefail
+        mount | grep '{{ service_dnas_mount_what }}'>/dev/null && echo ok || echo ko
+      args:
+        executable: /bin/bash
       register: dnas_mount_status
+      changed_when: false
     - name: Verify DNAS mount output
       assert:
         quiet: true
@@ -16,6 +21,7 @@
       shell: "curl --user dnas:dnas http://localhost:8384>/dev/null && echo ok || echo ko"
       args:
         warn: false
+      changed_when: false
       register: dnas_gui_status
     - name: Verify DNAS GUI output
       assert:

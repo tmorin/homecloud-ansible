@@ -36,14 +36,16 @@ jobs:
         with:
           python-version: '3.x'
       - name: Install Ansible
-        run: pip install --user 'ansible>=2.10'
+        run: pip install --user -r requirements.txt
       - name: Build the collection
         run: ansible-galaxy collection build --force --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+        working-directory: collection
       - name: Upload collection
         uses: actions/upload-artifact@v2
         with:
           name: collection
-          path: tmorin-homecloud-*.tar.gz
+          path: collection/tmorin-homecloud-*.tar.gz
       - name: Publish the collection
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         run: ansible-galaxy collection publish --token ${{ secrets.ANSIBLE_GALAXY_API_KEY }} tmorin-homecloud-*.tar.gz
+        working-directory: collection

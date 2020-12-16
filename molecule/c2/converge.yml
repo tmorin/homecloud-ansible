@@ -1,4 +1,3 @@
 ---
 
-#- import_playbook: ../resources/playbooks/cluster-hardening.yml
 - import_playbook: ../resources/playbooks/cluster-bootstrap.yml

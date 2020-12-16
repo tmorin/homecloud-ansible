@@ -1,0 +1,12 @@
+---
+
+- name: 'create a ceph volume'
+  become: yes
+  command: "cephadm shell -- ceph fs subvolumegroup create swarm docker/{{ volume_name }}"
+  loop:
+    - nextcloud_server
+    - nextcloud_database
+  loop_control:
+    loop_var: "volume_name"
+  changed_when: false
+  register: create_ceph_volumes

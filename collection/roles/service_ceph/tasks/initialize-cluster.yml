@@ -1,0 +1,38 @@
+---
+
+- name: Get /etc/ceph/ceph.conf stat
+  become: yes
+  stat:
+    path: /etc/ceph/ceph.conf
+  register: ceph_conf_file
+
+- name: Initialize the ceph cluster
+  when: not ceph_conf_file.stat.exists
+  block:
+    - name: Create /etc/ceph
+      become: yes
+      file:
+        path: /etc/ceph
+        state: directory
+        mode: 0644
+      register: initialize_cluster
+    - name: Bootstrap ceph
+      become: yes
+      shell: |
+        cephadm bootstrap \
+          --ssh-user {{ ansible_user }} \
+          --mon-ip {{ service_ceph_monitor_ip }} \
+          --skip-dashboard \
+          --skip-monitoring-stack \
+          --skip-firewalld \
+          --skip-pull
+      args:
+        executable: /bin/bash
+      register: initialize_cluster
+    - name: Set labels
+      become: yes
+      shell: |
+        cephadm shell -- ceph orch host label add {{ inventory_hostname }} main
+      args:
+        executable: /bin/bash
+      register: initialize_cluster

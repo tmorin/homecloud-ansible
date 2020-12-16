@@ -1,7 +1,0 @@
----
-
-- name: 'create the resources directory'
-  file:
-    path: /tmp/resources
-    state: directory
-  changed_when: false

@@ -6,7 +6,11 @@
   tasks:
     - name: Install dependencies
       become: yes
-      shell: apt-get install -y jq qemu-system-arm qemu-user-static
+      package:
+        name:
+          - jq
+          - qemu-system-arm
+          - qemu-user-static
     - name: "delete {{ image_armbian_working_directory }}"
       become: yes
       file:
@@ -21,3 +25,4 @@
       copy:
         dest: /tmp/dummy_pub_rsa
         content: dummy key
+        mode: 0644

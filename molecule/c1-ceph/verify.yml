@@ -1,0 +1,5 @@
+---
+
+- import_playbook: ../resources/playbooks/verify-service-docker.yml
+
+- import_playbook: ../resources/playbooks/verify-service-ceph.yml

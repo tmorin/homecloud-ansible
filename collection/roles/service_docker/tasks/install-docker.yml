@@ -1,0 +1,48 @@
+---
+
+- name: Install dependencies from apt
+  become: yes
+  package:
+    name: curl,nfs-common,cifs-utils
+    state: present
+    force_apt_get: "yes"
+
+- name: Stat /usr/bin/docker
+  become: yes
+  stat:
+    path: /usr/bin/docker
+  register: docker_binnary_file
+
+- name: Install Docker
+  when: not docker_binnary_file.stat.exists
+  block:
+    - name: 'install Docker dependencies from pip'
+      pip:
+        name:
+          - docker
+          - jsondiff
+          - pyaml
+        extra_args: --user
+    - name: Execute docker install script
+      become: yes
+      shell: |
+        set -o pipefail
+        curl -o- https://get.docker.com | bash
+      args:
+        executable: /bin/bash
+        creates: /usr/bin/docker
+        warn: false
+
+- name: Configure current user
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+- name: "reset ssh connection"
+  meta: reset_connection
+
+- name: Log into DockerHub
+  when: service_docker_username | length > 0
+  community.docker.docker_login:
+    username: "{{ service_docker_username }}"
+    password: "{{ service_docker_password }}"

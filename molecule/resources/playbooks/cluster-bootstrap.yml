@@ -9,7 +9,8 @@
     - include_role: name="resources_prepare"
   tasks:
     # CLUSTER
-    - include_role: name=cluster_node
+    - include_role:
+        name: cluster_node
     # DNAS
     - name: "bootstrap dnas services"
       include_role:

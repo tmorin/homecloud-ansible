@@ -38,12 +38,15 @@ platforms:
 
 provisioner:
   name: ansible
+  ansible_args:
+    - -e=service_docker_username=$DOCKER_USERNAME
+    - -e=service_docker_password=$DOCKER_PASSWORD
+  env:
+    ANSIBLE_ROLES_PATH: "$ephemeral_directory/roles/:$project_directory/../:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:$MOLECULE_PROJECT_DIRECTORY/collection/roles"
   config_options:
     ssh_connection:
       scp_if_ssh: true
       control_path: null
-  env:
-    ANSIBLE_ROLES_PATH: "$ephemeral_directory/roles/:$project_directory/../:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:$MOLECULE_PROJECT_DIRECTORY/roles"
   inventory:
     links:
       hosts: inventory/hosts.yml

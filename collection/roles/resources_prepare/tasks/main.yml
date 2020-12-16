@@ -1,0 +1,8 @@
+---
+
+- name: 'create the resources directory'
+  file:
+    path: /tmp/resources
+    state: directory
+    mode: 0755
+  changed_when: false

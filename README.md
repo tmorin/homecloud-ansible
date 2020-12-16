@@ -38,7 +38,7 @@ Additionally, Armbian images can be created for each host of the inventory.
 
 Each hosts must fulfilled the following constraints:
 
-- Operating System: Ubuntu > 18.4 and Debian > Stretch
+- Operating System: Ubuntu (18.04, 20.04) and Debian (Stretch, Buster)
 - CPU Architecture: amd64 or arm64
 - Memory: at least 2Go
 
@@ -48,14 +48,14 @@ If `ceph` is enabled:
 
 ## Dependencies
 
-The collection dependencies are bundled in [./collections.yml](collections.yml).
-```shell script
-ansible-galaxy collection install -r collections.yml
-```
-
 In order to build the custom Armbian images, additional dependencies are required:
 ```shell script
 apt-get install jq qemu-system-arm qemu-user-static
+```
+
+The collection dependencies are bundled in [./collections.yml](collections.yml).
+```shell script
+ansible-galaxy collection install -r collections.yml
 ```
 
 ## Testing
@@ -69,24 +69,26 @@ The test suite targets the following operating systems:
 - Ubuntu Bionic/Focal
 - Debian Stretch/Buster
 
-| |[c1]|[c2]|[armbian]|
-|---|---|---|---|
-|nodes|1|2|2|
-|https|no|no|no|
-|keepalived|yes|yes|no|
-|ceph|no|yes|no|
-|portainer|yes|yes|no|
-|influxdata|yes|no|no|
-|nextcloud|yes|no|no|
-|calibreweb|yes|no|no|
-|backup|yes|yes|no|
-|restore|no|yes|no|
-|dans|yes|yes|no|
-|Armbian image|no|no|yes|
+| |[c1]|[c1-ceph]|[c2]|[armbian]|
+|---|---|---|---|---|
+|nodes|1|1|2|2|
+|https|no|no|no|no|
+|keepalived|yes|no|yes|no|
+|ceph|no|yes|yes|no|
+|portainer|yes|no|yes|no|
+|influxdata|yes|no|no|no|
+|nextcloud|yes|no|no|no|
+|calibreweb|yes|no|no|no|
+|backup|yes|no|yes|no|
+|restore|no|no|yes|no|
+|dans|yes|no|yes|no|
+|hardening|no|yes|no|no|
+|Armbian image|no|no|no|yes|
 
 Examples starting with `vagrant-` can be fully deployed and tested using [vagrant] and [vagrant-libvirt].
 
 [c1]: molecule/c1
+[c1-ceph]: molecule/c1-ceph
 [c2]: molecule/c1
 [armbian]: molecule/armbian
 [molecule]: https://github.com/ansible-community/molecule

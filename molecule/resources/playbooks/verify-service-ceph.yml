@@ -1,0 +1,64 @@
+---
+
+- hosts: ceph_mon
+  vars:
+    homecloud_ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, ['homecloud_node_ip']) | list }}"
+    homecloud_ceph_monitor_ips: "{{ homecloud_ceph_monitor_ips_as_array | join(',') }}"
+    homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
+  tasks:
+
+    - name: Create the ceph volume
+      become: yes
+      command: "cephadm shell -- ceph fs subvolumegroup create swarm docker/test_ceph"
+      changed_when: false
+
+    - name: Create the docker volume test_ceph_1
+      community.docker.docker_volume:
+        name: test_ceph_1
+        driver: n0r1skcom/docker-volume-cephfs
+        driver_options:
+          name: admin
+          secret: "{{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}"
+          path: /volumes/docker/test_ceph
+          monitors: "{{ homecloud_ceph_monitor_ips }}"
+
+    - name: Mutate the docker volume test_ceph_1
+      community.docker.docker_container:
+        container_default_behavior: no_defaults
+        name: test_ceph_1
+        image: busybox
+        cleanup: true
+        volumes:
+          - test_ceph_1:/data
+        command: touch /data/test_file
+
+    - name: wait for sync
+      pause:
+        seconds: 5
+
+    - name: Create the docker volume test_ceph_2
+      community.docker.docker_volume:
+        name: test_ceph_2
+        driver: n0r1skcom/docker-volume-cephfs
+        driver_options:
+          name: admin
+          secret: "{{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}"
+          path: /volumes/docker/test_ceph
+          monitors: "{{ homecloud_ceph_monitor_ips }}"
+
+    - name: Read the docker volume test_ceph_2
+      community.docker.docker_container:
+        container_default_behavior: no_defaults
+        name: test_ceph_2
+        image: busybox
+        cleanup: true
+        detach: false
+        volumes:
+          - test_ceph_2:/data
+        command: ls /data
+      register: list_test_ceph_2
+    - name: Verify file has been created
+      assert:
+        quiet: true
+        that:
+          - list_test_ceph_2.container.Output | trim == 'test_file'

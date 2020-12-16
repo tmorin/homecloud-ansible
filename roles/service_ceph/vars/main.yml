@@ -1,7 +1,0 @@
----
-
-# The ceph should not be overridden.
-service_ceph_release: 15.2.5
-
-# The IP of the main monitor should not be overridden.
-service_ceph_monitor_ip: "{{ hostvars[groups['ceph_mon'][0]].homecloud_node_ip }}"

@@ -1,0 +1,29 @@
+---
+
+- name: Install ceph dependencies
+  become: yes
+  package:
+    name: curl,lvm2
+    state: present
+    force_apt_get: "yes"
+
+- name: Download cephadm
+  become: yes
+  get_url:
+    url: https://raw.githubusercontent.com/ceph/ceph/v{{ service_ceph_release }}/src/cephadm/cephadm
+    dest: /usr/local/bin
+    mode: '775'
+  register: install_cephadm
+
+- name: Pull the Ceph image
+  community.docker.docker_image:
+    name: "ceph/ceph:v{{ service_ceph_release }}"
+    source: pull
+    state: present
+
+- name: Tag the Ceph image
+  community.docker.docker_image:
+    name: "ceph/ceph:v{{ service_ceph_release }}"
+    repository: "ceph/ceph:v{{ service_ceph_major }}"
+    source: local
+    state: present

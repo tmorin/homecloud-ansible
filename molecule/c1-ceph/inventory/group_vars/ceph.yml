@@ -1,0 +1,20 @@
+---
+
+ceph_services:
+  - service_docker
+  - service_ceph
+
+# https://docs.ceph.com/docs/master/start/hardware-recommendations/
+service_ceph_config_rocksdb_cache_size: "67108864" # 64mb
+service_ceph_config_mds_cache_memory_limit: "67108864" # 64mb
+# https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#automatic-cache-sizing
+service_ceph_config_osd_memory_base: "67108864" # 64mb
+# https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#manual-cache-sizing
+service_ceph_config_bluestore_cache_size: "268435456" # 256mb
+# https://docs.ceph.com/docs/master/rados/configuration/pool-pg-config-ref/
+service_ceph_config_osd_pool_default_size: "1"
+service_ceph_config_osd_pool_default_min_size: "1"
+# https://docs.ceph.com/docs/master/rados/configuration/mon-config-ref/#miscellaneous
+service_ceph_config_mon_osd_cache_size: "67108864" # 64mb
+service_ceph_config_mon_osd_cache_size_min: "33554432" # 32mb
+service_ceph_config_mon_memory_target: "67108864" # 64mb

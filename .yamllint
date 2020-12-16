@@ -1,4 +1,5 @@
 ---
+
 # Based on ansible-lint config
 extends: default
 
@@ -32,7 +33,7 @@ rules:
   trailing-spaces: disable
   truthy: disable
 
-
 ignore: |
-  node_modules
+  .*
   env
+  node_modules

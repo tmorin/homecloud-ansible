@@ -1,0 +1,13 @@
+---
+
+- name: 'create a ceph volume'
+  become: yes
+  command: "cephadm shell -- ceph fs subvolumegroup create swarm docker/{{ volume_name }}"
+  loop:
+    - influxdata_influxdb
+    - influxdata_kapacitor
+    - influxdata_chronograf
+  loop_control:
+    loop_var: "volume_name"
+  changed_when: false
+  register: create_ceph_volumes

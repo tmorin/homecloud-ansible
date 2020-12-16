@@ -12,11 +12,11 @@
       - stack_info.Services == "1"
 
 - name: "{{ swarm_stack }} - Verify stack services"
-  shell: "{% raw %}docker stack ps calibreweb --format='{{.Name}} {{.CurrentState}}' || true{% endraw %}"
+  shell: "{% raw %}docker stack ps calibreweb --format='{{ .Name }} {{ .CurrentState }}' || true{% endraw %}"
   register: stack_service_info
   until: stack_service_info.stdout.find(item~' Running') > -1
   retries: 60
-  delay: 3
+  delay: 5
   loop:
     - 'calibreweb_server.1'
 
@@ -27,7 +27,7 @@
   register: logs_service_info
   until: logs_service_info.stdout.find(item.log) > -1
   retries: 60
-  delay: 3
+  delay: 5
   loop:
     - svc: 'calibreweb_server'
       log: '[services.d] done.'
@@ -39,7 +39,7 @@
   register: web_service_info
   until: web_service_info.stdout.find(item.status) > -1
   retries: 60
-  delay: 3
+  delay: 5
   loop:
     - host: 'calibreweb.homecloud.swarm'
       status: 'HTTP/1.1 302 Found'

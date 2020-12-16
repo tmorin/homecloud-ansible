@@ -1,0 +1,11 @@
+---
+
+- name: 'copy the stack file'
+  template:
+    src: stack.yml.jinja2
+    dest: /tmp/resources/portainer.stack.yml
+    force: true
+    trim_blocks: no
+    lstrip_blocks: no
+    mode: 0644
+  register: deploy_stack

@@ -1,0 +1,43 @@
+---
+
+- name: Get Ceph plugin status
+  shell: |
+    set -o pipefail
+    docker plugin ls | grep n0r1skcom/docker-volume-cephfs &>/dev/null && echo installed || echo not_installed
+  args:
+    executable: /bin/bash
+  register: ceph_plugin_status
+  changed_when: false
+
+- name: Install docker plugin n0r1skcom/docker-volume-cephfs
+  when: ceph_plugin_status.stdout == "not_installed" and homecloud_ceph_is_enabled
+  block:
+    - name: Install build dependencies from apt
+      become: yes
+      package:
+        name: git
+        state: present
+        force_apt_get: "yes"
+    - name: Build docker plugin n0r1skcom/docker-volume-cephfs
+      shell: |
+        set -ex
+        rm -Rf /tmp/docker-volume-cephfs
+        git clone https://gitlab.com/n0r1sk/docker-volume-cephfs.git /tmp/docker-volume-cephfs
+        cd /tmp/docker-volume-cephfs
+        docker build --pull -t docker-volume-cephfs:rootfs .
+        mkdir -p ./plugin/rootfs
+        docker create --name tmp docker-volume-cephfs:rootfs
+        docker export tmp | tar -x -C ./plugin/rootfs
+        cp config.json ./plugin/
+        docker rm -vf tmp
+        docker plugin create n0r1skcom/docker-volume-cephfs ./plugin
+        docker plugin enable n0r1skcom/docker-volume-cephfs
+        rm -Rf /tmp/docker-volume-cephfs
+      args:
+        executable: /bin/bash
+    - name: Uninstall build dependencies
+      become: yes
+      package:
+        name: git
+        state: absent
+        force_apt_get: "yes"
