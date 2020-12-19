@@ -1,0 +1,66 @@
+name: Continous Integration - Test
+
+on: [ push, pull_request ]
+
+jobs:
+
+  test:
+    name: Test molecule scenario
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: [ 'c1' ]
+        n1_box: [ '' ]
+        n2_box: [ '' ]
+        driver: [ "'qemu'" ]
+    #        include:
+    #          - scenario: c1
+    #            n1_box: generic/ubuntu1804
+    #          - scenario: c1
+    #            n1_box: generic/ubuntu2004
+    #          - scenario: c1-ceph
+    #            n1_box: generic/debian9
+    #          - scenario: c1-ceph
+    #            n1_box: generic/debian10
+    #          - scenario: c2
+    #            n1_box: generic/debian9
+    #            n2_box: generic/debian10
+    env:
+      MOLECULE_SCENARIO: ${{ matrix.scenario }}
+      MOLECULE_N1_BOX: ${{ matrix.n1_box }}
+      MOLECULE_N2_BOX: ${{ matrix.n2_box }}
+      MOLECULE_DRIVER: ${{ matrix.driver }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          key: vagrant-box-debian9
+          path: "~/.vagrant.d/boxes/generic-VAGRANTSLASH-debian9"
+      - uses: actions/cache@v2
+        with:
+          key: vagrant-box-debian10
+          path: "~/.vagrant.d/boxes/generic-VAGRANTSLASH-debian10"
+      - uses: actions/cache@v2
+        with:
+          key: vagrant-box-ubuntu1804
+          path: "~/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu1804"
+      - uses: actions/cache@v2
+        with:
+          key: vagrant-box-ubuntu2004
+          path: "~/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu2004"
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - uses: actions/cache@v2
+        with:
+          key: python3-env
+          path: "env"
+      - name: Install requirements
+        run: |
+          pip install --upgrade setuptools
+          pip install -r requirements.txt
+      - name: Install vagrant and libvirt
+        run: sudo ./scripts/ci-install.sh
+      - name: Test
+        run: sudo /home/runner/.local/bin/molecule test -s $MOLECULE_SCENARIO

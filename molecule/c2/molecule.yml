@@ -14,7 +14,7 @@ platforms:
   - name: c2-n1
     box: "${MOLECULE_N1_BOX-generic/debian10}"
     provider_options:
-      driver: "'kvm'"
+      driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 2048
     cpu: 2
     interfaces:
@@ -26,7 +26,7 @@ platforms:
   - name: c2-n2
     box: "${MOLECULE_N2_BOX-generic/debian9}"
     provider_options:
-      driver: "'kvm'"
+      driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 2048
     cpu: 2
     interfaces:

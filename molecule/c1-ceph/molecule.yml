@@ -14,7 +14,7 @@ platforms:
   - name: c1-ceph-n1
     box: "${MOLECULE_N1_CEPH_BOX-generic/debian10}"
     provider_options:
-      driver: "'kvm'"
+      driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 4096
     cpu: 2
     interfaces:
