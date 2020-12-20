@@ -16,21 +16,21 @@ An in-depth explanation is available in the [paper](./paper/README.adoc).
 
 ## Overview
 
-This ansible collection provides the following building blocks:
+The Ansible collection provides the following building blocks:
 
 - a Docker Swarm with:
-  - a layer4 load-balancer handled by `keepalived`
-  - a modern reverse proxy for UDP, TCP and HTTP handled by `traefik`
-- a distributed file system handled by `ceph`
+  - a layer4 load-balancer handled by `Keepalived`
+  - a modern reverse proxy for UDP, TCP and HTTP handled by `Traefik`
+- a distributed file system handled by `Ceph`
 - a decentralized solution to synchronize files between local/remote nodes with `Syncthing`
 
 The collection provides also ready-to-use stacks:
 
-- `influxdata` : a set of components to monitor the Docker Swarm.
-- `portainer` : a lightweight management UI to easily manage the Docker Swarm.
-- `nextcloud` : a platform providing the benefits of online collaboration without the compliance and security risks.
-- `calibreweb` :  a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
-- `backup` : a system based on Duplicity and CRON which backups Docker volumes. 
+- `Influxdata` : a set of components to monitor the Docker Swarm.
+- `Portainer` : a lightweight management UI to easily manage the Docker Swarm.
+- `Nextcloud` : a platform providing the benefits of online collaboration without the compliance and security risks.
+- `Calibreweb` :  a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
+- `Backup` : a system based on Duplicity and CRON which backups Docker volumes. 
 
 Additionally, Armbian images can be created for each host of the inventory.
 
@@ -44,7 +44,7 @@ Each hosts must fulfilled the following constraints:
 
 If `ceph` is enabled:
 
-- 1 available storage block device by hosts ([more information there](https://docs.ceph.com/docs/master/cephadm/install/#deploy-osds))
+- 1 available storage block device by OSD nodes ([more information there](https://docs.ceph.com/docs/master/cephadm/install/#deploy-osds))
 
 ## Dependencies
 
@@ -69,7 +69,7 @@ The test suite targets the following operating systems:
 - Ubuntu Bionic/Focal
 - Debian Stretch/Buster
 
-| |[c1]|[c1-ceph]|[c2]|[armbian]|
+| |[c1]|[c1-ceph]|[c2]|[armbian]*|
 |---|---|---|---|---|
 |nodes|1|1|2|2|
 |https|no|no|no|no|
@@ -85,7 +85,7 @@ The test suite targets the following operating systems:
 |hardening|no|yes|no|no|
 |Armbian image|no|no|no|yes|
 
-Examples starting with `vagrant-` can be fully deployed and tested using [vagrant] and [vagrant-libvirt].
+* the [armbian] scenario cannot be executed on Travis CI.
 
 [c1]: molecule/c1
 [c1-ceph]: molecule/c1-ceph
@@ -104,9 +104,7 @@ They are located in the molecule directory: [molecule/resources/playbooks](molec
 #### Hardening
 
 The playbook [cluster-hardening.yml](molecule/resources/playbooks/cluster-hardening.yml) apply hardening recommendations on the operating system and SSH.
-The activities are managed by the Ansible collection [devsec.hardening].
-
-[devsec.hardening]: https://galaxy.ansible.com/devsec/hardening
+The activities are managed by the Ansible collection [devsec.hardening](https://galaxy.ansible.com/devsec/hardening).
 
 #### Bootstrap the cluster
 
