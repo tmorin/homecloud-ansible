@@ -1,12 +1,5 @@
 ---
 
-- name: Install ceph dependencies
-  become: yes
-  package:
-    name: curl,lvm2
-    state: present
-    force_apt_get: "yes"
-
 - name: Download cephadm
   become: yes
   get_url:

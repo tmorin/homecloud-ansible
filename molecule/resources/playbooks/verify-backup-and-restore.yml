@@ -2,38 +2,39 @@
 
 - hosts: all
   tasks:
-
-    - name: Get portainer stack info
-      community.docker.docker_stack_task_info:
-        name: portainer
-      register: portainer_stack_info
-    - name: Resolve the portainer console node
-      set_fact:
-        get_portainer_node: "{{ portainer_stack_info \
-        | community.general.json_query('results[?Name==`portainer_console.1` && DesiredState==`Running`].Node | [0]') }}"
-    - name: Copy portainer node
+    - name: Resolve the portainer node
       when: ansible_hostname == groups.swarm_mgr[0]
-      delegate_to: localhost
-      copy:
-        content: "{{ get_portainer_node }}"
-        dest: "/tmp/portainer_node"
-        mode: 0644
+      block:
+        - name: Get portainer stack info
+          community.docker.docker_stack_task_info:
+            name: portainer
+          register: portainer_stack_info
+        - name: Resolve the portainer console node
+          set_fact:
+            get_portainer_node: "{{ portainer_stack_info | community.general.json_query('results[?Name==`portainer_console.1` && DesiredState==`Running`].Node | [0]') }}" # noqa 204
+        - name: Copy portainer node
+          delegate_to: localhost
+          copy:
+            content: "{{ get_portainer_node }}"
+            dest: "/tmp/portainer_node"
+            mode: 0644
 
-    - name: Get backup stack info
-      community.docker.docker_stack_task_info:
-        name: backup
-      register: backup_stack_info
-    - name: Resolve the portainer console node
-      set_fact:
-        get_backup_node: "{{ backup_stack_info \
-        | community.general.json_query('results[?Name==`backup_duplicity.1` && DesiredState==`Running`].Node' | [0] ) }}"
-    - name: Copy backup node
+    - name: Resolve the backup node
       when: ansible_hostname == groups.swarm_mgr[0]
-      delegate_to: localhost
-      copy:
-        content: "{{ get_backup_node }}"
-        dest: "/tmp/backup_node"
-        mode: 0644
+      block:
+        - name: Get backup stack info
+          community.docker.docker_stack_task_info:
+            name: backup
+          register: backup_stack_info
+        - name: Resolve the backup node
+          set_fact:
+            get_backup_node: "{{ backup_stack_info | community.general.json_query('results[?Name==`backup_duplicity.1` && DesiredState==`Running`].Node | [0]') }}" # noqa 204
+        - name: Copy backup node
+          delegate_to: localhost
+          copy:
+            content: "{{ get_backup_node }}"
+            dest: "/tmp/backup_node"
+            mode: 0644
 
     - name: Lookup the nodes
       set_fact:
@@ -42,28 +43,24 @@
 
     - name: Add /data/test_file in portainer_console
       when: ansible_hostname == portainer_node
-      #shell: docker run --rm -v portainer_console:/data busybox touch /data/test_file
       community.docker.docker_container:
+        container_default_behavior: no_defaults
+        name: test_add_test_file
         image: busybox
         cleanup: true
         volumes:
           - portainer_console:/data
         command: touch /data/test_file
 
-    - name: Force backup_duplicity backup
+    - name: Force backuping of portainer
       when: ansible_hostname == backup_node
-      shell: "docker exec $(docker container ps --filter name=backup_duplicity --format {% raw %}'{{ .Node }}'{% endraw %} /tasks/backup-PORTAINER-CONSOLE.sh"
-    #        community.docker.docker_container:
-    #          image: busybox
-    #          cleanup: true
-    #          volumes:
-    #            - portainer_console:/data
-    #          command: touch /data/test_file
+      shell: "docker exec $(docker container ps --filter name=backup_duplicity --format {% raw %}'{{ .Names }}'{% endraw %}) /tasks/backup-PORTAINER-CONSOLE.sh"
 
-    - name: remove /data/test_file from portainer_console
+    - name: Remove /data/test_file from portainer_console
       when: ansible_hostname == portainer_node
-      #shell: docker run --rm -v portainer_console:/data busybox rm /data/test_file
       community.docker.docker_container:
+        container_default_behavior: no_defaults
+        name: test_remove_test_file
         image: busybox
         cleanup: true
         volumes:
@@ -74,21 +71,26 @@
 
 - hosts: all
   tasks:
-    - name: Lookup the portainer node
-      set_fact:
-        portainer_node: "{{ lookup('file', '/tmp/portainer_node') }}"
-    - name: list /data/test_file from portainer_console
+    - name: Resolve portainer node
       when: ansible_hostname == portainer_node
-      shell: |
-        set -o pipefail
-        docker run --rm -v portainer_console:/data busybox ls -l /data \
-        | grep /data/test_file || true
-      args:
-        executable: /bin/bash
-      register: list_test_file
-    - name: "Verify restore action"
-      when: ansible_hostname == portainer_node
-      assert:
-        quiet: true
-        that:
-          - list_test_file.stdout | length > 0
+      block:
+        - name: Lookup the portainer node
+          set_fact:
+            portainer_node: "{{ lookup('file', '/tmp/portainer_node') }}"
+        - name: List /data from portainer_console
+          community.docker.docker_container:
+            container_default_behavior: no_defaults
+            name: test_list_test_file
+            image: busybox
+            cleanup: true
+            detach: false
+            volumes:
+              - portainer_console:/data
+            command: ls /data
+          register: list_test_file
+        - debug: var=list_test_file
+        - name: Verify file has been restored
+          assert:
+            quiet: true
+            that:
+              - list_test_file.container.Output.find('test_file')

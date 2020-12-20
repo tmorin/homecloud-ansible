@@ -7,6 +7,14 @@
     state: directory
     mode: 0755
 
+- name: Install dependencies
+  when: inventory_hostname in groups.ceph
+  become: yes
+  package:
+    name: curl,lvm2
+    state: present
+    force_apt_get: "yes"
+
 - name: Install cephadm
   when: inventory_hostname in groups.ceph_mon
   import_tasks: install-cephadm.yml
