@@ -41,6 +41,8 @@ jobs:
         run: yamllint .
       - name: Lint the collection
         run: ansible-lint
+        env:
+          PATH: "$PATH:~/.local/bin"
       - name: Build the collection
         run: ansible-galaxy collection build --force --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
         working-directory: collection
