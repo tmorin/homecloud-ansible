@@ -35,8 +35,11 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-      - name: Install Ansible
+      - name: Install requirements
         run: pip install --user -r requirements.txt
+      - name: Lint the collection
+        run: ansible-lint
+        working-directory: collection
       - name: Build the collection
         run: ansible-galaxy collection build --force --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
         working-directory: collection
