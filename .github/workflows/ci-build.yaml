@@ -35,16 +35,23 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-      - name: Install requirements
-        run: pip install --user -r requirements.txt
+      - name: Install Python requirements
+        run: |
+          export PATH="$PATH:$HOME/.local/bin"
+          pip install --user --upgrade setuptools wheel pip
+          pip install --user -r requirements.txt
       - name: Lint yam files
-        run: yamllint .
+        run: |
+          export PATH="$PATH:$HOME/.local/bin"
+          yamllint .
       - name: Lint the collection
-        run: ansible-lint
-        env:
-          PATH: "$PATH:~/.local/bin"
+        run: |
+          export PATH="$PATH:$HOME/.local/bin"
+          ansible-lint
       - name: Build the collection
-        run: ansible-galaxy collection build --force --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+        run: |
+          export PATH="$PATH:$HOME/.local/bin"
+          ansible-galaxy collection build --force --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
         working-directory: collection
       - name: Upload collection
         uses: actions/upload-artifact@v2
@@ -53,5 +60,7 @@ jobs:
           path: collection/tmorin-homecloud-*.tar.gz
       - name: Publish the collection
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        run: ansible-galaxy collection publish --token ${{ secrets.ANSIBLE_GALAXY_API_KEY }} tmorin-homecloud-*.tar.gz
+        run: |
+          export PATH="$PATH:$HOME/.local/bin"
+          ansible-galaxy collection publish --token ${{ secrets.ANSIBLE_GALAXY_API_KEY }} tmorin-homecloud-*.tar.gz
         working-directory: collection

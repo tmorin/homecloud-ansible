@@ -1,6 +1,6 @@
 name: Continous Integration - Test
 
-on: [ push, pull_request ]
+on: [ ]
 
 jobs:
 
@@ -49,18 +49,23 @@ jobs:
         with:
           key: vagrant-box-ubuntu2004
           path: "~/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu2004"
+      #- uses: actions/cache@v2
+      #  with:
+      #    key: python3-env
+      #    path: "env"
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-      - uses: actions/cache@v2
-        with:
-          key: python3-env
-          path: "env"
-      - name: Install requirements
+      - name: Install Python requirements
         run: |
-          pip install --upgrade setuptools
+          export PATH="$PATH:$HOME/.local/bin:/root/.local/bin"
+          pip install --upgrade setuptools wheel pip
           pip install -r requirements.txt
       - name: Install vagrant and libvirt
-        run: sudo ./scripts/ci-install.sh
-      - name: Test
-        run: sudo /home/runner/.local/bin/molecule test -s $MOLECULE_SCENARIO
+        run: |
+          export PATH="$PATH:/home/runner/.local/bin:/root/.local/bin"
+          sudo ./scripts/ci-install.sh
+      - name: Execute test scenario
+        run: |
+          PATH="$PATH:/home/runner/.local/bin:/root/.local/bin"
+          sudo /home/runner/.local/bin/molecule test -s $MOLECULE_SCENARIO
