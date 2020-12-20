@@ -390,6 +390,28 @@ In order to avoid confusions, by convention, the prefix of common variables is `
 
 For instance, the variable `homecloud_is_https` is common because it drives the configuration of Traefik as well as declarations of Docker Stacks exposing services from Internet.
 
+== Quality
+
+The good point of the infrastructure as code approach is to provide a source code which can be validated in the continuous integration process.
+
+The validation of the described Ansible collection focuses on two axes.
+The first one checks the syntax of the source code in order increase good practices and preventing the bad one.
+The second axe checks the implementation performing end-to-end tests.
+Those kinds of tests provides two main benefits: 1) the implemented features are tested before to reach the real life and 2) potential regressions are early identified.
+
+For each axe, the Ansible community provides a solution which can be easily integrated in a continuous integration process.
+
+Ansible-lint is the solution to check the syntax <<alt>>.
+Fortunately, it is shipped with a large set of rules.
+
+Molecule is the test framework which help to prepare and execute test scenarios with many virtualization providers <<mol>>.
+Therefore, the Ansible collection can directly be tested on a virtual server with 1, 2 or more nodes.
+
+== Conclusion
+
+Put all together, the described approaches, concepts and technologies help the design as well as the implementation of an internal cloud.
+A kind of cloud able to host private data and provide services all around the world for a reasonable amount of users.
+
 [appendix]
 [#appendix_dnas]
 == dnas, a decentralized NAS
@@ -401,8 +423,8 @@ On the other side, Syncthing brings the decentralized part with its peer-to-peer
 .The DNAS overview
 image::user_services_dnas.png[The DNAS overview]
 
-The Syncthing service replicates data to the external SSD Disk.
 The same disk is _opened_ to the internal network as a Samba share.
+The Syncthing service replicates data to the external SSD Disk.
 
 [appendix]
 [#appendix_keepalived_integration]
@@ -520,6 +542,7 @@ https://www.techopedia.com/definition/4127/secure-shell-ssh
 *Technologies*
 
 * [[[acsh]]] Ansible Collection - devsec.hardening, https://galaxy.ansible.com/devsec/hardening
+* [[[alt]]] Ansible-lint, https://github.com/ansible-community/ansible-lint
 * [[[ans]]] Ansible, https://www.ansible.com
 * [[[abn]]] Armbian, https://www.armbian.com
 * [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
@@ -536,6 +559,7 @@ https://www.techopedia.com/definition/4127/secure-shell-ssh
 * [[[ite]]] Telegraf, https://www.influxdata.com/time-series-platform/telegraf
 * [[[kad]]] Keepalived, https://www.keepalived.org
 * [[[ncd]]] Nextcloud, https://nextcloud.com
+* [[[mol]]] Molecule, https://github.com/ansible-community/molecule
 * [[[por]]] Portainer, https://www.portainer.io
 * [[[smb]]] Samba, https://www.samba.org
 * [[[syt]]] Syncthing, https://syncthing.net
