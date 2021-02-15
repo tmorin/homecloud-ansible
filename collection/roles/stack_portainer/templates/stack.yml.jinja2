@@ -27,7 +27,7 @@ volumes:
 services:
 
   agent:
-    image: {{ portainer_agent_image }}
+    image: {{ stack_portainer_agent_image }}
     environment:
       - LOG_LEVEL=WARN
       - AGENT_CLUSTER_ADDR=tasks.agent
@@ -41,14 +41,14 @@ services:
       mode: global
       resources:
         limits:
-          memory: {{ portainer_agent_memory }}
+          memory: {{ stack_portainer_agent_memory }}
         reservations:
-          memory: {{ portainer_agent_memory }}
+          memory: {{ stack_portainer_agent_memory }}
       placement:
         constraints: [node.platform.os == linux]
 
   console:
-    image: {{ portainer_console_image }}
+    image: {{ stack_portainer_console_image }}
     command: -H tcp://tasks.agent:9001 --tlsskipverify
     volumes:
       - console:/data
@@ -65,9 +65,9 @@ services:
         order: stop-first
       resources:
         limits:
-          memory: {{ portainer_console_memory }}
+          memory: {{ stack_portainer_console_memory }}
         reservations:
-          memory: {{ portainer_console_memory }}
+          memory: {{ stack_portainer_console_memory }}
       placement:
         constraints: [node.role == manager]
       restart_policy:
@@ -75,7 +75,7 @@ services:
       labels:
         - "traefik.enable=true"
         # routers
-        - "traefik.http.routers.portainer.rule=Host(`{{ portainer_host }}`)"
+        - "traefik.http.routers.portainer.rule=Host(`{{ stack_portainer_host }}`)"
 {% if homecloud_is_https %}
         - "traefik.http.routers.portainer.entrypoints=https"
         - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"

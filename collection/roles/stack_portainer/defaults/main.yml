@@ -5,7 +5,7 @@ homecloud_ceph_monitor_ips: ""
 homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
 homecloud_is_https: true
 
-portainer_host: 'portainer.homecloud.swarm'
+stack_portainer_host: 'portainer.homecloud.swarm'
 
 
 # volumes
@@ -15,11 +15,11 @@ portainer_volume_console: {}
 
 # console
 
-portainer_console_image: 'portainer/portainer-ce'
-portainer_console_memory: '64M'
+stack_portainer_console_image: 'portainer/portainer-ce'
+stack_portainer_console_memory: '64M'
 
 
 # agent
 
-portainer_agent_image: 'portainer/agent'
-portainer_agent_memory: '32M'
+stack_portainer_agent_image: 'portainer/agent'
+stack_portainer_agent_memory: '32M'
