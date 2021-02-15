@@ -19,12 +19,12 @@ volumes:
       secret: {{ lookup('file', homecloud_vault_path~'/ceph.client.admin.secret') | trim }}
       path: /volumes/docker/traefik_letsencrypt
       monitors: {{ homecloud_ceph_monitor_ips }}
-{% else %}{{ traefik_volume_letsencrypt | to_json }}{% endif %}
+{% else %}{{ stack_traefik_volume_letsencrypt | to_json }}{% endif %}
 
 services:
 
   server:
-    image: {{ traefik_server_image }}
+    image: {{ stack_traefik_server_image }}
     command:
       - "--log.level=ERROR"
       - "--api.insecure=true"
@@ -33,21 +33,21 @@ services:
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=traefik_public"
-      - "--entrypoints.http.address=:{{ traefik_http_port }}"
-      - "--entrypoints.https.address=:{{ traefik_https_port }}"
+      - "--entrypoints.http.address=:{{ stack_traefik_http_port }}"
+      - "--entrypoints.https.address=:{{ stack_traefik_https_port }}"
 {% if homecloud_is_https %}
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
-      - "--certificatesresolvers.letsencrypt.acme.email={{ traefik_server_admin_email }}"
+      - "--certificatesresolvers.letsencrypt.acme.email={{ stack_traefik_server_admin_email }}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
 {% endif %}
 
     ports:
-      - target: {{ traefik_http_port }}
-        published: {{ traefik_http_port }}
+      - target: {{ stack_traefik_http_port }}
+        published: {{ stack_traefik_http_port }}
         protocol: tcp
-      - target: {{ traefik_https_port }}
-        published: {{ traefik_https_port }}
+      - target: {{ stack_traefik_https_port }}
+        published: {{ stack_traefik_https_port }}
         protocol: tcp
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -69,7 +69,7 @@ services:
       labels:
         - "traefik.enable=true"
         # routers
-        - "traefik.http.routers.traefik.rule=Host(`{{ traefik_host }}`)"
+        - "traefik.http.routers.traefik.rule=Host(`{{ stack_traefik_host }}`)"
 {% if homecloud_is_https %}
         - "traefik.http.routers.traefik.entrypoints=https"
         - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
@@ -88,4 +88,4 @@ services:
         - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 {% endif %}
         # middleware basic auth
-        - "traefik.http.middlewares.basic_auth_admin.basicauth.users={{ traefik_server_auth_admin }}"
+        - "traefik.http.middlewares.basic_auth_admin.basicauth.users={{ stack_traefik_server_auth_admin }}"
