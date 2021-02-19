@@ -2,7 +2,7 @@
 // METADATA
 :doctype: article
 :author: Thibault Morin
-:revdate: 2020-12-08
+:revdate: 2021-02-19
 :homepage: https://github.com/tmorin/homecloud-ansible
 :toc:
 // FOOTNOTES
@@ -94,7 +94,7 @@ image::building_blocks_and_user_services.png[User Services and Building Blocks]
 
 === The container engine and orchestrator
 
-Docker is one of the most popular technology about _container_, and moreover, ready-to-use to almost all architectures <<dok>>.
+Docker is one of the most popular technology about _containers_, and moreover, ready-to-use to almost all architectures <<dok>>.
 Therefore, because `homecloud` must be easy to bootstrap and configure for at least `amd64` and `aarch64` architectures, Docker is a good candidate for the container engine.
 
 Luckily Docker shipped a ready-to-use container orchestrator: Docker Swarm <<dsw>>.applications will be hi Therefore, according to the _domestic_ usage of `homecloud`, Docker Swarm is a good candidate for the container orchestration especially because no overhead will be added to the technical stack.
@@ -108,7 +108,7 @@ Therefore, the router must be configured with an IP able to handle the forwarded
 
 In the `homecloud` context, the configured IP is one of anyone of the cluster nodes, because Docker Swarm is internally able to forward requests to the right node whatever the entry point <<dnt>>.
 
-However, IP addresses can be dynamics and moreover the node availability cannot be guaranty.
+However, IP addresses can be dynamics and moreover the node availability cannot be guarantied.
 It means the configured IP could become unallocated in the future in case of dynamic IP, or pointing to a node which stops to work properly.
 Therefore, the cluster is not reliable because the cluster is not <<g_ha, highly available>> <<doha>>.
 
@@ -186,7 +186,7 @@ Therefore, a final building block has to be defined: the backup and restore.
 === Backup and restore
 
 In the `homecloud` context, the term disaster means: data stored in Ceph have been lost.
-For instance, the Nextcloud database cannot be used anymore because of data corruption which cannot be resolved by the MariaDB engine it-self.
+For instance, the Nextcloud database cannot be used any more because of data corruption which cannot be resolved by the MariaDB engine it-self.
 Therefore, `homecloud` must provide a way <<g_disaster_recovery, to recover the disaster>>.
 The most affordable way to recover data is to regularly backup them and storing them into another system.
 
@@ -325,7 +325,7 @@ The inventory groups of the hosts define the Ceph roles.
 
 According to the Ceph requirements, an OSD node must provide a free block device of at least 5GO.
 
-=== The DNAS service
+=== The dnas service
 
 The Ansible role `service_dnas` installs and configures Syncthing and Samba on the host.
 It manages the mount of the block device which contains the files to expose over Syncthing and Samba.
@@ -397,7 +397,7 @@ The good point of the infrastructure as code approach is to provide a source cod
 The validation of the described Ansible collection focuses on two axes.
 The first one checks the syntax of the source code in order increase good practices and preventing the bad one.
 The second axe checks the implementation performing end-to-end tests.
-Those kinds of tests provides two main benefits: 1) the implemented features are tested before to reach the real life and 2) potential regressions are early identified.
+Those kinds of tests provide two main benefits: 1) the implemented features are tested before to reach the real life and 2) potential regressions are early identified.
 
 For each axe, the Ansible community provides a solution which can be easily integrated in a continuous integration process.
 
@@ -420,8 +420,8 @@ The purpose of _dnas_ is to expose private files over the local network like a u
 Samba provides remote accesses from the local network.
 On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.
 
-.The DNAS overview
-image::user_services_dnas.png[The DNAS overview]
+.The dnas overview
+image::user_services_dnas.png[The dnas overview]
 
 The same disk is _opened_ to the internal network as a Samba share.
 The Syncthing service replicates data to the external SSD Disk.
