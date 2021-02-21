@@ -47,5 +47,5 @@
       import_tasks: create-volumes.yml
 
 - name: Install Docker plugin
-  when: inventory_hostname in groups.ceph,groups.swarm
+  when: inventory_hostname in groups.ceph+(groups.swarm | default([]) )
   import_tasks: install-docker-plugin.yml
