@@ -1,0 +1,7 @@
+---
+
+service_k3s_server_ip: "{{ hostvars[groups['k3s_srv'][0]].homecloud_node_ip }}"
+
+# The value should be overridden from a host variable.
+service_k3s_node_labels: { }
+service_k3s_node_taints: { }

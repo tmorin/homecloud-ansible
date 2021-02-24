@@ -1,0 +1,16 @@
+---
+
+- name: Set role for agents
+  become: yes
+  command: kubectl label node --overwrite {{ node_name }} node-role.kubernetes.io/role=worker
+  loop: "{{ groups.k3s_agt | default([]) }}"
+  loop_control:
+    loop_var: node_name
+  register: set_role_agents
+  changed_when: not 'not labeled' in set_role_agents.stdout
+#- debug: var=set_role_agents
+
+- include_tasks: set-node-labels.yml
+  loop: "{{ groups.k3s | default([]) }}"
+  loop_control:
+    loop_var: node_name

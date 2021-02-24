@@ -1,0 +1,10 @@
+---
+
+- name: Wait for nodes availability
+  become: yes
+  command: kubectl get node -o jsonpath='{.items[?(@.status.conditions[-1].type=="Ready")].metadata.name}'
+  changed_when: false
+  register: kubcetl_result
+  delay: 5
+  retries: 6
+  until: kubcetl_result.stdout.split(' ') | unique | length == groups.k3s | length

@@ -1,0 +1,3 @@
+---
+
+service_k3s_server_primary_ip: "{{ hostvars[groups['k3s_srv'][0]].homecloud_node_ip }}"

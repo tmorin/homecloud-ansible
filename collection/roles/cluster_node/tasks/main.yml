@@ -7,3 +7,5 @@
 - import_tasks: install-dependencies.yml
 
 - import_tasks: install-swapoff.yml
+
+- import_tasks: activate-iptables-legacy.yml

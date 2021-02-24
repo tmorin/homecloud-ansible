@@ -1,0 +1,23 @@
+galaxy_info:
+  author: Thibault Morin
+  description: bootstrap a Kubernetes server based on https://k3s.io
+  license: MIT
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - stretch
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+
+  galaxy_tags:
+    - debian
+    - ubuntu
+    - docker
+    - swarm
+
+dependencies: [ ]

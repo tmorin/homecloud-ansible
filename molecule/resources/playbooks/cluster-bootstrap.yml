@@ -25,6 +25,13 @@
       loop: "{{ swarm_services | default([]) }}"
       loop_control:
         loop_var: "swarm_service"
+    # K3S
+    - name: "bootstrap k3s services"
+      include_role:
+        name: "{{ k3s_service }}"
+      loop: "{{ k3s_services | default([]) }}"
+      loop_control:
+        loop_var: "k3s_service"
     # CEPH
     - name: "bootstrap ceph services"
       include_role:

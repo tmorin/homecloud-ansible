@@ -1,0 +1,30 @@
+---
+
+- name: Create the vault directory
+  delegate_to: localhost
+  file:
+    path: "{{ homecloud_vault_path }}"
+    state: directory
+    mode: 0755
+
+- name: Install the prim  ary k3s server
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - import_tasks: k3s-server-primary.yml
+    - import_tasks: get-server-token.yml
+
+- name: Install the secondaries k3s servers
+  when: inventory_hostname in groups.k3s_srv[1:] | default([])
+  block:
+    - import_tasks: k3s-server-secondary.yml
+
+- name: Install the k3s agents
+  when: inventory_hostname in groups.k3s_agt | default([])
+  block:
+    - import_tasks: k3s-agent.yml
+
+- name: Configure cluster nodes
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - import_tasks: wait-for-nodes.yml
+    - import_tasks: configure_nodes.yml

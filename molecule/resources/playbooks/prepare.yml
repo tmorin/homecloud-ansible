@@ -18,3 +18,11 @@
         dev: "{{ service_dnas_mount_what }}"
         force: false
         fstype: ext4
+
+    - name: Format the block device of Longhorn
+      when: k3s_longhorn_mount_what is defined
+      become: yes
+      community.general.filesystem:
+        dev: "{{ k3s_longhorn_mount_what }}"
+        force: false
+        fstype: ext4

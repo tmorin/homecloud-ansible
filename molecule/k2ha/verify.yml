@@ -1,0 +1,3 @@
+---
+
+- import_playbook: ../resources/playbooks/verify-service-k3s.yml

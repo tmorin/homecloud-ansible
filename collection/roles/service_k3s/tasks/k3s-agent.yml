@@ -1,0 +1,19 @@
+---
+
+- name: Install agent
+  become: true
+  shell: |
+    set -o pipefail
+    curl -sfL https://get.k3s.io | \
+      K3S_NODE_NAME="{{ inventory_hostname }}" \
+      K3S_URL="https://{{ service_k3s_server_primary_ip }}:6443" \
+      K3S_TOKEN="{{ lookup('file', homecloud_vault_path~'/k3s-sever-token.txt') }}" \
+      sh -s - \
+      --node-ip {{ homecloud_node_ip }} \
+      --node-external-ip {{ homecloud_node_ip }}
+  args:
+    executable: /bin/bash
+    creates: /usr/local/bin/k3s
+    warn: false
+  register: install_agent
+#- debug: var=install_agent
