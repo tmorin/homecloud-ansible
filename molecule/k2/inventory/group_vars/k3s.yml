@@ -2,3 +2,6 @@
 
 k3s_services:
   - service_k3s
+
+k3s_deployments:
+  - k3s_dashboard

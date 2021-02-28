@@ -1,0 +1,14 @@
+---
+
+- hosts: all
+  pre_tasks:
+    - include_role: name="resources_prepare"
+  tasks:
+    - name: "apply k3s deployments"
+      include_role:
+        name: "{{ k3s_deployment }}"
+      loop: "{{ k3s_deployments | default([]) }}"
+      loop_control:
+        loop_var: "k3s_deployment"
+  post_tasks:
+    - include_role: name="resources_clean"

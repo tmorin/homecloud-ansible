@@ -7,7 +7,15 @@
     state: directory
     mode: 0755
 
-- name: Install the prim  ary k3s server
+- name: Install dependencies from pip
+  become: yes
+  pip:
+    name:
+      - openshift
+      - pyaml
+    extra_args: --user
+
+- name: Install the primary k3s server
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
     - import_tasks: k3s-server-primary.yml
