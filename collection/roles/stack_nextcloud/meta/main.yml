@@ -7,8 +7,12 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
-        - stretch
         - buster
+        - stretch
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
 
   galaxy_tags:
     - stack
