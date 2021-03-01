@@ -5,3 +5,9 @@ k3s_services:
 
 k3s_deployments:
   - k3s_dashboard
+  - k3s_longhorn
+
+k3s_longhorn_settings:
+  default-replica-count: 2
+
+k3s_longhorn_disk_device: "/dev/vdb"

@@ -7,3 +7,5 @@ service_k3s_node_labels:
   key1: value1
 
 #service_k3s_node_taints: { }
+
+k3s_longhorn_disk_device: "/dev/vdb"

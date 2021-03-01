@@ -1,8 +1,8 @@
 ---
 
 - name: Fetch server token
-  become: yes
+  become: true
   fetch:
     src: /var/lib/rancher/k3s/server/node-token
     dest: "{{ homecloud_vault_path }}/k3s-sever-token.txt"
-    flat: yes
+    flat: true

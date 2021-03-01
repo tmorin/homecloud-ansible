@@ -1,0 +1,78 @@
+---
+
+- name: Install dependencies from apt
+  become: true
+  package:
+    name: open-iscsi
+    state: present
+    force_apt_get: "yes"
+
+- name: Format and mount the disk
+  when: k3s_longhorn_disk_device | default('') | length > 0
+  block:
+    - name: Format the block device of Longhorn
+      become: true
+      community.general.filesystem:
+        dev: "{{ k3s_longhorn_disk_device }}"
+        force: false
+        fstype: "{{ k3s_longhorn_disk_type }}"
+    - name: Mount the block device on boot
+      become: true
+      ansible.posix.mount:
+        boot: true
+        state: mounted
+        src: "{{ k3s_longhorn_disk_device }}"
+        path: "{{ k3s_longhorn_disk_path }}"
+        fstype: "{{ k3s_longhorn_disk_type }}"
+
+- name: Configure Longhorn nodes
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - name: Add node label for Create Default Disk
+      become: true
+      command: |
+        kubectl label node --overwrite {{ nodevars.ansible_hostname }} \
+          node.longhorn.io/create-default-disk=true
+      loop: "{{ groups.k3s | default([]) | map('extract', hostvars) | rejectattr('k3s_longhorn_disk_device', 'none') }}"
+      loop_control:
+        loop_var: nodevars
+      register: set_node_label
+      changed_when: not 'not labeled' in set_node_label.stdout
+
+- name: Deploy Longhorn
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - name: Fetch deployment latest manifest
+      get_url:
+        url: https://raw.githubusercontent.com/longhorn/longhorn/master/deploy/longhorn.yaml
+        dest: /tmp/resources/longhorn.yaml
+      changed_when: false
+    - name: Apply custom settings
+      lineinfile:
+        path: /tmp/resources/longhorn.yaml
+        regexp: '    {{ item[0] }}:'
+        line: '    {{ item[0] }}: {{ item[1] }}'
+      changed_when: false
+      loop: "{{ (k3s_longhorn_settings | default({})).items() }}"
+    - name: Enable Create Default Disk on Labeled Nodes
+      lineinfile:
+        path: /tmp/resources/longhorn.yaml
+        regexp: 'create-default-disk-labeled-nodes:'
+        line: '    create-default-disk-labeled-nodes: true'
+      changed_when: false
+    - name: Deploy Longhorn
+      become: true
+      command: |
+        kubectl apply -f /tmp/resources/longhorn.yaml
+      register: deploy_longhorn
+      changed_when: "'created' in deploy_longhorn.stdout"
+    - name: Wait for Longhorn
+      become: true
+      command: |
+        kubectl -n longhorn-system get deploy longhorn-driver-deployer \
+          -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
+      changed_when: false
+      register: kubcetl_result
+      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
+      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
+      until: "'True' in kubcetl_result.stdout"

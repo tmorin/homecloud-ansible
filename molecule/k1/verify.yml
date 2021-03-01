@@ -2,15 +2,15 @@
 
 - import_playbook: ../resources/playbooks/verify-service-k3s.yml
 
-- hosts: k1-n1
+- hosts: k3s_srv[0]
   tasks:
     - name: Get nodes with label key0
-      become: yes
+      become: true
       command: kubectl get node -l key0 -o custom-columns=name:.metadata.name --no-headers
       changed_when: false
       register: get_label_key0
     - name: Get nodes with label key1
-      become: yes
+      become: true
       command: kubectl get node -l key1 -o custom-columns=name:.metadata.name --no-headers
       changed_when: false
       register: get_label_key1

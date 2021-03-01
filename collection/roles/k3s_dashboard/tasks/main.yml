@@ -3,16 +3,15 @@
 - name: Deploy the k8s dashboard
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
-
     - name: Copy customization.yml
       template:
         src: customization.yml
         dest: /tmp/resources/k3s_dashboard.customization.yml
         force: true
-        trim_blocks: no
-        lstrip_blocks: no
+        trim_blocks: false
+        lstrip_blocks: false
         mode: 0644
-
+      changed_when: false
     - name: Resolve latest dashboard version
       shell: |
         curl -w '%{url_effective}' -I -L -s \
@@ -22,15 +21,13 @@
       changed_when: false
       args:
         warn: false
-
     - name: Deploy the k8s dashboard
       become: true
       command: |
         kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/{{ resolve_latest_dashboard_version.stdout }}/aio/deploy/recommended.yaml \
         -f /tmp/resources/k3s_dashboard.customization.yml
       register: deploy_k3s_dashboard
-      changed_when: "'configured' in deploy_k3s_dashboard.stdout or 'created' in deploy_k3s_dashboard.stdout"
-
+      changed_when: "'created' in deploy_k3s_dashboard.stdout"
     - name: Wait for k8s dashboard
       become: true
       command: |
@@ -38,6 +35,6 @@
           -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
       changed_when: false
       register: kubcetl_result
-      delay: 5
-      retries: 6
+      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
+      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
       until: "'True' in kubcetl_result.stdout"

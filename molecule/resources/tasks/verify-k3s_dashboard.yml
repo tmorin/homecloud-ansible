@@ -1,46 +1,12 @@
 ---
 
-- name: Verify k3s_dashboard
+- name: Verify Kubernetes dashboard
   block:
-    - name: Expose the kubernetes dashboard
-      become: true
-      command: kubectl -n kubernetes-dashboard expose deploy kubernetes-dashboard --name kubernetes-dashboard-external --type LoadBalancer
-      changed_when: false
-      ignore_errors: true
-    - name: Wait for kubernetes dashboard service
-      become: true
-      command: kubectl -n kubernetes-dashboard get service kubernetes-dashboard-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-      changed_when: false
-      register: kubcetl_result
-      delay: 5
-      retries: 6
-      until: kubcetl_result.stdout | length > 0
-    - name: Get the load balancer ip
-      become: true
-      command: kubectl -n kubernetes-dashboard get service kubernetes-dashboard-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-      changed_when: false
-      register: load_balancer_ip
-    - name: Get the load balancer port
-      become: true
-      command: kubectl -n kubernetes-dashboard get service kubernetes-dashboard-external -o jsonpath='{.spec.ports[0].nodePort}'
-      changed_when: false
-      register: load_balancer_port
-    - name: Get the load balancer port
-      become: true
-      command: curl -Ik https://{{ load_balancer_ip.stdout }}:{{ load_balancer_port.stdout }}
-      changed_when: false
-      register: curl_dashboard
-      args:
-        warn: false
-    - name: Verify the landing page
-      assert:
-        quiet: true
-        that:
-          - not curl_dashboard.failed
-          - curl_dashboard.stdout_lines[0] | trim == "HTTP/2 200"
-  always:
-    - name: Delete the service kubernetes dashboard external
-      become: true
-      command: kubectl -n kubernetes-dashboard delete service kubernetes-dashboard-external
-      changed_when: false
-      ignore_errors: true
+    - name: Configure endpoint verifier
+      set_fact:
+        k8s_namespace: kubernetes-dashboard
+        k8s_deploy_name: kubernetes-dashboard
+        k8s_service_name: kubernetes-dashboard-external
+        k8s_url_protocol: https
+        k8s_expected_status: "HTTP/2 200"
+    - include_tasks: verify-k8s-http-endpoint.yml

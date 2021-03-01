@@ -46,13 +46,11 @@ jobs:
           export PATH="$PATH:$HOME/.local/bin"
           pip install --user --upgrade setuptools wheel pip
           pip install --user -r requirements.txt
-      - name: Lint yam files
-        run: |
-          export PATH="$PATH:$HOME/.local/bin"
-          yamllint .
+          ansible-galaxy collection install -r molecule/resources/collections.yml
       - name: Lint the collection
         run: |
           export PATH="$PATH:$HOME/.local/bin"
+          export ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:collection/roles
           ansible-lint
       - name: Build the collection
         run: |
