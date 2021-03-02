@@ -20,11 +20,18 @@
   block:
     - import_tasks: k3s-server-primary.yml
     - import_tasks: get-server-token.yml
+    - import_tasks: deploy-traefik.yml
 
 - name: Install the secondaries k3s servers
   when: inventory_hostname in groups.k3s_srv[1:] | default([])
   block:
     - import_tasks: k3s-server-secondary.yml
+
+- name: Add kubectl completion
+  when: inventory_hostname in groups.k3s_srv | default([])
+  become: true
+  shell: kubectl completion bash > /etc/bash_completion.d/kubectl
+  changed_when: false
 
 - name: Install the k3s agents
   when: inventory_hostname in groups.k3s_agt | default([])

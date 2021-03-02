@@ -1,9 +1,9 @@
 ---
 
-dependency:
-  name: galaxy
-  options:
-    requirements-file: molecule/resources/collections.yml
+#dependency:
+#  name: galaxy
+#  options:
+#    requirements-file: molecule/resources/collections.yml
 
 driver:
   name: vagrant
@@ -17,12 +17,7 @@ platforms:
       driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 4096
     cpu: 2
-    interfaces:
-      - network_name: 'private_network'
-        ip: '192.168.21.11'
-        libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
-      - "storage :file, :size => '2G'"
       - "storage :file, :size => '2G'"
 
 provisioner:
@@ -30,7 +25,7 @@ provisioner:
   ansible_args:
     - -e=service_docker_username=$DOCKER_USERNAME
     - -e=service_docker_password=$DOCKER_PASSWORD
-#    - -e=cluster_node_skip_reboot=true
+  # - -e=cluster_node_skip_reboot=true
   env:
     ANSIBLE_ROLES_PATH: "$ephemeral_directory/roles/:$project_directory/../:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:$MOLECULE_PROJECT_DIRECTORY/collection/roles"
   config_options:

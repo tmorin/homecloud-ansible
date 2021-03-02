@@ -17,12 +17,7 @@ platforms:
       driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 2096
     cpu: 2
-    interfaces:
-      - network_name: 'private_network'
-        ip: '192.168.21.21'
-        libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
-      - "storage :file, :size => '2G'"
       - "storage :file, :size => '2G'"
   - name: k2-n2
     box: "${MOLECULE_N2_BOX-generic/ubuntu2004}"
@@ -30,12 +25,7 @@ platforms:
       driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 2096
     cpu: 2
-    interfaces:
-      - network_name: 'private_network'
-        ip: '192.168.21.22'
-        libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
-      - "storage :file, :size => '2G'"
       - "storage :file, :size => '2G'"
 
 provisioner:
@@ -43,7 +33,7 @@ provisioner:
   ansible_args:
     - -e=service_docker_username=$DOCKER_USERNAME
     - -e=service_docker_password=$DOCKER_PASSWORD
-#    - -e=cluster_node_skip_reboot=true
+  # - -e=cluster_node_skip_reboot=true
   env:
     ANSIBLE_ROLES_PATH: "$ephemeral_directory/roles/:$project_directory/../:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:$MOLECULE_PROJECT_DIRECTORY/collection/roles"
   config_options:
