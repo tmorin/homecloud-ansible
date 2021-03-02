@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "1.6.0",
+  "version": "2.0.0-aplha.0",
   "scripts": {
     "gdiag": "gdiag --wd=paper",
     "release:alpha": "standard-version --commit-all --prerelease alpha --skip.changelog --skip.tag",

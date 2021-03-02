@@ -1,6 +1,6 @@
-ansible>=2.10
-ansible-lint
-molecule[ansible,lint]
+ansible~=2.10
+ansible-lint[yamllint]~=5.0.2
+molecule
 molecule-vagrant
 python-vagrant
 jmespath
