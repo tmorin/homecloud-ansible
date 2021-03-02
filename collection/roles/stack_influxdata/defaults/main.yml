@@ -10,9 +10,9 @@ stack_influxdata_host: 'influxdata.homecloud.swarm'
 
 # volumes
 
-stack_influxdata_volume_influxdb: {}
-stack_influxdata_volume_kapacitor: {}
-stack_influxdata_volume_chronograf: {}
+stack_influxdata_volume_influxdb: { }
+stack_influxdata_volume_kapacitor: { }
+stack_influxdata_volume_chronograf: { }
 
 
 # influxdb

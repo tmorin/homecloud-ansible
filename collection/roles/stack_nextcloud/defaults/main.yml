@@ -15,9 +15,9 @@ stack_nextcloud_host: 'nextcloud.homecloud.swarm'
 
 # volumes
 
-stack_nextcloud_volume_server: {}
-stack_nextcloud_volume_database: {}
-stack_nextcloud_volumes: {}
+stack_nextcloud_volume_server: { }
+stack_nextcloud_volume_database: { }
+stack_nextcloud_volumes: { }
 
 
 # database

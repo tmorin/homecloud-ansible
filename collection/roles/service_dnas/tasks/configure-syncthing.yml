@@ -1,64 +1,64 @@
 ---
 
 - name: Install dependencies from apt
-  become: yes
+  become: true
   package:
     name: python3-lxml,python3-bcrypt,python3-passlib
     state: present
     force_apt_get: "yes"
 
 - name: Enable and start syncthing.service
-  become: yes
+  become: true
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: "syncthing@{{ service_dnas_username }}.service"
-    enabled: yes
+    enabled: true
     state: started
   changed_when: false
 
 - name: Stop syncthing.service
-  become: yes
+  become: true
   systemd:
     name: "syncthing@{{ service_dnas_username }}.service"
     state: stopped
   changed_when: false
 
 - name: Remove the Sync folder from configuration
-  become: yes
+  become: true
   community.general.xml:
     path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/folder[@id='default']
     state: absent
 
 - name: Remove the Sync folder from file system
-  become: yes
+  become: true
   file:
     path: "{{ service_dnas_mount_where }}/Sync"
     state: absent
 
 - name: Set address
-  become: yes
+  become: true
   community.general.xml:
     path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/address
     value: "{{ service_dnas_syncthing_gui_address }}"
 
 - name: Set syncthing user
-  become: yes
+  become: true
   community.general.xml:
     path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/user
     value: "{{ service_dnas_syncthing_gui_username }}"
 
 - name: Set syncthing password
-  become: yes
+  become: true
   community.general.xml:
     path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/password
     value: "{{ service_dnas_syncthing_gui_password }}"
 
 - name: Restart syncthing service
-  become: yes
+  become: true
   systemd:
     name: "syncthing@{{ service_dnas_username }}.service"
     state: restarted

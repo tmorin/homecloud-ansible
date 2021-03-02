@@ -1,11 +1,11 @@
 ---
 
 - name: Get SSH public key
-  become: yes
+  become: true
   fetch:
     src: "/etc/ceph/ceph.pub"
     dest: "{{ homecloud_vault_path }}/ceph.pub"
-    flat: yes
+    flat: true
   register: get_ssh_pubkey
 
 - name: Push SSH public key to the current user

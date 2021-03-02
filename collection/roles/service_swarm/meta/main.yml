@@ -20,4 +20,4 @@ galaxy_info:
     - docker
     - swarm
 
-dependencies: []
+dependencies: [ ]

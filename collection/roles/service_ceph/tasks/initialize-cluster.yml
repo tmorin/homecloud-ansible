@@ -1,7 +1,7 @@
 ---
 
 - name: Get /etc/ceph/ceph.conf stat
-  become: yes
+  become: true
   stat:
     path: /etc/ceph/ceph.conf
   register: ceph_conf_file
@@ -10,14 +10,14 @@
   when: not ceph_conf_file.stat.exists
   block:
     - name: Create /etc/ceph
-      become: yes
+      become: true
       file:
         path: /etc/ceph
         state: directory
         mode: 0644
       register: initialize_cluster
     - name: Bootstrap ceph
-      become: yes
+      become: true
       shell: |
         cephadm bootstrap \
           --ssh-user {{ ansible_user }} \
@@ -30,7 +30,7 @@
         executable: /bin/bash
       register: initialize_cluster
     - name: Set labels
-      become: yes
+      become: true
       shell: |
         cephadm shell -- ceph orch host label add {{ inventory_hostname }} main
       args:

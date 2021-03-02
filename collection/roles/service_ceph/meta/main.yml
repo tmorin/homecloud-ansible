@@ -20,4 +20,4 @@ galaxy_info:
     - docker
     - ceph
 
-dependencies: []
+dependencies: [ ]

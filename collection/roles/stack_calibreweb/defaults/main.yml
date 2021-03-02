@@ -10,8 +10,8 @@ stack_calibreweb_host: 'calibreweb.homecloud.swarm'
 
 # volumes
 
-stack_calibreweb_volume_config: {}
-stack_calibreweb_volume_books: {}
+stack_calibreweb_volume_config: { }
+stack_calibreweb_volume_books: { }
 
 
 # server

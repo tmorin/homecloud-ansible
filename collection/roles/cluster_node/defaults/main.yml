@@ -1,5 +1,5 @@
 ---
 
-cluster_node_hold_packages: []
+cluster_node_hold_packages: [ ]
 
 cluster_node_skip_reboot: false

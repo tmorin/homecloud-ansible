@@ -12,28 +12,28 @@
     - include_role:
         name: cluster_node
     # DNAS
-    - name: "bootstrap dnas services"
+    - name: Bootstrap dnas services
       include_role:
         name: "{{ dnas_service }}"
       loop: "{{ dnas_services | default([]) }}"
       loop_control:
         loop_var: "dnas_service"
     # SWARM
-    - name: "bootstrap swarm services"
+    - name: Bootstrap swarm services
       include_role:
         name: "{{ swarm_service }}"
       loop: "{{ swarm_services | default([]) }}"
       loop_control:
         loop_var: "swarm_service"
     # K3S
-    - name: "bootstrap k3s services"
+    - name: Bootstrap k3s services
       include_role:
         name: "{{ k3s_service }}"
       loop: "{{ k3s_services | default([]) }}"
       loop_control:
         loop_var: "k3s_service"
     # CEPH
-    - name: "bootstrap ceph services"
+    - name: Bootstrap ceph services
       include_role:
         name: "{{ ceph_service }}"
       loop: "{{ ceph_services | default([]) }}"

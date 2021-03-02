@@ -13,6 +13,7 @@
 
 - name: "{{ swarm_stack }} - Verify stack services"
   shell: "{% raw %}docker stack ps backup --format='{{ .Name }} {{ .CurrentState }}' || true{% endraw %}"
+  changed_when: false
   register: stack_service_info
   until: stack_service_info.stdout.find(item~' Running') > -1
   retries: 60

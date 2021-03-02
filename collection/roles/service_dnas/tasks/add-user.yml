@@ -1,12 +1,12 @@
 ---
 
 - name: Add the group
-  become: yes
+  become: true
   group:
     name: "{{ service_dnas_username }}"
 
 - name: Add the user
-  become: yes
+  become: true
   user:
     name: "{{ service_dnas_username }}"
     group: "{{ service_dnas_username }}"
@@ -15,10 +15,10 @@
     password: "{{ service_dnas_password }}"
 
 - name: Chown the home directory
-  become: yes
-  file: # noqa 208
+  become: true
+  file:
     path: "{{ service_dnas_mount_where }}"
     state: directory
-    recurse: yes
+    recurse: true
     owner: "{{ service_dnas_username }}"
     group: "{{ service_dnas_username }}"

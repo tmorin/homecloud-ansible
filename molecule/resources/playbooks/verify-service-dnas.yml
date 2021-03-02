@@ -3,7 +3,7 @@
 - hosts: dnas
   tasks:
     # MOUNT
-    - name: Get DNAS mount status # noqa 303
+    - name: Get DNAS mount status # noqa command-instead-of-module
       shell: |
         set -o pipefail
         mount | grep '{{ service_dnas_mount_what }}'>/dev/null && echo ok || echo ko

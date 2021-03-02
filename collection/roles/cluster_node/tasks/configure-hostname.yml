@@ -1,12 +1,12 @@
 ---
 
 - name: Set hostname
-  become: yes
+  become: true
   hostname:
     name: "{{ inventory_hostname }}"
 
 - name: Build hosts file
-  become: yes
+  become: true
   lineinfile:
     dest: /etc/hosts
     regexp: '.*{{ item }}$'

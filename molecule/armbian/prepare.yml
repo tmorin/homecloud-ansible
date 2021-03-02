@@ -1,23 +1,23 @@
 ---
 
 - hosts: localhost
-  gather_facts: no
-  become: no
+  gather_facts: false
+  become: false
   tasks:
     - name: Install dependencies
-      become: yes
+      become: true
       package:
         name:
           - jq
           - qemu-system-arm
           - qemu-user-static
     - name: "delete {{ image_armbian_working_directory }}"
-      become: yes
+      become: true
       file:
         path: "{{ image_armbian_working_directory }}"
         state: absent
     - name: "delete {{ image_armbian_release_directory }}"
-      become: yes
+      become: true
       file:
         path: "{{ image_armbian_release_directory }}"
         state: absent

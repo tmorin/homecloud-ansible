@@ -5,8 +5,8 @@
     src: backup.env
     dest: /tmp/resources/backup.env
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack
 
@@ -15,8 +15,8 @@
     src: database.env
     dest: /tmp/resources/database.env
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack
 
@@ -25,8 +25,8 @@
     src: server.env
     dest: /tmp/resources/server.env
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack
 
@@ -35,7 +35,7 @@
     src: stack.yml.jinja2
     dest: /tmp/resources/nextcloud.stack.yml
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack

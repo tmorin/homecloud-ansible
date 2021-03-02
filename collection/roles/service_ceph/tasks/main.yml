@@ -9,7 +9,7 @@
 
 - name: Install dependencies
   when: inventory_hostname in groups.ceph
-  become: yes
+  become: true
   package:
     name: curl,lvm2
     state: present

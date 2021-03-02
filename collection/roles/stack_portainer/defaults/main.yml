@@ -10,7 +10,7 @@ stack_portainer_host: 'portainer.homecloud.swarm'
 
 # volumes
 
-portainer_volume_console: {}
+portainer_volume_console: { }
 
 
 # console

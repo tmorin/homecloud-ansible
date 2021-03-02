@@ -1,14 +1,14 @@
 ---
 
 - name: Install dependencies from apt
-  become: yes
+  become: true
   package:
     name: curl,nfs-common,cifs-utils
     state: present
     force_apt_get: "yes"
 
 - name: Stat /usr/bin/docker
-  become: yes
+  become: true
   stat:
     path: /usr/bin/docker
   register: docker_binnary_file
@@ -24,7 +24,7 @@
           - pyaml
         extra_args: --user
     - name: Execute docker install script
-      become: yes
+      become: true
       shell: |
         set -o pipefail
         curl -o- https://get.docker.com | bash
@@ -34,7 +34,7 @@
         warn: false
 
 - name: Configure current user
-  become: yes
+  become: true
   user:
     name: "{{ ansible_user }}"
     groups: docker

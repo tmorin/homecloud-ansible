@@ -14,4 +14,4 @@ homecloud_backup_volume:
 stack_backup_image: "thibaultmorin/duplicity-cron:0.8.17"
 stack_backup_memory: "128M"
 
-stack_backup_source_volume_names: []
+stack_backup_source_volume_names: [ ]

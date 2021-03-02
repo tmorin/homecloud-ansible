@@ -1,7 +1,7 @@
 ---
 
 - name: Install packages
-  become: yes
+  become: true
   package:
     name: ntp,python3,python3-pip,python3-setuptools
     state: present

@@ -1,30 +1,30 @@
 ---
 
 - name: Install samba
-  become: yes
+  become: true
   package:
     name: samba
     state: present
     force_apt_get: "yes"
 
 - name: Acviate and start smbd.service
-  become: yes
+  become: true
   systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: smbd.service
-    enabled: yes
+    enabled: true
     state: started
   changed_when: false
 
 - name: Stop smbd service
-  become: yes
+  become: true
   systemd:
     name: smbd.service
     state: stopped
   changed_when: false
 
 - name: Copy smb.conf
-  become: yes
+  become: true
   template:
     src: smb.conf.jinja2
     dest: /etc/samba/smb.conf
@@ -33,7 +33,7 @@
     mode: 0644
 
 - name: Set samba password
-  become: yes
+  become: true
   shell: |
     set -o pipefail
     (pdbedit --user={{ service_dnas_username }} &>/dev/null) \
@@ -44,7 +44,7 @@
   changed_when: false
 
 - name: Restart smbd.service
-  become: yes
+  become: true
   service:
     name: smbd.service
     state: restarted

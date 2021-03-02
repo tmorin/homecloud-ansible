@@ -3,7 +3,7 @@
 homecloud_node_ip: ''
 homecloud_network_netmask: ''
 homecloud_network_gateway: ''
-homecloud_network_nameserver: []
+homecloud_network_nameserver: [ ]
 
 # the url to get the armbian archive (c.f. https://dl.armbian.com)
 image_armbian_image_url: ""

@@ -2,7 +2,7 @@
 
 - hosts: swarm_mgr[0]
   tasks:
-    - name: "Remove a stack"
+    - name: Remove a stack
       #shell: "docker stack rm {{ item[6:] }}"
       community.docker.docker_stack:
         name: "{{ item[6:] }}"
@@ -13,7 +13,7 @@
   tasks:
     - name: Prune Docker unused resources
       community.docker.docker_prune:
-        containers: yes
-        networks: yes
-        volumes: yes
-        builder_cache: yes
+        containers: true
+        networks: true
+        volumes: true
+        builder_cache: true

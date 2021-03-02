@@ -1,7 +1,7 @@
 ---
 
 - name: Add the monitors to the ceph cluster
-  become: yes
+  become: true
   shell: |
     set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
@@ -17,7 +17,7 @@
   changed_when: false
 
 - name: Add managers to the ceph cluster
-  become: yes
+  become: true
   shell: |
     set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
@@ -33,7 +33,7 @@
   changed_when: false
 
 - name: Add the osd to the ceph cluster
-  become: yes
+  become: true
   shell: |
     set -exo pipefail
     status=$(cephadm shell -- ceph orch host ls | grep "{{ item }}" && echo "Exist" || echo "Missing")
@@ -49,7 +49,7 @@
   changed_when: false
 
 - name: Deploy mgr and mon
-  become: yes
+  become: true
   shell: |
     set -exo pipefail
     cephadm shell -- ceph orch apply mgr label:mgr

@@ -4,7 +4,7 @@
   tasks:
     - name: Get Docker Swarm info
       community.general.docker_swarm_info:
-      ignore_errors: yes
+      ignore_errors: true
       register: docker_swarm_info
     - name: Verify Docker Swarm installation
       assert:
@@ -19,7 +19,7 @@
   tasks:
     - name: Get Docker Swarm info
       community.general.docker_host_info:
-      ignore_errors: yes
+      ignore_errors: true
       register: docker_info
     - name: Verify Docker Swarm installation
       assert:

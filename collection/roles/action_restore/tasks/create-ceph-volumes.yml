@@ -1,7 +1,7 @@
 ---
 
 - name: 'create a ceph volume'
-  become: yes
+  become: true
   command: "cephadm shell -- ceph fs subvolumegroup create swarm docker/{{ volume_name }}"
   loop: "{{ action_restore_volume_names_to_restore | default([]) }}"
   loop_control:

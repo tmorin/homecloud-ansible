@@ -13,6 +13,7 @@
 
 - name: "{{ swarm_stack }} - Verify stack services"
   shell: "{% raw %}docker stack ps calibreweb --format='{{ .Name }} {{ .CurrentState }}' || true{% endraw %}"
+  changed_when: false
   register: stack_service_info
   until: stack_service_info.stdout.find(item~' Running') > -1
   retries: 60
@@ -24,6 +25,7 @@
   shell: "docker service logs {{ item.svc }} --no-trunc --raw || true"
   args:
     executable: /bin/bash
+  changed_when: false
   register: logs_service_info
   until: logs_service_info.stdout.find(item.log) > -1
   retries: 60
@@ -36,6 +38,7 @@
   shell: "curl -sILH host:{{ item.host }} http://{{ homecloud_virtual_ip }} || true"
   args:
     warn: false
+  changed_when: false
   register: web_service_info
   until: web_service_info.stdout.find(item.status) > -1
   retries: 60

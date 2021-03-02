@@ -20,4 +20,4 @@ galaxy_info:
     - calibre
     - calibreweb
 
-dependencies: []
+dependencies: [ ]

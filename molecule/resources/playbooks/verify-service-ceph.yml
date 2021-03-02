@@ -8,7 +8,7 @@
   tasks:
 
     - name: Create the ceph volume
-      become: yes
+      become: true
       command: "cephadm shell -- ceph fs subvolumegroup create swarm docker/test_ceph"
       changed_when: false
 

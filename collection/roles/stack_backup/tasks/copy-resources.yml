@@ -5,8 +5,8 @@
     src: duplicity.env.jinja2
     dest: /tmp/resources/duplicity.env
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack
 
@@ -15,7 +15,7 @@
     src: stack.yml.jinja2
     dest: /tmp/resources/backup.stack.yml
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack

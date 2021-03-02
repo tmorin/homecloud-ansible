@@ -22,4 +22,4 @@ galaxy_info:
     - kapacitor
     - chronograf
 
-dependencies: []
+dependencies: [ ]

@@ -2,13 +2,13 @@
 
 - name: "Chown {{ image_armbian_host_directory }}"
   delegate_to: localhost
-  become: yes
+  become: true
   file:
     path: "{{ image_armbian_host_directory }}"
     mode: u=rwX,g=rX,o=rX
     owner: "1000"
     group: "1000"
-    recurse: yes
+    recurse: true
   changed_when: false
 
 - name: Create the image release directory
@@ -20,6 +20,6 @@
 
 - name: Move host images
   delegate_to: localhost
-  become: yes
+  become: true
   raw: "mv -f {{ image_armbian_host_directory }}/image.img {{ image_armbian_release_directory }}/{{ inventory_hostname }}.img"
   changed_when: false

@@ -1,26 +1,26 @@
 ---
 
 - name: Install dependencies
-  become: yes
+  become: true
   package:
     name: apt-transport-https
     state: present
     force_apt_get: "yes"
 
 - name: Import syncthing GPG key to apt
-  become: yes
+  become: true
   apt_key:
     url: 'https://syncthing.net/release-key.txt'
     state: present
 
 - name: Add syncthing repository
-  become: yes
+  become: true
   apt_repository:
     repo: 'deb https://apt.syncthing.net/ syncthing stable'
     state: present
 
 - name: Install syncthing
-  become: yes
+  become: true
   package:
     name: syncthing
     state: present

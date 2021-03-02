@@ -1,7 +1,7 @@
 ---
 
 - name: Add osds
-  become: yes
+  become: true
   shell: |
     set -o pipefail
     status=$(cephadm shell -- ceph orch device ls {{ item }} --refresh |  grep "{{ hostvars[item].service_ceph_osd_device }}")

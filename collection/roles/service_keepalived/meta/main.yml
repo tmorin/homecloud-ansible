@@ -20,4 +20,4 @@ galaxy_info:
     - docker
     - keepalived
 
-dependencies: []
+dependencies: [ ]

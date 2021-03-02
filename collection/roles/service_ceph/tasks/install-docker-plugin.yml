@@ -13,7 +13,7 @@
   when: ceph_plugin_status.stdout == "not_installed" and homecloud_ceph_is_enabled
   block:
     - name: Install build dependencies from apt
-      become: yes
+      become: true
       package:
         name: git
         state: present
@@ -36,7 +36,7 @@
       args:
         executable: /bin/bash
     - name: Uninstall build dependencies
-      become: yes
+      become: true
       package:
         name: git
         state: absent

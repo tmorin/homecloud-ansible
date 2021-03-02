@@ -5,8 +5,8 @@
     src: stack.yml.jinja2
     dest: /tmp/resources/influxdata.stack.yml
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack
 
@@ -15,7 +15,7 @@
     src: telegraf.conf
     dest: /tmp/resources/telegraf.conf
     force: true
-    trim_blocks: no
-    lstrip_blocks: no
+    trim_blocks: false
+    lstrip_blocks: false
     mode: 0644
   register: deploy_stack

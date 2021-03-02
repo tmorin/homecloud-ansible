@@ -16,7 +16,7 @@ homecloud_backup_volume:
 ssh_allow_users: "{{ ansible_user }}"
 ssh_use_pam: true
 ssh_max_auth_retries: 10
-sftp_enabled: yes
+sftp_enabled: true
 # dev-sec.os-hardening
 os_auditd_enabled: false
 ufw_manage_defaults: false

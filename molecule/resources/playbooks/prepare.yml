@@ -4,25 +4,17 @@
   tasks:
 
     - name: Update packages
-      become: yes
+      become: true
       apt:
-        update_cache: yes
-        autoclean: yes
-        autoremove: yes
-        force_apt_get: yes
+        update_cache: true
+        autoclean: true
+        autoremove: true
+        force_apt_get: true
 
     - name: Format the block device of DNAS
       when: service_dnas_mount_what is defined
-      become: yes
+      become: true
       community.general.filesystem:
         dev: "{{ service_dnas_mount_what }}"
-        force: false
-        fstype: ext4
-
-    - name: Format the block device of Longhorn
-      when: k3s_longhorn_mount_what is defined
-      become: yes
-      community.general.filesystem:
-        dev: "{{ k3s_longhorn_mount_what }}"
         force: false
         fstype: ext4

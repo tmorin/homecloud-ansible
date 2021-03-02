@@ -11,6 +11,6 @@ service_dnas_mount_name: '{{ service_dnas_mount_where | regex_replace("^/") | re
 
 service_dnas_syncthing_gui_address: "0.0.0.0:8384"
 service_dnas_syncthing_gui_username: "dnas"
-# https://https://bcrypthashgenerator.tool-kit.dev/
+# https://https://bcrypthashgenerator.tool-kit.dev
 service_dnas_syncthing_gui_password: "$2a$10$dvemZCjuv8CDNfMVexU1t.v0or0Q1PKlSVHl7tPThuEkmBq7B3fbi" # == dnas
-#service_dnas_syncthing_gui_password: "{{ 'dnas' | password_hash('bcrypt', 'dnas') }}" # :( it doesn't work
+# service_dnas_syncthing_gui_password: "{{ 'dnas' | password_hash('bcrypt', 'dnas') }}" # :( it doesn't work

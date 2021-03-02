@@ -1,7 +1,7 @@
 ---
 
 - name: Download cephadm
-  become: yes
+  become: true
   get_url:
     url: https://raw.githubusercontent.com/ceph/ceph/v{{ service_ceph_release }}/src/cephadm/cephadm
     dest: /usr/local/bin

@@ -1,7 +1,7 @@
 ---
 
 - name: Configure ceph
-  become: yes
+  become: true
   shell: |
     set -exo pipefail
 

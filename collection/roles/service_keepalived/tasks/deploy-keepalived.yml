@@ -15,11 +15,11 @@
 
 - name: Deploy container
   community.docker.docker_container:
-    networks_cli_compatible: yes
+    networks_cli_compatible: true
     container_default_behavior: no_defaults
     name: keepalived
     image: '{{ service_keepalived_image }}'
-    detach: yes
+    detach: true
     state: started
     restart_policy: unless-stopped
     network_mode: host

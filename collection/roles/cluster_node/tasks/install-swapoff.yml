@@ -1,7 +1,7 @@
 ---
 
 - name: Copy swapoff.service
-  become: yes
+  become: true
   template:
     src: swapoff.service
     dest: /etc/systemd/system/swapoff.service
@@ -10,9 +10,9 @@
     mode: 0644
 
 - name: Enable and start swapoff.service
-  become: yes
+  become: true
   systemd:
     daemon_reload: true
     name: swapoff.service
-    enabled: yes
+    enabled: true
     state: started
