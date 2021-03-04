@@ -20,6 +20,7 @@
   block:
     - import_tasks: k3s-server-primary.yml
     - import_tasks: get-server-token.yml
+    - import_tasks: configure-local-kubectl.yml
     - import_tasks: deploy-traefik.yml
 
 - name: Install the secondaries k3s servers

@@ -3,12 +3,12 @@
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/tmorin/homecloud-ansible/Continous%20Integration/master?label=GitHub%20Actions&logo=github+actions&logoColor=black)](https://github.com/tmorin/homecloud-ansible/actions?query=workflow%3A%22Continous+Integration%22+branch%3Amaster)
 [![Travis (.org) branch](https://img.shields.io/travis/tmorin/homecloud-ansible/master?label=Travis%20CI&logo=travis+CI&logoColor=black)](https://travis-ci.org/github/tmorin/homecloud-ansible)
 
-> `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home based on Docker Swarm, Ceph and Syncthing.
+> `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home mainly based on Kubernetes, Longhorn and Syncthing.
 
 ## Presentation
 
 `homecloud` aims to provide a cloud like environment, especially an internal cloud, at home.
-The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Docker Swarm, Ceph or Syncthing.
+The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes, Longhorn or Syncthing.
 
 The main artifact is an Ansible collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
 
@@ -18,13 +18,13 @@ An in-depth explanation is available in the [paper](./paper/README.adoc).
 
 The Ansible collection provides the following building blocks:
 
-- a Docker Swarm with:
-  - a layer4 load-balancer handled by `Keepalived`
-  - a modern reverse proxy for UDP, TCP and HTTP handled by `Traefik`
-- a distributed file system handled by `Ceph`
-- a decentralized solution to synchronize files between local/remote nodes with `Syncthing`
+- a `Kubernetes` cluster
+- a support of high availability handled by `Keepalived`
+- a modern reverse proxy for UDP, TCP and HTTP handled by `Traefik`
+- a distributed block storage system handled by `Longhorn`
+- a decentralized solution to synchronize files between local/remote nodes, `dnas`, powered with `Syncthing` and `Samba`
 
-The collection provides also ready-to-use stacks:
+The collection provides also ready-to-use services:
 
 - `Influxdata` : a set of components to monitor the Docker Swarm.
 - `Portainer` : a lightweight management UI to easily manage the Docker Swarm.
@@ -42,9 +42,34 @@ Each hosts must fulfilled the following constraints:
 - CPU Architecture: amd64 or arm64
 - Memory: at least 2Go
 
-If `ceph` is enabled:
+If `longhorn` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk etc) for each node storing data
 
-- 1 available storage block device by OSD nodes ([more information there](https://docs.ceph.com/docs/master/cephadm/install/#deploy-osds))
+If `dnas` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk etc) for each node storing data
+
+## Local environment
+
+Crete the Python virtual environment
+```shell
+virtualenv venv
+source venv/bin/activate
+```
+
+Install the dependencies
+```shell
+pip install -r requirements.txt
+```
+
+Lint the Ansible collection
+```shell
+export ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:collection/roles
+ansible-lint
+```
+
+Configure local (Ansible agent) kubectl
+```shell
+export KUBECONFIG=/home/tmorin/.kube/homecloud
+kubectl get all --all-namespaces
+```
 
 ## Dependencies
 
@@ -53,9 +78,9 @@ In order to build the custom Armbian images, additional dependencies are require
 apt-get install jq qemu-system-arm qemu-user-static
 ```
 
-The collection dependencies are bundled in [./collections.yml](collections.yml).
-```shell script
-ansible-galaxy collection install -r collections.yml
+The collection dependencies are bundled in [./molecule/resources/collections.yml](molecule/resources/collections.yml).
+```shell
+ansible-galaxy collection install -r molecule/resources/collections.yml
 ```
 
 ## Testing
@@ -69,27 +94,41 @@ The test suite targets the following operating systems:
 - Ubuntu Bionic/Focal
 - Debian Stretch/Buster
 
-| |[c1]|[c1-ceph]|[c2]|[armbian]*|
+| |[k1]|[k2]|[k2ha]|[armbian]*|
 |---|---|---|---|---|
-|nodes|1|1|2|2|
+|nodes|1|2|2|2|
 |https|no|no|no|no|
-|keepalived|yes|no|yes|no|
-|ceph|no|yes|yes|no|
-|portainer|yes|no|yes|no|
-|influxdata|yes|no|no|no|
-|nextcloud|yes|no|no|no|
-|calibreweb|yes|no|no|no|
-|backup|yes|no|yes|no|
-|restore|no|no|yes|no|
-|dans|yes|no|yes|no|
-|hardening|no|yes|no|no|
+|keepalived|yes|yes|yes|no|
+|longhorn|yes|yes|yes|no|
+|traefik|yes|yes|yes|no|
+|dnas|yes|yes|yes|no|
+|hardening|no|no|no|no|
 |Armbian image|no|no|no|yes|
 
 * the [armbian] scenario cannot be executed on Travis CI.
 
-[c1]: molecule/c1
-[c1-ceph]: molecule/c1-ceph
-[c2]: molecule/c1
+
+Configure local (Ansible agent) kubectl for k1
+```shell
+export KUBECONFIG=/home/tmorin/.kube/k1
+kubectl get all --all-namespaces
+```
+
+Configure local (Ansible agent) kubectl for k2
+```shell
+export KUBECONFIG=/home/tmorin/.kube/k2
+kubectl get all --all-namespaces
+```
+
+Configure local (Ansible agent) kubectl for k2ha
+```shell
+export KUBECONFIG=/home/tmorin/.kube/k2ha
+kubectl get all --all-namespaces
+```
+
+[k1]: molecule/k1
+[k2]: molecule/k2
+[k2ha]: molecule/k2ha
 [armbian]: molecule/armbian
 [molecule]: https://github.com/ansible-community/molecule
 [vagrant]: https://www.vagrantup.com/

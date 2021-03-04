@@ -3,9 +3,9 @@
 - name: Install dependencies from apt
   become: true
   package:
-    name: open-iscsi
+    name: open-iscsi,nfs-common,cifs-utils
     state: present
-    force_apt_get: "yes"
+    force_apt_get: true
 
 - name: Format and mount the disk
   when: k3s_longhorn_disk_device | default('') | length > 0

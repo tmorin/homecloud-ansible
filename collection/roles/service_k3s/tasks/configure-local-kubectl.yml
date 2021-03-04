@@ -1,0 +1,32 @@
+---
+
+- name: Configure the ansible agent
+  when: service_k3s_local_kubectl_config_file | length > 0
+  block:
+    - name: Create the kubectl config directory
+      file:
+        path: "{{ service_k3s_local_kubectl_config_directory }}"
+        mode: '0600'
+        state: touch
+      changed_when: false
+    - name: Fetch the k8s configuration
+      become: true
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: "{{ service_k3s_local_kubectl_config_file }}"
+        flat: true
+      changed_when: false
+    - name: Fix the k8s configuration content
+      delegate_to: localhost
+      lineinfile:
+        path: "{{ service_k3s_local_kubectl_config_file }}"
+        regexp: "    server: https://127.0.0.1:6443"
+        line: "    server: https://{{ service_k3s_server_ip }}:6443"
+      changed_when: false
+    - name: Fix the k8s configuration permisions
+      delegate_to: localhost
+      file:
+        path: "{{ service_k3s_local_kubectl_config_file }}"
+        mode: '0600'
+        state: touch
+      changed_when: false
