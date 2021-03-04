@@ -31,11 +31,11 @@
     - name: Add node label for Create Default Disk
       become: true
       command: |
-        kubectl label node --overwrite {{ nodevars.ansible_hostname }} \
+        kubectl label node --overwrite {{ item.ansible_hostname }} \
           node.longhorn.io/create-default-disk=true
-      loop: "{{ groups.k3s | default([]) | map('extract', hostvars) | rejectattr('k3s_longhorn_disk_device', 'none') }}"
+      loop: "{{ (groups.k3s | default([])) | map('extract', hostvars) | list | selectattr('k3s_longhorn_disk_device', 'defined') }}"
       loop_control:
-        loop_var: nodevars
+        label: "{{ item.ansible_hostname }}"
       register: set_node_label
       changed_when: not 'not labeled' in set_node_label.stdout
 

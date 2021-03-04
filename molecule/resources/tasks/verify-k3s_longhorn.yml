@@ -10,3 +10,109 @@
         k8s_url_protocol: http
         k8s_expected_status: HTTP/1.1 200 OK
     - include_tasks: verify-k8s-http-endpoint.yml
+
+- name: Verify PersistentVolumeClaim
+  block:
+    - name: Create working directory
+      file:
+        dest: /tmp/resources/deployments
+        state: directory
+    - name: Clean resources
+      become: true
+      command: kubectl delete \
+        -f /tmp/resources/test-longhorn-rwo-step2.yml \
+        -f /tmp/resources/test-longhorn-rwo-step1.yml \
+        -f /tmp/resources/test-longhorn-rwx-step3.yml \
+        -f /tmp/resources/test-longhorn-rwx-step2.yml \
+        -f /tmp/resources/test-longhorn-rwx-step1.yml
+      changed_when: false
+      ignore_errors: true
+    - name: Copy deployment manifests
+      copy:
+        src: ../deployments/
+        dest: /tmp/resources/
+
+- name: Verify PersistentVolumeClaim - ReadWriteOnce
+  block:
+    - name: ReadWriteOnce - Apply step1
+      become: true
+      command: kubectl apply -f /tmp/resources/test-longhorn-rwo-step1.yml
+      changed_when: false
+    - name: ReadWriteOnce - Wait for step1
+      become: true
+      command: kubectl get pod test-longhorn-rwo-step1 -o jsonpath='{.status.phase}'
+      changed_when: false
+      register: kubcetl_result
+      delay: 2
+      retries: 60
+      until: "'Succeeded' in kubcetl_result.stdout"
+    - name: ReadWriteOnce - Apply step2
+      become: true
+      command: kubectl apply -f /tmp/resources/test-longhorn-rwo-step2.yml
+      changed_when: false
+    - name: ReadWriteOnce - Wait for step2
+      become: true
+      command: kubectl get pod test-longhorn-rwo-step2 -o jsonpath='{.status.phase}'
+      changed_when: false
+      register: kubcetl_result
+      delay: 2
+      retries: 60
+      until: "'Succeeded' in kubcetl_result.stdout"
+    - name: ReadWriteOnce - Get step2 output
+      become: true
+      command: kubectl logs test-longhorn-rwo-step2
+      register: step2_result
+    - name: ReadWriteOnce - Verify logs
+      assert:
+        quiet: true
+        that:
+          - step2_result.stdout_lines[0] | trim == 'hello from step1'
+
+- name: Verify PersistentVolumeClaim - ReadWriteMany
+  block:
+    - name: ReadWriteMany - Apply step1
+      become: true
+      command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step1.yml
+      changed_when: false
+    - name: ReadWriteMany - Wait for step1
+      become: true
+      command: kubectl get pod test-longhorn-rwx-step1 -o jsonpath='{.status.phase}'
+      changed_when: false
+      register: kubcetl_result
+      delay: 2
+      retries: 60
+      until: "'Succeeded' in kubcetl_result.stdout"
+    - name: ReadWriteMany - Apply step2
+      become: true
+      command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step2.yml
+      changed_when: false
+    - name: ReadWriteMany - Wait for step2
+      become: true
+      command: kubectl get pod test-longhorn-rwx-step2 -o jsonpath='{.status.phase}'
+      changed_when: false
+      register: kubcetl_result
+      delay: 2
+      retries: 60
+      until: "'Succeeded' in kubcetl_result.stdout"
+    - name: ReadWriteMany - Apply step3
+      become: true
+      command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step3.yml
+      changed_when: false
+    - name: ReadWriteMany - Wait for step3
+      become: true
+      command: kubectl get pod test-longhorn-rwx-step3 -o jsonpath='{.status.phase}'
+      changed_when: false
+      register: kubcetl_result
+      delay: 2
+      retries: 60
+      until: "'Succeeded' in kubcetl_result.stdout"
+    - name: ReadWriteMany - Get step3 output
+      become: true
+      command: kubectl logs test-longhorn-rwx-step3
+      register: step3_result
+    - name: ReadWriteMany - Verify logs
+      assert:
+        quiet: true
+        that:
+          - step3_result.stdout_lines[0] | trim == 'hello from step1'
+          - step3_result.stdout_lines[1] | trim == 'hello from step2'

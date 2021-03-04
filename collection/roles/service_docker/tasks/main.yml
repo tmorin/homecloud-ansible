@@ -1,4 +1,0 @@
----
-
-- import_tasks: install-docker-prune.yml
-- import_tasks: install-docker.yml

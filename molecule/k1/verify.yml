@@ -2,7 +2,6 @@
 
 - import_playbook: ../resources/playbooks/verify-service-k3s.yml
 - import_playbook: ../resources/playbooks/verify-service-keepalived.yml
-
 - hosts: k3s_srv[0]
   tasks:
     - name: Get nodes with label key0
@@ -21,5 +20,4 @@
         that:
           - get_label_key0.stdout_lines | length == 1
           - get_label_key1.stdout_lines | length == 1
-
 - import_playbook: ../resources/playbooks/wait-for-k3s-deployments.yml

@@ -1,9 +1,0 @@
----
-
-- name: Join as worker
-  community.docker.docker_swarm:
-    remote_addrs: [ "{{ service_swarm_manager_ip }}" ]
-    advertise_addr: "{{ hostvars[inventory_hostname].homecloud_node_ip }}"
-    join_token: "{{ lookup('file', homecloud_vault_path~'/token_worker') }}"
-    state: join
-    labels: "{{ service_swarm_node_labels }}"

@@ -17,7 +17,8 @@ galaxy_info:
   galaxy_tags:
     - debian
     - ubuntu
-    - docker
-    - swarm
+    - kubernete
+    - k3s
+    - k8s
 
 dependencies: [ ]

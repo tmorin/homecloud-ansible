@@ -67,7 +67,7 @@ ansible-lint
 
 Configure local (Ansible agent) kubectl
 ```shell
-export KUBECONFIG=/home/tmorin/.kube/homecloud
+export KUBECONFIG=$HOME/.kube/homecloud
 kubectl get all --all-namespaces
 ```
 
@@ -110,19 +110,19 @@ The test suite targets the following operating systems:
 
 Configure local (Ansible agent) kubectl for k1
 ```shell
-export KUBECONFIG=/home/tmorin/.kube/k1
+export KUBECONFIG=$HOME/.kube/k1
 kubectl get all --all-namespaces
 ```
 
 Configure local (Ansible agent) kubectl for k2
 ```shell
-export KUBECONFIG=/home/tmorin/.kube/k2
+export KUBECONFIG=$HOME/.kube/k2
 kubectl get all --all-namespaces
 ```
 
 Configure local (Ansible agent) kubectl for k2ha
 ```shell
-export KUBECONFIG=/home/tmorin/.kube/k2ha
+export KUBECONFIG=$HOME/.kube/k2ha
 kubectl get all --all-namespaces
 ```
 

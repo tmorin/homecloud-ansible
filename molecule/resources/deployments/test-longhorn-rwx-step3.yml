@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-longhorn-rwx-step3
+  namespace: default
+spec:
+  containers:
+    - name: step3
+      image: busybox
+      imagePullPolicy: IfNotPresent
+      command:
+        - "sh"
+        - "-c"
+        - "cat /data/file"
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  restartPolicy: Never
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: test-longhorn-rwx-pvc
+---
