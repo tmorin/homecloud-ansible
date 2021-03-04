@@ -1,6 +1,7 @@
 ---
 
 - import_playbook: ../resources/playbooks/verify-service-k3s.yml
+- import_playbook: ../resources/playbooks/verify-service-keepalived.yml
 
 - hosts: k3s_srv[0]
   tasks:

@@ -1,9 +1,10 @@
 ---
 
-homecloud_vault_path: "/tmp/molecule/vault-k2"
+homecloud_vault_path: /tmp/molecule/vault-k2
 
-homecloud_virtual_ip: '192.168.21.20'
-homecloud_is_https: false
+homecloud_virtual_ip: 192.168.100.20
+
+homecloud_node_interface: eth1
 
 homecloud_k8s_deploy_timeout_delay: 3
 homecloud_k8s_deploy_timeout_retries: 80

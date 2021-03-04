@@ -1,9 +1,9 @@
 ---
 
-#dependency:
-#  name: galaxy
-#  options:
-#    requirements-file: molecule/resources/collections.yml
+dependency:
+  name: galaxy
+  options:
+    requirements-file: molecule/resources/collections.yml
 
 driver:
   name: vagrant
@@ -17,6 +17,10 @@ platforms:
       driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 4096
     cpu: 2
+    interfaces:
+      - network_name: 'private_network'
+        ip: '192.168.100.11'
+        libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
       - "storage :file, :size => '2G'"
 

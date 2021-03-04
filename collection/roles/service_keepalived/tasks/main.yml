@@ -1,9 +1,48 @@
 ---
 
-- name: 'check parameters'
+- name: Check parameters
+  delegate_to: localhost
   assert:
+    quiet: true
     that:
       - homecloud_virtual_ip | length > 0
+      - homecloud_node_ip | length > 0
+      - homecloud_node_interface | length > 0
 
-- import_tasks: install-load_ip_vs.yml
-- import_tasks: deploy-keepalived.yml
+- name: Load the ip_vs module
+  become: true
+  community.general.modprobe:
+    name: ip_vs
+    state: present
+
+- name: Load the ip_vs module at bootstart
+  become: true
+  template:
+    src: ip_vs.conf
+    dest: /etc/modules-load.d/ip_vs.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install keepalived
+  become: true
+  package:
+    name: keepalived
+    state: present
+    force_apt_get: true
+
+- name: Configure keepalived
+  become: true
+  template:
+    src: keepalived.conf
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable and start keepalived
+  become: true
+  systemd:
+    name: keepalived
+    enabled: true
+    state: started

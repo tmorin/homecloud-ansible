@@ -1,7 +1,3 @@
 ---
 
 homecloud_node_ip: "{{ ansible_host }}"
-
-service_k3s_node_labels:
-  key0: value0
-  key1: value1

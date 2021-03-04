@@ -1,4 +1,3 @@
 ---
 
-homecloud_ips_as_array: "{{ groups.swarm | map('extract', hostvars, 'homecloud_node_ip') | list }}"
-homecloud_ips_as_strings: "{{ homecloud_ips_as_array | join(',') }}"
+service_keepalived_peers: "{{ groups.k3s | map('extract', hostvars, 'homecloud_node_ip') | reject('search', homecloud_node_ip) }}"

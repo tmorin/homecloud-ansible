@@ -1,9 +1,0 @@
-[Unit]
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/sbin/modprobe -a ip_vs
-
-[Install]
-WantedBy=default.target

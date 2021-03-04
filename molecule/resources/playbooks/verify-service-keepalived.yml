@@ -1,0 +1,7 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Check the virtual IP is available
+      command: ping -c 2 -i 1 -W 2 {{ homecloud_virtual_ip }}
+      changed_when: false

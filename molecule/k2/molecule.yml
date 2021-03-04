@@ -17,6 +17,10 @@ platforms:
       driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 2096
     cpu: 2
+    interfaces:
+      - network_name: 'private_network'
+        ip: '192.168.100.21'
+        libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
       - "storage :file, :size => '2G'"
   - name: k2-n2
@@ -25,6 +29,10 @@ platforms:
       driver: "${MOLECULE_DRIVER-'kvm'}"
     memory: 2096
     cpu: 2
+    interfaces:
+      - network_name: 'private_network'
+        ip: '192.168.100.22'
+        libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
       - "storage :file, :size => '2G'"
 

@@ -8,4 +8,4 @@ service_k3s_node_labels:
 
 #service_k3s_node_taints: { }
 
-k3s_longhorn_disk_device: "/dev/vdb"
+k3s_longhorn_disk_device: /dev/vdb
