@@ -11,12 +11,13 @@
         k8s_expected_status: HTTP/1.1 200 OK
     - include_tasks: verify-k8s-http-endpoint.yml
 
-- name: Verify PersistentVolumeClaim
+- name: Prepare testing environment
   block:
     - name: Create working directory
       file:
         dest: /tmp/resources/deployments
         state: directory
+        mode: '755'
     - name: Clean resources
       become: true
       command: kubectl delete \
@@ -31,6 +32,7 @@
       copy:
         src: ../deployments/
         dest: /tmp/resources/
+        mode: '644'
 
 - name: Verify PersistentVolumeClaim - ReadWriteOnce
   block:

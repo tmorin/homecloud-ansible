@@ -1,8 +1,0 @@
----
-
-- name: Deploy Traefik
-  become: true
-  template:
-    src: traefik.yaml
-    dest: /var/lib/rancher/k3s/server/manifests/traefik.yaml
-    mode: '0644'

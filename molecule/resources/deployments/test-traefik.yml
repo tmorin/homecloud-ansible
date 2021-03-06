@@ -1,26 +1,43 @@
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  creationTimestamp: null
+  name: whoami
   labels:
-    app: traefik-test
-  name: traefik-test
+    app: whoami
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: traefik-test
-  strategy: {}
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: traefik-test
-    spec:
-      containers:
-      - image: nginx
-        name: nginx
-        resources: {}
-status: {}
+  containers:
+    - name: whoami
+      image: containous/whoami:latest
+      ports:
+        - containerPort: 80
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: whoami
+  type: ClusterIP
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`whoami.homecloud.local`)
+      kind: Rule
+      services:
+        - name: whoami
+          port: 80
+---
+# curl -IkH host:whoami.home.cloud http://192.168.121.176:32080 -> HTTP/1.1 308 Permanent Redirect
+# curl -IkH host:whoami.home.cloud https://192.168.121.176:32443 -> HTTP/2 200

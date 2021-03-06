@@ -1,9 +1,0 @@
----
-
-homecloud_node_ip: "{{ ansible_host }}"
-
-service_swarm_node_labels:
-  blue:
-  type: generic
-
-service_dnas_mount_what: '/dev/vdb'

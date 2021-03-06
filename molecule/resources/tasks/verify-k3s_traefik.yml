@@ -1,0 +1,62 @@
+---
+
+- name: Prepare testing environment
+  block:
+    - name: Create working directory
+      file:
+        dest: /tmp/resources/deployments
+        state: directory
+        mode: '755'
+    - name: Clean resources
+      become: true
+      command: kubectl delete \
+        -f /tmp/resources/test-traefik.yml
+      changed_when: false
+      ignore_errors: true
+    - name: Copy deployment manifests
+      copy:
+        src: ../deployments/
+        dest: /tmp/resources/
+        mode: '644'
+
+- name: Verify whoami
+  block:
+    - name: Deploy whoami
+      become: true
+      command: kubectl apply \
+        -f /tmp/resources/test-traefik.yml
+      changed_when: false
+      ignore_errors: true
+    - name: Wait for whoami
+      become: true
+      command: kubectl get pod whoami \
+        -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+      changed_when: false
+      register: kubcetl_result
+      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
+      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
+      until: "'True' in kubcetl_result.stdout"
+    - name: Fetch the landing page with HTTP
+      command: "curl -IkH host:whoami.homecloud.local http://{{ homecloud_virtual_ip }}:32080"
+      changed_when: false
+      register: curl_dashboard
+      args:
+        warn: false
+    - name: Verify the landing page with HTTP
+      assert:
+        quiet: true
+        that:
+          - not curl_dashboard.failed
+          - curl_dashboard.stdout_lines[0] | trim == "HTTP/1.1 308 Permanent Redirect"
+    - name: Fetch the landing page with HTTPs
+      command: "curl -IkH host:whoami.homecloud.local https://{{ homecloud_virtual_ip }}:32443"
+      changed_when: false
+      register: curl_dashboard
+      args:
+        warn: false
+    - name: Verify the landing page with HTTPs
+      assert:
+        quiet: true
+        that:
+          - not curl_dashboard.failed
+          - curl_dashboard.stdout_lines[0] | trim == "HTTP/2 200"

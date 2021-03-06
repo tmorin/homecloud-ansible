@@ -1,0 +1,34 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  repo: https://helm.traefik.io/traefik
+  chart: traefik
+  valuesContent: |-
+    ports:
+      web:
+        nodePort: 32080
+        redirectTo: websecure
+      websecure:
+        nodePort: 32443
+        tls:
+          enabled: true
+          certResolver: le
+    persistence:
+      enabled: true
+      storageClass: {{ k3s_traefik_persistence_storage_class }}
+    additionalArguments:
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.le.acme.email={{ k3s_traefik_acme_email }}"
+      - "--certificatesresolvers.le.acme.caserver={{ k3s_traefik_acme_server }}"
+      - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+    resources:
+      requests:
+        memory: 50Mi
+      limits:
+        memory: 100Mi
+---

@@ -30,9 +30,8 @@
   block:
     - name: Add node label for Create Default Disk
       become: true
-      command: |
-        kubectl label node --overwrite {{ item.ansible_hostname }} \
-          node.longhorn.io/create-default-disk=true
+      command: kubectl label node --overwrite {{ item.ansible_hostname }} \
+        node.longhorn.io/create-default-disk=true
       loop: "{{ (groups.k3s | default([])) | map('extract', hostvars) | list | selectattr('k3s_longhorn_disk_device', 'defined') }}"
       loop_control:
         label: "{{ item.ansible_hostname }}"
@@ -62,17 +61,15 @@
       changed_when: false
     - name: Deploy Longhorn
       become: true
-      command: |
-        kubectl apply -f /tmp/resources/longhorn.yaml
+      command: kubectl apply -f /tmp/resources/longhorn.yaml
       register: deploy_longhorn
       changed_when: "'created' in deploy_longhorn.stdout"
     - name: Wait for Longhorn
       become: true
-      command: |
-        kubectl -n longhorn-system get deploy longhorn-driver-deployer \
-          -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
+      command: kubectl -n longhorn-system get deploy longhorn-driver-deployer \
+        -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
       changed_when: false
-      register: kubcetl_result
+      register: kubcetl_get_longhorn
       delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
       retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
-      until: "'True' in kubcetl_result.stdout"
+      until: "'True' in kubcetl_get_longhorn.stdout"

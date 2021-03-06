@@ -8,7 +8,8 @@
     K3S_TOKEN="{{ lookup('file', homecloud_vault_path~'/k3s-sever-token.txt') }}" \
     sh -s - server \
     --node-name {{ inventory_hostname }} \
-    --server https://{{ service_k3s_server_primary_ip }}:6443
+    --server https://{{ service_k3s_server_primary_ip }}:6443 \
+    --no-deploy traefik
   args:
     executable: /bin/bash
     creates: /usr/local/bin/k3s

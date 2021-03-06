@@ -1,0 +1,31 @@
+---
+
+- name: Deploy Traefik
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - name: Deploy traefik.yaml
+      become: true
+      template:
+        src: traefik.yaml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-traefik.yaml
+        mode: '0644'
+        force: true
+      changed_when: false
+    - name: Deploy traefik-dashboard-ingress.yml
+      when: k3s_traefik_dashboard_users
+      become: true
+      template:
+        src: traefik-dashboard-ingress.yml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-traefik-dashboard-ingress.yml
+        mode: '0644'
+        force: true
+      changed_when: false
+    - name: Wait for Traefik
+      become: true
+      command: kubectl -n kube-system get deploy traefik \
+        -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
+      changed_when: false
+      register: kubcetl_get_traefik
+      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
+      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
+      until: "'True' in kubcetl_get_traefik.stdout"

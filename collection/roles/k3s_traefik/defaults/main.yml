@@ -1,0 +1,16 @@
+---
+
+k3s_traefik_dashboard_ingress_host: "traefik.home.cloud"
+
+k3s_traefik_dashboard_users: ""
+
+# htpasswd -nb admin admin_password | openssl base64
+#k3s_traefik_dashboard_users: |-
+#  YWRtaW46JGFwcjEkNFgyVzVLcWwkZEh0SUJFUC54Q2E3Z0hyV2lwNG5zMQoK
+
+k3s_traefik_acme_email: "admin@homecloud.local"
+k3s_traefik_acme_server: "https://acme-v02.api.letsencrypt.org/directory"
+k3s_traefik_persistence_storage_class: "local-path"
+
+# echo $(htpasswd -nb admin admin_password) | sed -e s/\\$/\\$\\$/g
+k3s_traefik_auth_admin: "admin:$$apr1$$dAp9Vuir$$wxnIUy1XNHHSawNfWRSyg0"

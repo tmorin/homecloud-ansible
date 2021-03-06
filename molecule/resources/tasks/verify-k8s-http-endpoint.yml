@@ -26,7 +26,6 @@
       changed_when: false
       register: load_balancer_port
     - name: Fetch the landing page
-      become: true
       command: curl -Ik {{ k8s_url_protocol }}://{{ load_balancer_ip.stdout }}:{{ load_balancer_port.stdout }}
       changed_when: false
       register: curl_dashboard

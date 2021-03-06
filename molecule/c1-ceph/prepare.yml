@@ -1,5 +1,0 @@
----
-
-- import_playbook: '../resources/playbooks/prepare.yml'
-
-- import_playbook: ../resources/playbooks/cluster-hardening.yml

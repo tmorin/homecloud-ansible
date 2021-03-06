@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Thibault Morin
+  description: deploy the Kubernetes Traefik modern poxy
+  license: MIT
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - stretch
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+
+  galaxy_tags:
+    - kubernetes
+    - traefik
+
+dependencies: [ ]

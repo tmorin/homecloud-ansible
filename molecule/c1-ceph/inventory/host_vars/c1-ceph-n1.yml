@@ -1,5 +1,0 @@
----
-
-homecloud_node_ip: "{{ ansible_host }}"
-
-service_ceph_osd_device: '/dev/vdb'
