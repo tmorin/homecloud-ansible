@@ -11,6 +11,4 @@ k3s_deployments:
 k3s_longhorn_settings:
   default-replica-count: 1
 
-service_k3s_local_kubectl_config_file: "~/.kube/k2ha"
-
-k3s_traefik_persistence_storage_class: "longhorn"
+service_k3s_local_kubectl_config_file: "~/.kube/k1ha"

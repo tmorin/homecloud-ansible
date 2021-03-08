@@ -22,4 +22,4 @@
           - get_label_key1.stdout_lines | length == 2
           - get_label_key2.stdout_lines | length == 1
 
-- import_playbook: ../resources/playbooks/wait-for-k3s-deployments.yml
+- import_playbook: ../resources/playbooks/verify-k3s-deployments.yml

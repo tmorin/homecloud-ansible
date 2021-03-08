@@ -11,27 +11,15 @@ driver:
     name: libvirt
 
 platforms:
-  - name: k2-n1
+  - name: k1ha-n1
     box: "${MOLECULE_N1_BOX-generic/debian10}"
     provider_options:
       driver: "${MOLECULE_DRIVER-'kvm'}"
-    memory: 2096
+    memory: 4096
     cpu: 2
     interfaces:
       - network_name: 'private_network'
-        ip: '192.168.200.11'
-        libvirt__domain_name: 'homecloud.local'
-    provider_raw_config_args:
-      - "storage :file, :size => '2G'"
-  - name: k2-n2
-    box: "${MOLECULE_N2_BOX-generic/ubuntu2004}"
-    provider_options:
-      driver: "${MOLECULE_DRIVER-'kvm'}"
-    memory: 2096
-    cpu: 2
-    interfaces:
-      - network_name: 'private_network'
-        ip: '192.168.200.12'
+        ip: '192.168.100.21'
         libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
       - "storage :file, :size => '2G'"

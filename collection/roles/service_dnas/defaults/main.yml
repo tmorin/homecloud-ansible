@@ -9,6 +9,8 @@ service_dnas_mount_type: "ext4"
 service_dnas_mount_options: ""
 service_dnas_mount_name: '{{ service_dnas_mount_where | regex_replace("^/") | regex_replace("/", "-") }}'
 
+service_dnas_nfs_hosts: []
+
 service_dnas_syncthing_gui_address: "0.0.0.0:8384"
 service_dnas_syncthing_gui_username: "dnas"
 # https://https://bcrypthashgenerator.tool-kit.dev

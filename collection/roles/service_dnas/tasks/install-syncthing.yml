@@ -5,7 +5,7 @@
   package:
     name: apt-transport-https
     state: present
-    force_apt_get: "yes"
+    force_apt_get: true
 
 - name: Import syncthing GPG key to apt
   become: true
@@ -24,4 +24,4 @@
   package:
     name: syncthing
     state: present
-    force_apt_get: "yes"
+    force_apt_get: true

@@ -8,5 +8,6 @@
 - import_tasks: install-mount.yml
 - import_tasks: add-user.yml
 - import_tasks: install-samba.yml
+- import_tasks: install-nfs.yml
 - import_tasks: install-syncthing.yml
 - import_tasks: configure-syncthing.yml

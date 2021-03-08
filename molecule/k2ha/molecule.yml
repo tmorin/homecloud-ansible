@@ -19,7 +19,7 @@ platforms:
     cpu: 2
     interfaces:
       - network_name: 'private_network'
-        ip: '192.168.110.21'
+        ip: '192.168.200.21'
         libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
       - "storage :file, :size => '2G'"
@@ -31,7 +31,7 @@ platforms:
     cpu: 2
     interfaces:
       - network_name: 'private_network'
-        ip: '192.168.110.22'
+        ip: '192.168.200.22'
         libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
       - "storage :file, :size => '2G'"

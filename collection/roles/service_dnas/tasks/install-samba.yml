@@ -5,7 +5,7 @@
   package:
     name: samba
     state: present
-    force_apt_get: "yes"
+    force_apt_get: true
 
 - name: Acviate and start smbd.service
   become: true

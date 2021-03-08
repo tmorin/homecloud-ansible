@@ -28,11 +28,11 @@
         quiet: true
         that:
           - dnas_gui_status.stdout == 'ok'
-    # SHARE
+    # SMB SHARE
     - name: Get DNAS share status
       become: true
       ansible.posix.mount:
-        path: /mnt/test_share
+        path: /mnt/test_smb_share
         src: //localhost/dnas
         fstype: cifs
         opts: username=dnas,password=dnas
@@ -41,6 +41,21 @@
     - name: Get DNAS share status
       become: true
       ansible.posix.mount:
-        path: /mnt/test_share
+        path: /mnt/test_smb_share
+        state: absent
+      register: dnas_share_status
+    # NFS SHARE
+    - name: Get DNAS NFS share status
+      become: true
+      ansible.posix.mount:
+        path: /mnt/test_share_nfs
+        src: "{{ homecloud_node_ip }}:/mnt/dnas"
+        fstype: nfs
+        state: present
+      register: dnas_share_status
+    - name: Get DNAS NFS share status
+      become: true
+      ansible.posix.mount:
+        path: /mnt/test_share_nfs
         state: absent
       register: dnas_share_status

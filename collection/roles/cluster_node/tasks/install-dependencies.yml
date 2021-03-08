@@ -5,4 +5,4 @@
   package:
     name: ntp,python3,python3-pip,python3-setuptools
     state: present
-    force_apt_get: "yes"
+    force_apt_get: true

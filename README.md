@@ -22,12 +22,11 @@ The Ansible collection provides the following building blocks:
 - a support of high availability handled by `Keepalived`
 - a modern reverse proxy for UDP, TCP and HTTP handled by `Traefik`
 - a distributed block storage system handled by `Longhorn`
-- a decentralized solution to synchronize files between local/remote nodes, `dnas`, powered with `Syncthing` and `Samba`
+- a decentralized solution to synchronize files between local/remote nodes, `dnas`, powered with `Syncthing`, `NFS` and `Samba`
 
 The collection provides also ready-to-use services:
 
-- `Influxdata` : a set of components to monitor the Docker Swarm.
-- `Portainer` : a lightweight management UI to easily manage the Docker Swarm.
+- `Kubernetes Dashboard` : the built-in Kubernetes Dashboard.
 - `Nextcloud` : a platform providing the benefits of online collaboration without the compliance and security risks.
 - `Calibreweb` :  a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
 - `Backup` : a system based on Duplicity and CRON which backups Docker volumes. 
@@ -42,9 +41,9 @@ Each hosts must fulfilled the following constraints:
 - CPU Architecture: amd64 or arm64
 - Memory: at least 2Go
 
-If `longhorn` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk etc) for each node storing data
+If `longhorn` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk ...) for each node storing data
 
-If `dnas` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk etc) for each node storing data
+If `dnas` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk ...) for each node storing data
 
 ## Local environment
 
@@ -94,16 +93,17 @@ The test suite targets the following operating systems:
 - Ubuntu Bionic/Focal
 - Debian Stretch/Buster
 
-| |[k1]|[k2]|[k2ha]|[armbian]*|
-|---|---|---|---|---|
-|nodes|1|2|2|2|
-|https|no|no|no|no|
-|keepalived|yes|yes|yes|no|
-|longhorn|yes|yes|yes|no|
-|traefik|yes|yes|yes|no|
-|dnas|yes|yes|yes|no|
-|hardening|no|no|no|no|
-|Armbian image|no|no|no|yes|
+| |[k1]|[k1ha]|[k2]|[k2ha]|[armbian]*|
+|---|---|---|---|---|---|
+|servers|1|1|1|2|0|
+|agents|0|0|1|2|0|
+|keepalived|no|yes|yes|yes|no|
+|longhorn|no|yes|yes|yes|no|
+|traefik|yes|yes|yes|yes|no|
+|dashboard|yes|no|no|no|no|
+|dnas|yes|no|no|no|no|
+|hardening|no|no|no|no|no|
+|Armbian image|no|no|no|no|yes|
 
 * the [armbian] scenario cannot be executed on Travis CI.
 
@@ -111,6 +111,12 @@ The test suite targets the following operating systems:
 Configure local (Ansible agent) kubectl for k1
 ```shell
 export KUBECONFIG=$HOME/.kube/k1
+kubectl get all --all-namespaces
+```
+
+Configure local (Ansible agent) kubectl for k1ha
+```shell
+export KUBECONFIG=$HOME/.kube/k1ha
 kubectl get all --all-namespaces
 ```
 
@@ -127,6 +133,7 @@ kubectl get all --all-namespaces
 ```
 
 [k1]: molecule/k1
+[k1ha]: molecule/k1ha
 [k2]: molecule/k2
 [k2ha]: molecule/k2ha
 [armbian]: molecule/armbian

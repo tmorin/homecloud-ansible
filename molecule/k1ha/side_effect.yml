@@ -1,0 +1,3 @@
+---
+
+- import_playbook: ../resources/playbooks/k3s-deploy.yml

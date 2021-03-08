@@ -5,7 +5,7 @@
   package:
     name: python3-lxml,python3-bcrypt,python3-passlib
     state: present
-    force_apt_get: "yes"
+    force_apt_get: true
 
 - name: Enable and start syncthing.service
   become: true

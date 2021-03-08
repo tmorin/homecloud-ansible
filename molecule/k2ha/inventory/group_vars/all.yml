@@ -2,7 +2,7 @@
 
 homecloud_vault_path: "/tmp/molecule/vault-k2ha"
 
-homecloud_virtual_ip: 192.168.110.20
+homecloud_virtual_ip: 192.168.200.20
 
 homecloud_node_interface: eth1
 

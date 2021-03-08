@@ -1,0 +1,5 @@
+---
+
+service_dnas_net: "{{ hostvars[ansible_hostname].ansible_interfaces | map('extract', hostvars[ansible_hostname].ansible_facts) | selectattr('ipv4', 'defined') | map(attribute='ipv4') | selectattr('address', 'eq', homecloud_node_ip) | first }}"
+service_dnas_net_netmask: "{{ service_dnas_net.netmask }}"
+service_dnas_net_network: "{{ service_dnas_net. network }}"
