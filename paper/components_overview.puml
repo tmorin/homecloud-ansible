@@ -3,30 +3,25 @@ skinparam monochrome true
 !global $INCLUSION_MODE="local"
 !global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
 !include $LIB_BASE_LOCATION/bootstrap.puml
-include('homecloud/Brand/Docker')
-include('homecloud/Brand/DockerSwarm')
 include('homecloud/Brand/Traefik')
-include('homecloud/Brand/Ceph')
-include('homecloud/Brand/Influxdata')
 include('homecloud/Brand/Portainer')
 include('homecloud/Brand/Nextcloud')
 include('homecloud/Brand/Syncthing')
 include('homecloud/Brand/Calibreweb')
 include('homecloud/Brand/Keepalived')
 include('homecloud/Brand/Samba')
-include('homecloud/Brand/Backup')
+include('simpleicons-4/K/Kubernetes')
 include('fontawesome-5.15/Solid/Home')
+include('material-4.0/Device/Widgets')
 * <$HomeMd> homecloud
-** <$DockerMd> Docker Engine
-*** <$KeepalivedMd> Keepalived
-*** <$CephMd> Ceph
-** <$DockerSwarmMd> Docker Swarm
-*** <$BackupMd> Backup
+** <$KubernetesMd> Kubernetes
 *** <$TraefikMd> Traefik
-*** <$InfluxdataMd> Influxdata
+*** <$WidgetsMd> Longhorn
+*** <$KubernetesMd> Dashboard
 *** <$PortainerMd> Portainer
 *** <$NextcloudMd> Nextcloud
 *** <$CalibrewebMd> calibre-web
+** <$KeepalivedMd> Keepalived
 ** <$SyncthingMd> Syncthing
 ** <$SambaMd> Samba
 @endwbs

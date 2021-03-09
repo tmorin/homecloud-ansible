@@ -1,8 +1,8 @@
-= homecloud : a cloud at home with Docker Swarm, Ceph and Syncthing
+= homecloud : a cloud at home with Kubernetes and Syncthing
 // METADATA
 :doctype: article
 :author: Thibault Morin
-:revdate: 2021-02-19
+:revdate: 2021-03-09
 :homepage: https://github.com/tmorin/homecloud-ansible
 :toc:
 // FOOTNOTES
@@ -12,7 +12,7 @@
 == Introduction
 
 `homecloud` aims to provide a <<g_cloud_computing, cloud like environment>>, especially an <<g_internal_cloud, internal cloud>>, at home.
-The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Docker Swarm, Ceph or Syncthing.
+The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes, Longhorn or Syncthing.
 
 The main artifact is an Ansible <<ans>> collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
 
@@ -42,7 +42,7 @@ The four boards are inter-connected using the home's router which is already con
 Each node is a PINE A64-LTS board <<plts>> embedding an `aarch64` CPU and 2G of memory.
 The used operating system is based on Debian: Armbian <<abn>>.
 
-Because of lack of compatibility with newer versions of the Linux kernel, four new boards (ROCK64 <<r64>>) have been added to the cluster.
+Finally, four new boards (ROCK64 <<r64>>) have been added to the cluster.
 
 == The user services
 
@@ -53,6 +53,7 @@ The primarily purpose of the cluster is to host the following user services:
 * dnas: a decentralized NAS (c.f. appendix <<appendix_dnas>>) based on:
 ** Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>.
 ** Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>.
+** NFS: it is a distributed file system protocol <<nfs>>.
 
 .The provided user services of the cluster
 image::user_services_layout.png[The provided user services of the cluster]
@@ -94,19 +95,16 @@ image::building_blocks_and_user_services.png[User Services and Building Blocks]
 
 === The container engine and orchestrator
 
-Docker is one of the most popular technology about _containers_, and moreover, ready-to-use to almost all architectures <<dok>>.
-Therefore, because `homecloud` must be easy to bootstrap and configure for at least `amd64` and `aarch64` architectures, Docker is a good candidate for the container engine.
-
-Luckily Docker shipped a ready-to-use container orchestrator: Docker Swarm <<dsw>>.applications will be hi Therefore, according to the _domestic_ usage of `homecloud`, Docker Swarm is a good candidate for the container orchestration especially because no overhead will be added to the technical stack.
-
-Nevertheless, additional building blocks have to be added to the virtual stack.
+- containerd
+- kubernetes
+- k3s
 
 === The cluster availability
 
 Basically when a request comes from Internet, the router has to redirect it to the cluster using the <<g_port_forwarding, port forwarding>> technique.
 Therefore, the router must be configured with an IP able to handle the forwarded requests.
 
-In the `homecloud` context, the configured IP is one of anyone of the cluster nodes, because Docker Swarm is internally able to forward requests to the right node whatever the entry point <<dnt>>.
+In the `homecloud` context, the configured IP is one of anyone of the cluster nodes, because Kubernetes is internally able to forward requests to the right node whatever the entry point.
 
 However, IP addresses can be dynamics and moreover the node availability cannot be guarantied.
 It means the configured IP could become unallocated in the future in case of dynamic IP, or pointing to a node which stops to work properly.
@@ -116,25 +114,21 @@ One of the simplest solutions to prevent unavailability of the cluster is to use
 That means, from the router point of view, the cluster is in fact just a unique server which can be reached with a unique IP address which will never ever change.
 
 Keepalived is one of the most popular implementations of the virtual server technique <<kad>>.
-Moreover, it can be easily containerized and configured.
-Therefore, Keepalived is a good candidate for the virtual server technique.
-
 An overview of the Keepalived integration is available in the appendix: <<appendix_keepalived_integration>>.
 
 Now the cluster is highly available, the next topic is to be sure the containerized workloads are fully highly available too.
 
-=== The distributed file system
+=== The distributed block storage
 
-Deploying a container and providing its high availabilities on a cluster is easy with Docker Swarm.
+Deploying a container and providing its high availabilities on a cluster is easy with Kubernetes.
 However, it doesn't manage the availability of the container's data among the nodes.
 
 For instance, if a container hosting a database is destroyed and then re-created on a new node by the orchestrator, by default, the new container won't start with the data related to the destroyed one.
 
-In order to get the availability of the data among the nodes of the cluster, a <<g_dfs, distributed file system>> has to be configured.
+In order to get the availability of the data among the nodes of the cluster, a distributed storage system has to be configured.
 
-Ceph is one of the most popular technology about distributed file system <<cep>>.
-Moreover, it can be easily integrated in a Docker environment <<dvc>>.
-Therefore, Ceph is a good candidate for the distributed file system.
+Kubernetes and its ecosystem provide many solutions which solve the availability issue of the data among the nodes.
+One of them, the lighter on, is Longhorn <<lhn>>.
 
 Now containers are able to recover their data over their lifecycles, there is another topic to deal with: how final services will be found and reached from Internet?
 
@@ -145,40 +139,27 @@ In the `homecloud` context, the reverse proxy handles the requests coming from I
 The handling of incoming requests can be straight forward or much complex: enhancement of requests, security, load balancing ...
 
 Traefik is one of the most popular technology about reverse proxy <<tra>>.
-Moreover, it can be easily integrated in a Docker environment.
-Therefore, Traefik is a good candidate for the reverse proxy.
+Moreover, it can be easily integrated in Kubernetes.
 
-Presently, the cluster is able to properly serve services within usual circumstances.
+Presently, the cluster is able to properly serves services within usual circumstances.
 Nevertheless, unexpected events can occur and lead to unavailability of the cluster.
 Unavailability is not welcome and another building block should prevent it: the monitoring of the cluster's status and the alerts broadcasting.
 
 === Monitoring and alerting
 
-The Influxdata stack is one of the most popular technology about monitoring and alerting <<inf>>.
-Especially because the Influxdata stack provides all expected components:
+- prometheus <<pmt>>
 
-* Telegraf: an agent to collect metrics <<ite>>
-* InfluxDB: a database to store metrics <<idb>>
-* Chronograf: a front-end to render the metrics <<ich>>
-* Kapacitor: a data processing engine to detect anomalies and send alerts <<ika>>
+=== Orchestrator management
 
-Therefore, Influxdata is a good candidate for the <<g_cloud_monitoring, cloud monitoring>> stack.
-
-However, once the cloud monitoring stack detects an anomaly and emits an alert, then usually actions have to be executed.
-Therefore, another build block has to be defined: the management of the Docker Swarm cluster.
-
-=== Docker Swarm management
-
-The management of a Docker Swarm cluster as well as the related Docker engines, can be done using the command line interface provided by default.
-However, its usage requires access to the terminals of cluster nodes.
-Another way is to use a web-app connected to a backend which will be able to directly deals with the Docker daemons.
+The management of a Kubernetes cluster can be done using the command line interface provided by `kubectl`.
+However, its usage requires access to the terminals of cluster nodes locally or remotely.
+Another way is to use a web-app which will be able to directly deals with the Kubernetes API.
 So that, the management activities can be done without direct access to the cluster nodes.
 
-Portainer is one of the most popular solutions to manage Docker Swarm clusters from a web-app <<por>>.
-Moreover, it provides natively the support of Docker Swarm for the expected architectures.
-Therefore, Portainer is a good candidate for the management of the Docker Swarm cluster.
+Portainer is one of the lighter solutions to manage Kubernetes clusters from a web-app <<por>>.
+Moreover, it provides natively the support of Kubernetes for the expected architectures.
 
-The management of the Docker resources cannot resolve all maintenance cases.
+The management of the Kubernetes resources cannot resolve all maintenance cases.
 The Murphy’s law is too strong, too true.
 _Anything that can go wrong will go wrong_, and it could be disaster.
 Therefore, a final building block has to be defined: the backup and restore.
@@ -190,20 +171,20 @@ For instance, the Nextcloud database cannot be used any more because of data cor
 Therefore, `homecloud` must provide a way <<g_disaster_recovery, to recover the disaster>>.
 The most affordable way to recover data is to regularly backup them and storing them into another system.
 
-Duplicity is one of the most popular tools to create secure backup <<dup>>.
+Longhorn provides a built-in feature to backup blocks on external system.
+
+Moreover, Duplicity is one of the most popular tools to create secure backup <<dup>>.
 Moreover, Duplicity provides a large set of destinations like SFTP, AWS S3, Google Drive, ...
 Obviously, it provides the restoring action too.
-Therefore, Duplicity is a good candidate to execute the backup and restore processes.
 
 At this point, all building blocks have been introduced, it's time to summarize the cluster's components.
 
 == The components overview
 
-All `homecloud` services and building blocks, can be breakdown in three categories:
+All `homecloud` services and building blocks, can be breakdown in two categories:
 
-1. services of Operating System
-2. orphan Docker containers
-3. stacks of Docker Swarm
+1. services managed by Operating System
+2. services managed by Kubernetes
 
 .The components hierarchy
 image::components_overview_hierarchy.png[The components hierarchy]
@@ -284,75 +265,42 @@ Finally, it can be necessary to freeze packages.
 For instance, the PINE A64-LTS cannot work with eMMC on recent Linux releases.
 Therefore, the respective packages have to be frozen otherwise the system couldn't restart.
 
-[#role_docker_service]
-=== The Docker service
+[#role_k3s_service]
+=== The k3s service
 
-The Docker service is one of the main building block of `homecloud`.
-The service must be available on each host of both clusters Docker Swarm and Ceph.
-The Ansible role `service_docker` configures the hosts accordingly.
+The k3s service is one of the main building block of `homecloud`.
+The service must be available on each host of the cluster.
+It installs and configures Kubernetes.
+The Ansible role `service_k3s` configures the hosts accordingly.
 
-Due to the Docker Hub limitation, the role expects a username and a password.
+According to the k3s terminology, a host can be a server or an agent.
+The inventory groups of the hosts define the role.
 
-=== The Docker Swarm service
-
-The Ansible role `service_swarm` turns the host to a node of the Docker Swarm cluster.
-It expects a working Docker Engine, c.f. <<role_docker_service, the Docker Service>>.
-
-A host can be a manager or a worker.
-The inventory groups of the hosts define the Docker Swarm roles.
-
-* `swarm_mgr` contains the manager nodes.
-* `swarm_wkr` contains the worker nodes.
+* `k3s_srv` contains the server nodes.
+* `k3s_agt` contains the agent nodes.
 
 === The Keepalived service
 
-The Ansible role `service_keepalived` ships Keepalived to the host within Docker container.
-Therefore, it expects a working Docker Engine, c.f. <<role_docker_service, the Docker Service>>.
+The Ansible role `service_keepalived` installs and configure Keepalived as an operating service on each host of the cluster.
 
 The role configures also the load of the kernel module `ip_vs` on system boot.
 
-=== The Ceph service
-
-The Ansible role `service_ceph` turns the host to a node of the Ceph cluster.
-Therefore, it expects a working Docker Engine, c.f. <<role_docker_service, the Docker Service>>.
-
-A host can have many Ceph roles.
-The inventory groups of the hosts define the Ceph roles.
-
-* `ceph_mon` contains the monitor nodes.
-* `ceph_mgr` contains the manager nodes.
-* `ceph_osd` contains the OSD nodes.
-
-According to the Ceph requirements, an OSD node must provide a free block device of at least 5GO.
-
 === The dnas service
 
-The Ansible role `service_dnas` installs and configures Syncthing and Samba on the host.
+The Ansible role `service_dnas` installs and configures Syncthing, Samba and NFS on the host.
 It manages the mount of the block device which contains the files to expose over Syncthing and Samba.
 It manages also basic configuration of Syncthing and Samba related to credentials.
 
-=== The Docker stacks
+=== The Kubernetes deployment manifests
 
-There is a dedicated Ansible role by stacks.
-Each role provides the definition of the stack as well as its deployment process.
-It manages also the creation of the expected Ceph volumes.
+There is a dedicated Ansible role by manifests.
+Each role provides the definition of the manifest as well as its deployment process.
 
 The building blocks:
 
-* `stack_backup` defines a stack which backups Docker volumes with Duplicity on regular basis.
-* `stack_influxdata` defines the stack providing the monitoring and altering feature.
-* `stack_portainer` defines the stack providing the Docker Swarm management feature.
-* `tack_traefik` defines the stack providing the reverse proxy feature.
-
-The end-user services:
-
-* `stack_calibreweb` defines the stack providing the calibre-web feature.
-* `stack_nextcloud` defines the stack providing the nextcloud feature.
-
-=== Backup and restore
-
-As seen above, the Ansible role `stack_backup` manages the backup operations.
-Its counterpart, the Ansible role `action_restore` manages the restoration of backed Docker volumes.
+* `k3s_dashboard` deploys the Kubernetes Dashboard.
+* `k3s_longhorn` deploys the distributed block storage system: Longhorn.
+* `k3s_traefik` deploys the ingress controller: Traefik.
 
 === The Ansible inventory
 
@@ -366,13 +314,9 @@ all
     rock64
     pine64
     ...
-  swarm
-    swarm_mgr
-    swarm_wkr
-  ceph
-    ceph_mon
-    ceph_mgr
-    ceph_osd
+  k3s
+    k3s_srv
+    k3s_agt
   dnas
 ....
 
@@ -381,14 +325,14 @@ all
 By convention, the name of the role is the prefix of its variable names.
 The convention prevents naming collisions and increase readability of the inventory declarations.
 
-For instance, the path to the block device of an OSD node is defined with a variable name starting with `service_ceph_` because the variable is only used in the Ansible role `service_ceph`: `service_ceph_osd_device`.
+For instance, the path to the block device of an OSD node is defined with a variable name starting with `k3s_traefik` because the variable is only used in the Ansible role `k3s_traefik`: `k3s_traefik_acme_email`.
 
 === The common variables
 
 Some Ansible roles share the same variables.
 In order to avoid confusions, by convention, the prefix of common variables is `homecloud_`.
 
-For instance, the variable `homecloud_is_https` is common because it drives the configuration of Traefik as well as declarations of Docker Stacks exposing services from Internet.
+For instance, the variable `homecloud_virtual_ip` is common because it drives the configuration of Traefik as well as declarations of Keepalived.
 
 == Quality
 
@@ -430,9 +374,7 @@ The Syncthing service replicates data to the external SSD Disk.
 [#appendix_keepalived_integration]
 == Keepalived integration
 
-For each board, i.e. node of the cluster, the Keepalived application runs in a Docker Container which is executed in the Docker Engine.
-The execution requires the _privileged_ flag, and the capability _NET_ADMIN_.
-Therefore, each Keepalived instance can manage the virtual network interface of the virtual IP.
+For each board, i.e. node of the cluster, the Keepalived application runs as an operating system service.
 
 .Overview of the Keepalived integration
 image::building_blocks_keepalived.png[Overview of the Keepalived integration]
@@ -461,11 +403,6 @@ https://www.techopedia.com/definition/24368/continuous-integration-ci
 [[g_cluster]]Cluster::
 A cluster, in the context of servers, is a group of computers that are connected with each other and operate closely to act as a single computer. +
 https://www.techopedia.com/definition/997/cluster-servers
-
-[[g_dfs]]Distributed File System (DFS)::
-A distributed file system (DFS) is a file system with data stored on a server.
-The data is accessed and processed as if it was stored on the local client machine. +
-https://www.techopedia.com/definition/1825/distributed-file-system-dfs
 
 [[g_dhcp]]Dynamic Host Configuration Protocol (DHCP)::
 Dynamic Host Configuration Protocol (DHCP) is a network management protocol used to dynamically assign an IP address to any new node entering the network.
@@ -541,25 +478,19 @@ https://www.techopedia.com/definition/4127/secure-shell-ssh
 
 *Technologies*
 
+* [[[abn]]] Armbian, https://www.armbian.com
 * [[[acsh]]] Ansible Collection - devsec.hardening, https://galaxy.ansible.com/devsec/hardening
 * [[[alt]]] Ansible-lint, https://github.com/ansible-community/ansible-lint
 * [[[ans]]] Ansible, https://www.ansible.com
-* [[[abn]]] Armbian, https://www.armbian.com
 * [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
-* [[[cep]]] Ceph, https://ceph.io
-* [[[dnt]]] Docker - Networking overview, https://docs.docker.com/network
-* [[[dok]]] Docker, https://www.docker.com
-* [[[dsw]]] Docker Swarm, https://docs.docker.com/engine/swarm
+* [[[cntd]]] Containerd, https://containerd.io
 * [[[dup]]] duplicity, http://duplicity.nongnu.org
-* [[[dvc]]] docker-volume-cephfs https://gitlab.com/n0r1sk/docker-volume-cephfs
-* [[[ich]]] Chronograf, https://www.influxdata.com/time-series-platform/chronograf
-* [[[idb]]] InfluxDB, https://www.influxdata.com/time-series-platform/
-* [[[ika]]] Kapacitor, https://www.influxdata.com/time-series-platform/kapacitor
-* [[[inf]]] Influxdata, https://www.influxdata.com
-* [[[ite]]] Telegraf, https://www.influxdata.com/time-series-platform/telegraf
 * [[[kad]]] Keepalived, https://www.keepalived.org
-* [[[ncd]]] Nextcloud, https://nextcloud.com
+* [[[lhn]]] Longhorn, https://longhorn.io
 * [[[mol]]] Molecule, https://github.com/ansible-community/molecule
+* [[[ncd]]] Nextcloud, https://nextcloud.com
+* [[[nfs]]] Network File System, https://tools.ietf.org/html/rfc5661
+* [[[pmt]]] Prometheus, https://prometheus.io
 * [[[por]]] Portainer, https://www.portainer.io
 * [[[smb]]] Samba, https://www.samba.org
 * [[[syt]]] Syncthing, https://syncthing.net
