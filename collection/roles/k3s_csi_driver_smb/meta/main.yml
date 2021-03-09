@@ -1,6 +1,6 @@
 galaxy_info:
   author: Thibault Morin
-  description: deploy calibre-web (https://github.com/k8s-at-home/charts/tree/master/charts/calibre-web)
+  description: deploy csi-driver-smb (https://github.com/kubernetes-csi/csi-driver-smb)
   license: MIT
   min_ansible_version: 2.9
 
@@ -17,7 +17,7 @@ galaxy_info:
   galaxy_tags:
     - stack
     - kubernetes
-    - calibre
-    - calibreweb
+    - cifs
+    - samba
 
 dependencies: [ ]

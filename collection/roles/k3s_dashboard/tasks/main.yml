@@ -8,8 +8,6 @@
         src: customization.yml
         dest: /tmp/resources/k3s_dashboard.customization.yml
         force: true
-        trim_blocks: false
-        lstrip_blocks: false
         mode: 0644
       changed_when: false
     - name: Resolve latest dashboard version

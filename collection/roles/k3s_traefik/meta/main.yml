@@ -1,6 +1,6 @@
 galaxy_info:
   author: Thibault Morin
-  description: deploy the Kubernetes Traefik modern poxy
+  description: deploy Traefik (https://traefik.io)
   license: MIT
   min_ansible_version: 2.9
 

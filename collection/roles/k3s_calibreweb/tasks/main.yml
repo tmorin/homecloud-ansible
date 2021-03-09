@@ -10,6 +10,7 @@
         dest: /var/lib/rancher/k3s/server/manifests/homecloud-calibreweb.yaml
         mode: '0644'
         force: true
+      changed_when: false
     - name: Wait for calibreweb
       become: true
       command: kubectl -n default get deploy calibreweb-calibre-web \

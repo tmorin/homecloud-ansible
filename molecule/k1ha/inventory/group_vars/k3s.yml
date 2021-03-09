@@ -5,6 +5,7 @@ k3s_services:
   - service_k3s
 
 k3s_deployments:
+  - k3s_csi_driver_smb
   - k3s_longhorn
   - k3s_traefik
 

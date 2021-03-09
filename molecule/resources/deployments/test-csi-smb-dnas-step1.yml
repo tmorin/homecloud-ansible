@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test-csi-smb-dnas-secret
+  namespace: default
+data:
+  password: ZG5hcw==
+  username: ZG5hcw==
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: test-csi-smb-dnas-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 10Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - vers=3.0
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: test-csi-smb-dnas-pv
+    volumeAttributes:
+      source: "//{{ hostvars[groups.dnas[0]].homecloud_node_ip }}/dnas"
+    nodeStageSecretRef:
+      name: test-csi-smb-dnas-secret
+      namespace: default
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-csi-smb-dnas-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Mi
+  volumeName: test-csi-smb-dnas-pv
+  storageClassName: ""
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-csi-smb-dnas-step1
+  namespace: default
+spec:
+  containers:
+    - name: step1
+      image: busybox
+      imagePullPolicy: IfNotPresent
+      command:
+        - "sh"
+        - "-c"
+        - "echo 'test-csi-smb-dnas-step1' > /data/file"
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  restartPolicy: Never
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: test-csi-smb-dnas-pvc
+---
