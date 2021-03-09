@@ -27,11 +27,10 @@
   block:
     - import_tasks: k3s-server-secondary.yml
 
-- name: Add kubectl completion
+- name: Configure k3s servers
   when: inventory_hostname in groups.k3s_srv | default([])
-  become: true
-  shell: kubectl completion bash > /etc/bash_completion.d/kubectl
-  changed_when: false
+  block:
+    - import_tasks: k3s-server.yml
 
 - name: Install the k3s agents
   when: inventory_hostname in groups.k3s_agt | default([])

@@ -1,0 +1,21 @@
+---
+
+- name: Add kubectl completion
+  become: true
+  shell: kubectl completion bash > /etc/bash_completion.d/kubectl
+  changed_when: false
+
+- name: Install helm
+  become: true
+  shell: |
+    set -o pipefail
+    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+  args:
+    executable: /bin/bash
+    warn: false
+  changed_when: false
+
+- name: Add helm completion
+  become: true
+  shell: helm completion bash > /etc/bash_completion.d/helm
+  changed_when: false
