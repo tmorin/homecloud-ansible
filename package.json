@@ -3,6 +3,7 @@
   "version": "2.0.0-aplha.0",
   "scripts": {
     "gdiag": "gdiag --wd=paper",
+    "gdiag:clean": "gdiag --wd=paper -c",
     "release:alpha": "standard-version --commit-all --prerelease alpha --skip.changelog --skip.tag",
     "release:beta": "standard-version --commit-all --prerelease beta --skip.changelog",
     "release:publish": "git push --tags && git push --all",

@@ -8,7 +8,7 @@
     sh -s - server \
     --cluster-init \
     --node-name {{ inventory_hostname }} \
-    --no-deploy traefik
+    --disable traefik
   args:
     executable: /bin/bash
     creates: /usr/local/bin/k3s

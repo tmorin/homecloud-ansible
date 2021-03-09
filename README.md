@@ -3,12 +3,12 @@
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/tmorin/homecloud-ansible/Continous%20Integration/master?label=GitHub%20Actions&logo=github+actions&logoColor=black)](https://github.com/tmorin/homecloud-ansible/actions?query=workflow%3A%22Continous+Integration%22+branch%3Amaster)
 [![Travis (.org) branch](https://img.shields.io/travis/tmorin/homecloud-ansible/master?label=Travis%20CI&logo=travis+CI&logoColor=black)](https://travis-ci.org/github/tmorin/homecloud-ansible)
 
-> `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home mainly based on Kubernetes, Longhorn and Syncthing.
+> `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home mainly based on Kubernetes and Syncthing.
 
 ## Presentation
 
 `homecloud` aims to provide a cloud like environment, especially an internal cloud, at home.
-The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes, Longhorn or Syncthing.
+The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes or Syncthing.
 
 The main artifact is an Ansible collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
 
@@ -29,7 +29,6 @@ The collection provides also ready-to-use services:
 - `Kubernetes Dashboard` : the built-in Kubernetes Dashboard.
 - `Nextcloud` : a platform providing the benefits of online collaboration without the compliance and security risks.
 - `Calibreweb` :  a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
-- `Backup` : a system based on Duplicity and CRON which backups Docker volumes. 
 
 Additionally, Armbian images can be created for each host of the inventory.
 
@@ -45,9 +44,9 @@ If `longhorn` is enabled: 1 available storage block device (i.e. an sd-card, an 
 
 If `dnas` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk ...) for each node storing data
 
-## Local environment
+## Local environment setup
 
-Crete the Python virtual environment
+Create the Python virtual environment
 ```shell
 virtualenv venv
 source venv/bin/activate
@@ -154,12 +153,8 @@ The activities are managed by the Ansible collection [devsec.hardening](https://
 
 #### Bootstrap the cluster
 
-The playbook [cluster-bootstrap.yml](molecule/resources/playbooks/cluster-bootstrap.yml) bootstraps the cluster, i.e. the Docker Swarm instance, the Ceph cluster, and the Decentralized NAS.
+The playbook [cluster-bootstrap.yml](molecule/resources/playbooks/cluster-bootstrap.yml) bootstraps the cluster, i.e. the Kubernetes cluster and the Decentralized NAS.
 
-#### Deploy the Docker stacks
+#### Deploy the Kubernetes deployment manifests
 
-The playbook [stacks-deploy.yml](molecule/resources/playbooks/stacks-deploy.yml) deploys the Docker stacks.
-
-#### Restore stacks backups
-
-The playbook [stacks-restore-backups.yml](molecule/resources/playbooks/stacks-restore-backup.yml) restores backups of stacks.
+The playbook [k3s-deploy.yml](molecule/resources/playbooks/k3s-deploy.yml) deploys the Kubernetes deployment manifests.
