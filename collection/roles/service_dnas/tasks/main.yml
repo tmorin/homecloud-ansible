@@ -2,6 +2,7 @@
 
 - name: Check parameters
   assert:
+    quiet: true
     that:
       - service_dnas_mount_what | length > 0
 

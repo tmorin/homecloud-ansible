@@ -6,6 +6,4 @@ service_k3s_node_labels:
   key0: value0
   key1: value1
 
-#service_k3s_node_taints: { }
-
 service_dnas_mount_what: "/dev/vdb"

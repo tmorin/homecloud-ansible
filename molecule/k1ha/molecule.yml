@@ -23,6 +23,7 @@ platforms:
         libvirt__domain_name: 'homecloud.local'
     provider_raw_config_args:
       - "storage :file, :size => '2G'"
+      - "storage :file, :size => '2G'"
 
 provisioner:
   name: ansible

@@ -1,0 +1,21 @@
+---
+
+- name: Deploy Calibre-web
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - name: Deploy the manifest
+      become: true
+      template:
+        src: calibreweb.yaml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-calibreweb.yaml
+        mode: '0644'
+        force: true
+    - name: Wait for calibreweb
+      become: true
+      command: kubectl -n default get deploy calibreweb-calibre-web \
+        -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
+      changed_when: false
+      register: kubcetl_get_calibreweb
+      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
+      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
+      until: "'True' in kubcetl_get_calibreweb.stdout"

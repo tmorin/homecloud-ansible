@@ -100,7 +100,8 @@ The test suite targets the following operating systems:
 |longhorn|no|yes|yes|yes|no|
 |traefik|yes|yes|yes|yes|no|
 |dashboard|yes|no|no|no|no|
-|dnas|yes|no|no|no|no|
+|calibre-web|yes|no|no|no|no|
+|dnas|yes|yes|no|no|no|
 |hardening|no|no|no|no|no|
 |Armbian image|no|no|no|no|yes|
 

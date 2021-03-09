@@ -1,0 +1,23 @@
+galaxy_info:
+  author: Thibault Morin
+  description: deploy a k8s manifest propulsing Calibreweb
+  license: MIT
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - stretch
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+
+  galaxy_tags:
+    - stack
+    - kubernetes
+    - calibre
+    - calibreweb
+
+dependencies: [ ]

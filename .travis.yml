@@ -31,18 +31,11 @@ env:
     - VAGRANT_DEFAULT_PROVIDER=libvirt
   matrix:
     #- TEST_NAME=armbian # chroot fails on travis
-    #- TEST_NAME=c1 MOLECULE_N1_BOX=generic/ubuntu1804
-    #- TEST_NAME=c1 MOLECULE_N1_BOX=generic/ubuntu2004
-    #- TEST_NAME=c1 MOLECULE_N1_BOX=generic/debian9
-    #- TEST_NAME=c1 MOLECULE_N1_BOX=generic/debian10
-    #- TEST_NAME=c1-ceph MOLECULE_N1_CEPH_BOX=generic/debian9
-    #- TEST_NAME=c1-ceph MOLECULE_N1_CEPH_BOX=generic/debian10
-    #- TEST_NAME=c2 MOLECULE_N1_BOX=generic/ubuntu1804 MOLECULE_N2_BOX=generic/ubuntu2004 # longer than 50 minutes:(
-    #- TEST_NAME=c2 MOLECULE_N1_BOX=generic/debian9 MOLECULE_N2_BOX=generic/debian10
-    - TEST_NAME=k1 MOLECULE_N1_BOX=generic/debian9
-    - TEST_NAME=k1 MOLECULE_N1_BOX=generic/debian10
-    - TEST_NAME=k1 MOLECULE_N1_BOX=generic/ubuntu2004
-    - TEST_NAME=k1 MOLECULE_N1_BOX=generic/ubuntu1804
+    - TEST_NAME=k1
+    - TEST_NAME=k1ha MOLECULE_N1_BOX=generic/debian9
+    - TEST_NAME=k1ha MOLECULE_N1_BOX=generic/debian10
+    - TEST_NAME=k1ha MOLECULE_N1_BOX=generic/ubuntu2004
+    - TEST_NAME=k1ha MOLECULE_N1_BOX=generic/ubuntu1804
     - TEST_NAME=k2
     - TEST_NAME=k2ha
 cache:
