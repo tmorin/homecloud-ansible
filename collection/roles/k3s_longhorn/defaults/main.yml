@@ -1,5 +1,7 @@
 ---
 
+k3s_longhorn_release: "master"
+
 k3s_longhorn_disk_device: ""
 k3s_longhorn_disk_path: "/var/lib/longhorn"
 k3s_longhorn_disk_type: "ext4"
