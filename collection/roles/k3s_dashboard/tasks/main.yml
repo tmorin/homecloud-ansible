@@ -4,9 +4,10 @@
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
     - name: Copy customization.yml
+      become: true
       template:
         src: customization.yml
-        dest: /tmp/resources/k3s_dashboard.customization.yml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-dashboard-customization.yml
         force: true
         mode: 0644
       changed_when: false
@@ -20,11 +21,12 @@
         warn: false
     - name: Deploy the k8s dashboard
       become: true
-      command: kubectl apply \
-        -f https://raw.githubusercontent.com/kubernetes/dashboard/{{ resolve_latest_dashboard_version.stdout }}/aio/deploy/recommended.yaml \
-        -f /tmp/resources/k3s_dashboard.customization.yml
+      get_url:
+        url: "https://raw.githubusercontent.com/kubernetes/dashboard/{{ resolve_latest_dashboard_version.stdout }}/aio/deploy/recommended.yaml"
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-dashboard-recommended.yaml
+        force: true
       register: deploy_k3s_dashboard
-      changed_when: "'created' in deploy_k3s_dashboard.stdout"
+      changed_when: false
     - name: Wait for k8s dashboard
       become: true
       command: kubectl -n kubernetes-dashboard get deploy kubernetes-dashboard \
