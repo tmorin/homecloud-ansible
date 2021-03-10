@@ -26,9 +26,5 @@ spec:
       - "--certificatesresolvers.le.acme.email={{ k3s_traefik_acme_email }}"
       - "--certificatesresolvers.le.acme.caserver={{ k3s_traefik_acme_server }}"
       - "--certificatesresolvers.le.acme.storage=/data/acme.json"
-    resources:
-      requests:
-        memory: 50Mi
-      limits:
-        memory: 100Mi
+    resources: {{ k3s_traefik_resources | to_json }}
 ---

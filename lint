@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+export ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:collection/roles
+ansible-lint

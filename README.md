@@ -59,8 +59,7 @@ pip install -r requirements.txt
 
 Lint the Ansible collection
 ```shell
-export ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:collection/roles
-ansible-lint
+./lint
 ```
 
 Configure local (Ansible agent) kubectl

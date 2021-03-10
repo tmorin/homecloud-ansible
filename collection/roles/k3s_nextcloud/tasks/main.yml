@@ -1,0 +1,57 @@
+---
+
+- name: Deploy Nextcloud
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - name: Deploy nextcloud.yml
+      become: true
+      template:
+        src: nextcloud.yml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-nextcloud.yml
+        mode: '0644'
+        force: true
+      changed_when: false
+    - name: Deploy nextcloud-ingress.yml
+      become: true
+      template:
+        src: nextcloud-ingress.yml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-nextcloud-ingress.yml
+        mode: '0644'
+        force: true
+      changed_when: false
+    - name: Deploy nextcloud-cache-data.yml
+      become: true
+      when: not k3s_nextcloud_cache_existing_claim
+      template:
+        src: nextcloud-cache-data.yml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-nextcloud-cache-data.yml
+        mode: '0644'
+        force: true
+      changed_when: false
+    - name: Deploy nextcloud-database-data.yml
+      become: true
+      when: not k3s_nextcloud_database_existing_claim
+      template:
+        src: nextcloud-database-data.yml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-nextcloud-database-data.yml
+        mode: '0644'
+        force: true
+      changed_when: false
+    - name: Deploy nextcloud-server-data.yml
+      become: true
+      when: not k3s_nextcloud_server_existing_claim
+      template:
+        src: nextcloud-server-data.yml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-nextcloud-server-data.yml
+        mode: '0644'
+        force: true
+      changed_when: false
+    - name: Wait for nextcloud
+      become: true
+      command: kubectl -n default get deploy nextcloud \
+        -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
+      changed_when: false
+      register: kubcetl_get_nextcloud
+      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
+      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
+      until: "'True' in kubcetl_get_nextcloud.stdout"

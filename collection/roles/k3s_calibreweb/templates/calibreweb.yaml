@@ -3,7 +3,7 @@ apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: calibreweb
-  namespace: default
+  namespace: "{{ k3s_calibreweb_namespace }}"
 spec:
   repo: https://k8s-at-home.com/charts
   chart: calibre-web
@@ -39,17 +39,13 @@ spec:
         accessMode: "ReadWriteOnce"
         {%- endif %}
 
-    resources:
-      limits:
-        memory: "{{ k3s_calibreweb_resource_memory }}"
-      requests:
-        memory: "{{ k3s_calibreweb_resource_memory }}"
+    resources: {{ k3s_calibreweb_resources  | to_json }}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: calibreweb
-  namespace: default
+  namespace: "{{ k3s_calibreweb_namespace }}"
 spec:
   entryPoints:
     - websecure

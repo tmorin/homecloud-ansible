@@ -14,3 +14,10 @@ k3s_traefik_persistence_storage_class: "local-path"
 
 # echo $(htpasswd -nb admin admin_password) | sed -e s/\\$/\\$\\$/g
 k3s_traefik_auth_admin: "admin:$$apr1$$dAp9Vuir$$wxnIUy1XNHHSawNfWRSyg0"
+
+k3s_traefik_resources: { }
+#k3s_traefik_resources:
+#  requests:
+#    memory: 50Mi
+#  limits:
+#    memory: 100Mi

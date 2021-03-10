@@ -1,0 +1,30 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: nextcloud-replace-dav
+  namespace: "{{ k3s_nextcloud_namespace }}"
+spec:
+  replacePathRegex:
+    regex: ^/.well-known/(card|cal)dav
+    replacement: /remote.php/dav/
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nextcloud
+  namespace: "{{ k3s_nextcloud_namespace }}"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ k3s_nextcloud_ingress_host }}`)
+      kind: Rule
+      services:
+        - name: nextcloud
+          port: 8080
+      middlewares:
+        - name: nextcloud-replace-dav
+---
+# curl -IkH host:nextcloud.home.cloud http://localhost:32080
+# curl -IkH host:nextcloud.home.cloud https://localhost:32443

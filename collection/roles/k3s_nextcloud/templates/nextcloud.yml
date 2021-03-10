@@ -1,0 +1,137 @@
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nextcloud
+  namespace: "{{ k3s_nextcloud_namespace }}"
+spec:
+  repo: https://nextcloud.github.io/helm
+  chart: nextcloud
+  valuesContent: |-
+    image:
+      repository: {{ k3s_nextcloud_server_image_repository }}
+      tag: "{{ k3s_nextcloud_server_image_tag }}"
+      pullPolicy: IfNotPresent
+
+    nextcloud:
+      host: "{{ k3s_nextcloud_ingress_host }}"
+      username: "{{ k3s_nextcloud_server_admin_user }}"
+      password: "{{ k3s_nextcloud_server_admin_password }}"
+      {% if k3s_nextcloud_server_smtp_host | default(false) -%}
+      mail:
+        enabled: true
+        fromAddress: "{{ k3s_nextcloud_server_mail_from }}"
+        domain: "{{ k3s_nextcloud_server_mail_domain }}"
+        smtp:
+          host: "{{ k3s_nextcloud_server_smtp_host }}"
+          secure: "{{ k3s_nextcloud_server_smtp_secure }}"
+          port: "{{ k3s_nextcloud_server_smtp_port }}"
+          authtype: "{{ k3s_nextcloud_server_smtp_authtype }}"
+          name: "{{ k3s_nextcloud_server_smtp_name }}"
+          password: "{{ k3s_nextcloud_server_smtp_password }}"
+      {%- endif %}
+
+      extraVolumes:
+        {% for volume in k3s_nextcloud_server_volumes -%}
+        - {{ volume | to_json }}
+        {%- endfor %}
+
+      extraVolumeMounts:
+        {% for volume in k3s_nextcloud_server_volumes -%}
+        - name: "{{ volume.name }}"
+          mountPath: "/mnt/{{ volume.name }}"
+        {%- endfor %}
+
+      resources: {{ k3s_nextcloud_server_resources | to_json }}
+
+    internalDatabase:
+      enabled: false
+
+    externalDatabase:
+      enabled: true
+      type: mysql
+      host: mariadb
+      user: nextcloud
+      password: "{{ k3s_nextcloud_database_nextcoud_password }}"
+      database: nextcloud
+
+    mariadb:
+      enabled: true
+      db:
+        name: nextcloud
+        user: nextcloud
+        password: "{{ k3s_nextcloud_database_nextcoud_password }}"
+      rootUser:
+        password: "{{ k3s_nextcloud_database_root_password }}"
+      replication:
+        enabled: false
+      master:
+        resources: {{ k3s_nextcloud_database_resources | to_json }}
+        persistence:
+          enabled: true
+          {% if k3s_nextcloud_database_existing_claim -%}
+          existingClaim: "{{ k3s_nextcloud_database_existing_claim }}"
+          {% else -%}
+          existingClaim: nextcloud-database-data
+          {%- endif %}
+
+    redis:
+      enabled: true
+      usePassword: true
+      password: "{{ k3s_nextcloud_cache_password }}"
+      cluster:
+        enabled: false
+      master:
+        resources: {{ k3s_nextcloud_cache_resources | to_json }}
+      persistence:
+        {% if k3s_nextcloud_cache_existing_claim -%}
+        existingClaim: "{{ k3s_nextcloud_cache_existing_claim }}"
+        {% else -%}
+        existingClaim: nextcloud-cache-data
+        {%- endif %}
+
+    cronjob:
+      enabled: false
+
+    persistence:
+      enabled: true
+      {% if k3s_nextcloud_server_existing_claim -%}
+      existingClaim: "{{ k3s_nextcloud_server_existing_claim }}"
+      {% else -%}
+      existingClaim: nextcloud-server-data
+      {%- endif %}
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: nextcloud-cron
+  namespace: "{{ k3s_nextcloud_namespace }}"
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: nextcloud
+              command:
+                - curl
+              args:
+                - "-IkH"
+                - "host:{{ k3s_nextcloud_ingress_host }}"
+                - "https://{{ homecloud_node_ip }}:32443/cron.php"
+              image: "{{ k3s_nextcloud_server_image_repository }}:{{ k3s_nextcloud_server_image_tag }}"
+              imagePullPolicy: IfNotPresent
+              resources: {{ k3s_nextcloud_cron_resources | to_json }}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          terminationGracePeriodSeconds: 30
+  schedule: '*/5 * * * *'
+  successfulJobsHistoryLimit: 2
+  suspend: false
+---
