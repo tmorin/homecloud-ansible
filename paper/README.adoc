@@ -2,7 +2,7 @@
 // METADATA
 :doctype: article
 :author: Thibault Morin
-:revdate: 2021-03-09
+:revdate: 2021-03-11
 :homepage: https://github.com/tmorin/homecloud-ansible
 :toc:
 // FOOTNOTES
@@ -12,7 +12,7 @@
 == Introduction
 
 `homecloud` aims to provide a <<g_cloud_computing, cloud like environment>>, especially an <<g_internal_cloud, internal cloud>>, at home.
-The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes, Longhorn or Syncthing.
+The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes or Syncthing.
 
 The main artifact is an Ansible <<ans>> collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
 
@@ -42,8 +42,6 @@ The four boards are inter-connected using the home's router which is already con
 Each node is a PINE A64-LTS board <<plts>> embedding an `aarch64` CPU and 2G of memory.
 The used operating system is based on Debian: Armbian <<abn>>.
 
-Finally, four new boards (ROCK64 <<r64>>) have been added to the cluster.
-
 == The user services
 
 The primarily purpose of the cluster is to host the following user services:
@@ -53,7 +51,6 @@ The primarily purpose of the cluster is to host the following user services:
 * dnas: a decentralized NAS (c.f. appendix <<appendix_dnas>>) based on:
 ** Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>.
 ** Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>.
-** NFS: it is a distributed file system protocol <<nfs>>.
 
 .The provided user services of the cluster
 image::user_services_layout.png[The provided user services of the cluster]
@@ -95,9 +92,16 @@ image::building_blocks_and_user_services.png[User Services and Building Blocks]
 
 === The container engine and orchestrator
 
+[NOTE]
+====
+[yellow-background]#TODO#
+
+Introduce the following items:
+
 - containerd
 - kubernetes
 - k3s
+====
 
 === The cluster availability
 
@@ -147,7 +151,15 @@ Unavailability is not welcome and another building block should prevent it: the 
 
 === Monitoring and alerting
 
+[NOTE]
+====
+[yellow-background]#TODO#
+
+Introduce the following items:
+
 - prometheus <<pmt>>
+- graphana <<pmt>>
+====
 
 === Orchestrator management
 
@@ -173,9 +185,15 @@ The most affordable way to recover data is to regularly backup them and storing 
 
 Longhorn provides a built-in feature to backup blocks on external system.
 
-Moreover, Duplicity is one of the most popular tools to create secure backup <<dup>>.
-Moreover, Duplicity provides a large set of destinations like SFTP, AWS S3, Google Drive, ...
-Obviously, it provides the restoring action too.
+[NOTE]
+====
+[yellow-background]#TODO#
+
+Introduce Duplicity <<dup>>.
+
+- backup + restore of specific directories/files
+- large set of destinations like SFTP, AWS S3, Google Drive, ...
+====
 
 At this point, all building blocks have been introduced, it's time to summarize the cluster's components.
 
@@ -302,6 +320,11 @@ The building blocks:
 * `k3s_longhorn` deploys the distributed block storage system: Longhorn.
 * `k3s_traefik` deploys the ingress controller: Traefik.
 
+The end-user services
+
+* `k3s_calibreweb` deploys calibre-web.
+* `k3s_nextcloud` deploys Nextcloud.
+
 === The Ansible inventory
 
 The inventory defines the nodes of the `homecloud` cluster according to their purposes.
@@ -311,7 +334,6 @@ The inventory defines the nodes of the `homecloud` cluster according to their pu
 ....
 all
   boards
-    rock64
     pine64
     ...
   k3s
@@ -474,7 +496,6 @@ https://www.techopedia.com/definition/4127/secure-shell-ssh
 
 * [[[p64]]] PINE64, https://www.pine64.org
 * [[[plts]]] PINE A64-LTS, https://www.pine64.org/devices/single-board-computers/pine-a64-lts
-* [[[r64]]] ROCK64, https://www.pine64.org/devices/single-board-computers/rock64
 
 *Technologies*
 

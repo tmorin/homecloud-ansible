@@ -4,7 +4,6 @@ skinparam monochrome true
 !global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
 !include $LIB_BASE_LOCATION/bootstrap.puml
 include('homecloud/Brand/Traefik')
-include('homecloud/Brand/Portainer')
 include('homecloud/Brand/Nextcloud')
 include('homecloud/Brand/Syncthing')
 include('homecloud/Brand/Calibreweb')
@@ -18,7 +17,6 @@ include('material-4.0/Device/Widgets')
 *** <$TraefikMd> Traefik
 *** <$WidgetsMd> Longhorn
 *** <$KubernetesMd> Dashboard
-*** <$PortainerMd> Portainer
 *** <$NextcloudMd> Nextcloud
 *** <$CalibrewebMd> calibre-web
 ** <$KeepalivedMd> Keepalived
