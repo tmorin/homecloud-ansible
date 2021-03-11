@@ -27,4 +27,7 @@
     chdir: "{{ image_armbian_working_directory }}"
     cmd: "unxz {{ image_armbian_base_archive_path }}"
   register: unpack
-- debug: var=unpack
+
+- name: debug unpack
+  debug:
+    var: unpack

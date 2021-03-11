@@ -1,15 +1,14 @@
 ---
 
 - hosts: all
-  vars:
-    homecloud_ceph_monitor_ips_as_array: "{{ groups.ceph_mon | default([]) | map('extract', hostvars, ['homecloud_node_ip']) | list }}"
-    homecloud_ceph_monitor_ips: "{{ homecloud_ceph_monitor_ips_as_array | join(',') }}"
-    homecloud_ceph_is_enabled: "{{ homecloud_ceph_monitor_ips | length > 0 }}"
   pre_tasks:
-    - include_role: name="resources_prepare"
+    - name: prepare
+      include_role:
+        name: resources_prepare
   tasks:
     # CLUSTER
-    - include_role:
+    - name: Bootstrap cluster node
+      include_role:
         name: cluster_node
     # DNAS
     - name: Bootstrap dnas services
@@ -26,4 +25,6 @@
       loop_control:
         loop_var: "k3s_service"
   post_tasks:
-    - include_role: name="resources_clean"
+    - name: clean
+      include_role:
+        name: resources_clean

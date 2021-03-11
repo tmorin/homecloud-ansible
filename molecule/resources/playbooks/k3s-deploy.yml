@@ -2,7 +2,9 @@
 
 - hosts: all
   pre_tasks:
-    - include_role: name="resources_prepare"
+    - name: prepare
+      include_role:
+        name: resources_prepare
   tasks:
     - name: Apply k3s deployments
       include_role:
@@ -11,4 +13,6 @@
       loop_control:
         loop_var: "k3s_deployment"
   post_tasks:
-    - include_role: name="resources_clean"
+    - name: clean
+      include_role:
+        name: resources_clean
