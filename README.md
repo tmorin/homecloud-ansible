@@ -5,6 +5,10 @@
 
 > `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home mainly based on Kubernetes and Syncthing.
 
+This is the **version 2** of the library.
+
+The **version 1** of the library is available in the **v1.x branch**.
+
 ## Presentation
 
 `homecloud` aims to provide a cloud like environment, especially an internal cloud, at home.
