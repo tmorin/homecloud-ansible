@@ -1,9 +1,0 @@
----
-
-- name: "deploy the task"
-  community.docker.docker_stack:
-    state: present
-    name: "portainer"
-    prune: true
-    compose:
-      - "/tmp/resources/portainer.stack.yml"
