@@ -104,6 +104,7 @@ The test suite targets the following operating systems:
 |traefik|yes|yes|yes|yes|no|
 |dashboard|yes|no|no|no|no|
 |calibre-web|yes|no|no|no|no|
+|nextcloud|yes|no|no|no|no|
 |dnas|yes|yes|no|no|no|
 |hardening|no|no|no|no|no|
 |Armbian image|no|no|no|no|yes|
