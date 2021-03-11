@@ -15,7 +15,7 @@ tags:
   - k8s
   - longhorn
   - traefik
-  - calibre-web
+  - calibreweb
   - nextcloud
 repository: https://github.com/tmorin/homecloud-ansible
 homepage: https://github.com/tmorin/homecloud-ansible#readme
