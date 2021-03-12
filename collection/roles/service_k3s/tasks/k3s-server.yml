@@ -8,14 +8,43 @@
 - name: Install helm
   become: true
   shell: |
-    set -o pipefail
+    set -eo pipefail
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    /usr/local/bin/helm completion bash > /etc/bash_completion.d/helm
   args:
     executable: /bin/bash
     warn: false
   changed_when: false
 
-- name: Add helm completion
+- name: Install kustomize
   become: true
-  shell: helm completion bash > /etc/bash_completion.d/helm
-  changed_when: false
+  shell: |
+    set -eo pipefail
+    VERS=$(curl -w '%{url_effective}' -I -L -s \
+      -S https://github.com/kubernetes-sigs/kustomize/releases/latest \
+      -o /dev/null | sed -e 's|.*/||')
+    ARCH=$(uname -m)
+    case $ARCH in
+      amd64)
+        ARCH=amd64
+        ;;
+      x86_64)
+        ARCH=amd64
+        ;;
+      arm64)
+        ARCH=arm64
+        ;;
+      aarch64)
+        ARCH=arm64
+        ;;
+      *)
+      fatal "Unsupported architecture $ARCH"
+    esac
+    curl -sfL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${VERS}/kustomize_${VERS}_linux_${ARCH}.tar.gz | \
+      tar xz -C /usr/local/bin/
+    /usr/local/bin/kustomize completion bash > /etc/bash_completion.d/kustomize
+  args:
+    executable: /bin/bash
+    creates: /usr/local/bin/kustomize
+    warn: false
+  ignore_errors: yes
