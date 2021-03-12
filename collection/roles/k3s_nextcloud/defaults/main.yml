@@ -90,7 +90,3 @@ k3s_nextcloud_cache_resources: { }
 #      memory: "48Mi"
 
 k3s_nextcloud_cache_password: "redis_password"
-
-k3s_nextcloud_cache_storage_class: "local-path"
-k3s_nextcloud_cache_storage_size: "256Mi"
-k3s_nextcloud_cache_existing_claim: ""
