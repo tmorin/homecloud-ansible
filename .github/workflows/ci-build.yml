@@ -55,7 +55,7 @@ jobs:
       - name: Build the collection
         run: |
           export PATH="$PATH:$HOME/.local/bin"
-          ansible-galaxy collection build --force --api-key ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+          ansible-galaxy collection build --force
         working-directory: collection
       - name: Upload collection
         uses: actions/upload-artifact@v2
