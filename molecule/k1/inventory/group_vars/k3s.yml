@@ -7,17 +7,9 @@ k3s_deployments:
   - k3s_csi_driver_smb
   - k3s_traefik
   - k3s_dashboard
-  - k3s_calibreweb
-  - k3s_nextcloud
 
 service_k3s_local_kubectl_config_file: "~/.kube/k1"
-
-k3s_calibreweb_server_timezone: "Europe/Zurich"
 
 # htpasswd -nb admin admin_password | openssl base64
 k3s_traefik_dashboard_users: |-
   YWRtaW46JGFwcjEkNFgyVzVLcWwkZEh0SUJFUC54Q2E3Z0hyV2lwNG5zMQoK
-
-k3s_nextcloud_server_volumes:
-  - name: test
-    emptyDir: { }

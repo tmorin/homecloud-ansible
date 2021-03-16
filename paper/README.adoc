@@ -46,11 +46,11 @@ The used operating system is based on Debian: Armbian <<abn>>.
 
 The primarily purpose of the cluster is to host the following user services:
 
-* Nextcloud: a suite of client-server software for creating and using file hosting services <<ncd>>.
-* calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <<caw>>.
 * dnas: a decentralized NAS (c.f. appendix <<appendix_dnas>>) based on:
 ** Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>.
 ** Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>.
+* Nextcloud: a suite of client-server software for creating and using file hosting services <<ncd>>.
+* calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <<caw>>.
 
 .The provided user services of the cluster
 image::user_services_layout.png[The provided user services of the cluster]
@@ -319,11 +319,6 @@ The building blocks:
 * `k3s_dashboard` deploys the Kubernetes Dashboard.
 * `k3s_longhorn` deploys the distributed block storage system: Longhorn.
 * `k3s_traefik` deploys the ingress controller: Traefik.
-
-The end-user services
-
-* `k3s_calibreweb` deploys calibre-web.
-* `k3s_nextcloud` deploys Nextcloud.
 
 === The Ansible inventory
 
