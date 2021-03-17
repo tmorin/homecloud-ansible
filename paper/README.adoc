@@ -314,8 +314,6 @@ It manages also basic configuration of Syncthing and Samba related to credential
 There is a dedicated Ansible role by manifests.
 Each role provides the definition of the manifest as well as its deployment process.
 
-The building blocks:
-
 * `k3s_dashboard` deploys the Kubernetes Dashboard.
 * `k3s_longhorn` deploys the distributed block storage system: Longhorn.
 * `k3s_traefik` deploys the ingress controller: Traefik.
@@ -342,7 +340,7 @@ all
 By convention, the name of the role is the prefix of its variable names.
 The convention prevents naming collisions and increase readability of the inventory declarations.
 
-For instance, the path to the block device of an OSD node is defined with a variable name starting with `k3s_traefik` because the variable is only used in the Ansible role `k3s_traefik`: `k3s_traefik_acme_email`.
+For instance, the email tp provide to Let's Encrypt is defined with a variable name starting with `k3s_traefik` because the variable is only used in the Ansible role `k3s_traefik`: `k3s_traefik_acme_email`.
 
 === The common variables
 
