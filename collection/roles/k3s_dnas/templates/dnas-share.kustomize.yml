@@ -1,0 +1,160 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dnas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: dnas-share
+  name: dnas-share
+spec:
+  selector:
+    app: dnas-share
+  type: ClusterIP
+  ports:
+    - name: netbios-ss
+      port: 139
+      protocol: TCP
+      targetPort: netbios-ss
+    - name: microsoft-ds
+      port: 445
+      protocol: TCP
+      targetPort: microsoft-ds
+    - port: 2049
+      name: tcp-nfs
+      protocol: TCP
+    - port: 2049
+      name: udp-nfs
+      protocol: UDP
+    - port: 111
+      name: tcp-111
+      protocol: TCP
+    - port: 111
+      name: udp-111
+      protocol: UDP
+    - port: 32765
+      name: tcp-32765
+      protocol: TCP
+    - port: 32765
+      name: udp-32765
+      protocol: UDP
+    - port: 32767
+      name: tcp-32767
+      protocol: TCP
+    - port: 32767
+      name: udp-32767
+      protocol: UDP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dnas-share
+  name: dnas-share
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dnas-share
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dnas-share
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: "dnas.morin.io/node"
+                    operator: In
+                    values:
+                      - "true"
+                  - key: "dnas.morin.io/hostname"
+                    operator: In
+                    values:
+                      - "{{ item.ansible_hostname }}"
+              weight: 1
+      containers:
+        - image: klutchell/nfs-server
+          name: nfs
+          env:
+            - name: NFS_EXPORT_0
+              value: "/{{ dnas_username }} *(rw,sync,no_root_squash,no_subtree_check,insecure)"
+          volumeMounts:
+            - name: "{{ dnas_username }}"
+              mountPath: "/{{ dnas_username }}"
+              readOnly: false
+            - name: modules
+              mountPath: /lib/modules
+              readOnly: true
+          ports:
+            - containerPort: 2049
+              hostPort: 2049
+              protocol: TCP
+            - containerPort: 2049
+              hostPort: 2049
+              protocol: UDP
+            - containerPort: 111
+              hostPort: 111
+              protocol: TCP
+            - containerPort: 111
+              hostPort: 111
+              protocol: UDP
+            - containerPort: 32765
+              hostPort: 32765
+              protocol: TCP
+            - containerPort: 32765
+              hostPort: 32765
+              protocol: UDP
+            - containerPort: 32767
+              hostPort: 32767
+              protocol: TCP
+            - containerPort: 32767
+              hostPort: 32767
+              protocol: UDP
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+                - SYS_MODULE
+        - image: dperson/samba
+          name: samba
+          env:
+            - name: USERID
+              value: "{{ dnas_uid }}"
+            - name: GROUPID
+              value: "{{ dnas_gid }}"
+            - name: USER
+              value: "{{ dnas_username }};{{ dnas_password }}"
+            - name: SHARE
+              value: "{{ dnas_username }};/shares/{{ dnas_username }};no;no;no;{{ dnas_username }}"
+          ports:
+            - containerPort: 139
+              name: netbios-ss
+              protocol: TCP
+              hostPort: 139
+            - containerPort: 445
+              name: microsoft-ds
+              protocol: TCP
+              hostPort: 445
+          volumeMounts:
+            - name: "{{ dnas_username }}"
+              mountPath: "/shares/{{ dnas_username }}"
+              readOnly: false
+      volumes:
+        - name: "{{ dnas_username }}"
+          hostPath:
+            path: "{{ dnas_mount_where }}"
+            type: Directory
+        - name: modules
+          hostPath:
+            path: /lib/modules
+            type: Directory
+---

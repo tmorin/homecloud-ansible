@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+commonLabels:
+  dnas.morin.io/smb: "{{ item.ansible_hostname }}"
+nameSuffix: "-{{ item.ansible_hostname }}"
+namespace: dnas
+resources:
+  - dnas-share.kustomize.yml
+secretGenerator:
+  - name: dnas-share
+    envs:
+      - dnas-share.kustomize.secret.env

@@ -19,5 +19,4 @@
         that:
           - get_label_key0.stdout_lines | length == 1
           - get_label_key1.stdout_lines | length == 1
-- import_playbook: ../resources/playbooks/verify-service-dnas.yml
 - import_playbook: ../resources/playbooks/verify-k3s-deployments.yml

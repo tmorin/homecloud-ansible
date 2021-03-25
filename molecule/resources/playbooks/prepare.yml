@@ -12,9 +12,9 @@
         force_apt_get: true
 
     - name: Format the block device of DNAS
-      when: service_dnas_mount_what is defined
+      when: k3s_dnas_mount_what is defined
       become: true
       community.general.filesystem:
-        dev: "{{ service_dnas_mount_what }}"
+        dev: "{{ k3s_dnas_mount_what }}"
         force: false
         fstype: ext4

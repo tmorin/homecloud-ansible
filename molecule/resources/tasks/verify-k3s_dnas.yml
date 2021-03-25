@@ -1,12 +1,13 @@
 ---
 
-- hosts: dnas
-  tasks:
+- name: Verify Syncthing
+  when: k3s_dnas_mount_what | length > 0
+  block:
     # MOUNT
     - name: Get DNAS mount status # noqa command-instead-of-module
       shell: |
         set -o pipefail
-        mount | grep '{{ service_dnas_mount_what }}'>/dev/null && echo ok || echo ko
+        mount | grep '{{ k3s_dnas_mount_what }}'>/dev/null && echo ok || echo ko
       args:
         executable: /bin/bash
       register: dnas_mount_status
@@ -18,7 +19,7 @@
           - dnas_mount_status.stdout == 'ok'
     # GUI
     - name: Get DNAS GUI status
-      shell: "curl --user dnas:dnas http://localhost:8384>/dev/null && echo ok || echo ko"
+      shell: "curl --user dnas:dnas http://{{ homecloud_node_ip }}:8384>/dev/null && echo ok || echo ko"
       args:
         warn: false
       changed_when: false
@@ -33,7 +34,7 @@
       become: true
       ansible.posix.mount:
         path: /mnt/test_smb_share
-        src: //localhost/dnas
+        src: "//{{ homecloud_node_ip }}/dnas"
         fstype: cifs
         opts: username=dnas,password=dnas
         state: present

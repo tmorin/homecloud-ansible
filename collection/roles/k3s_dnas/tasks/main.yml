@@ -1,0 +1,29 @@
+---
+
+- name: Install and bootstrap Synchting
+  when: k3s_dnas_mount_what | length > 0
+  block:
+    - import_tasks: host_install-mount.yml
+    - import_tasks: host_add-user.yml
+    - import_tasks: host_install-syncthing.yml
+    - import_tasks: host_configure-syncthing.yml
+
+- name: Deploy dnas nodes
+  when: inventory_hostname in groups.k3s_srv[:1] | default([])
+  block:
+    - name: Add node label for dnas node
+      become: true
+      command: |
+        kubectl label node --overwrite {{ item.ansible_hostname }} \
+          dnas.morin.io/node=true \
+          dnas.morin.io/hostname={{ item.ansible_hostname }}
+      loop: "{{ k3s_dnas_nodes }}"
+      loop_control:
+        label: "{{ item.ansible_hostname }}"
+      register: set_node_label
+      changed_when: not 'not labeled' in set_node_label.stdout
+    - name: Deploy the Kubernetes manifest
+      include_tasks: k3s_deploy.yml
+      loop: "{{ k3s_dnas_nodes }}"
+      loop_control:
+        label: "{{ item.ansible_hostname }}"

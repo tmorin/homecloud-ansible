@@ -11,55 +11,59 @@
   become: true
   systemd:
     daemon_reload: true
-    name: "syncthing@{{ service_dnas_username }}.service"
+    name: "syncthing@{{ k3s_dnas_username }}.service"
     enabled: true
     state: started
   changed_when: false
 
+- name: Wait for Synchting initialization
+  wait_for:
+    timeout: 2
+
 - name: Stop syncthing.service
   become: true
   systemd:
-    name: "syncthing@{{ service_dnas_username }}.service"
+    name: "syncthing@{{ k3s_dnas_username }}.service"
     state: stopped
   changed_when: false
 
 - name: Remove the Sync folder from configuration
   become: true
   community.general.xml:
-    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ k3s_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/folder[@id='default']
     state: absent
 
 - name: Remove the Sync folder from file system
   become: true
   file:
-    path: "{{ service_dnas_mount_where }}/Sync"
+    path: "{{ k3s_dnas_mount_where }}/Sync"
     state: absent
 
 - name: Set address
   become: true
   community.general.xml:
-    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ k3s_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/address
-    value: "{{ service_dnas_syncthing_gui_address }}"
+    value: "{{ k3s_dnas_syncthing_gui_address }}"
 
 - name: Set syncthing user
   become: true
   community.general.xml:
-    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ k3s_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/user
-    value: "{{ service_dnas_syncthing_gui_username }}"
+    value: "{{ k3s_dnas_syncthing_gui_username }}"
 
 - name: Set syncthing password
   become: true
   community.general.xml:
-    path: "{{ service_dnas_mount_where }}/.config/syncthing/config.xml"
+    path: "{{ k3s_dnas_mount_where }}/.config/syncthing/config.xml"
     xpath: /configuration/gui/password
-    value: "{{ service_dnas_syncthing_gui_password }}"
+    value: "{{ k3s_dnas_syncthing_gui_password }}"
 
 - name: Restart syncthing service
   become: true
   systemd:
-    name: "syncthing@{{ service_dnas_username }}.service"
+    name: "syncthing@{{ k3s_dnas_username }}.service"
     state: restarted
   changed_when: false

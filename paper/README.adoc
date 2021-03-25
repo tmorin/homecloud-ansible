@@ -303,20 +303,22 @@ The Ansible role `service_keepalived` installs and configure Keepalived as an op
 
 The role configures also the load of the kernel module `ip_vs` on system boot.
 
-=== The dnas service
-
-The Ansible role `service_dnas` installs and configures Syncthing, Samba and NFS on the host.
-It manages the mount of the block device which contains the files to expose over Syncthing and Samba.
-It manages also basic configuration of Syncthing and Samba related to credentials.
-
 === The Kubernetes deployment manifests
 
 There is a dedicated Ansible role by manifests.
 Each role provides the definition of the manifest as well as its deployment process.
 
+* `k3s_csi_driver_smb` a CSI plugin to mount Samba shares.
 * `k3s_dashboard` deploys the Kubernetes Dashboard.
+* `k3s_dnas` deploys the ingress controller: Traefik.
 * `k3s_longhorn` deploys the distributed block storage system: Longhorn.
 * `k3s_traefik` deploys the ingress controller: Traefik.
+
+=== The dnas integration
+
+The Ansible role `k3s_dnas` installs and configures Syncthing, Samba and NFS.
+It manages the mount of the block device which contains the files to expose over Syncthing, Samba and NFS.
+It manages also the basic configuration of Syncthing, Samba and NFS like credentials.
 
 === The Ansible inventory
 
@@ -376,13 +378,13 @@ A kind of cloud able to host private data and provide services all around the wo
 == dnas, a decentralized NAS
 
 The purpose of _dnas_ is to expose private files over the local network like a usual <<g_nas, NAS>>  but also from Internet.
-Samba provides remote accesses from the local network.
+Samba and NFS provide remote accesses from the local network.
 On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.
 
 .The dnas overview
 image::user_services_dnas.png[The dnas overview]
 
-The same disk is _opened_ to the internal network as a Samba share.
+The same disk is _opened_ to the internal network as a Samba/NFS share.
 The Syncthing service replicates data to the external SSD Disk.
 
 [appendix]

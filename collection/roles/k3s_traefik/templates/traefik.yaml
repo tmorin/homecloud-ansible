@@ -17,6 +17,18 @@ spec:
         tls:
           enabled: true
           certResolver: le
+      #netbios-ss:
+      #  nodePort: 30139
+      #  port: 30139
+      #  exposedPort: 139
+      #  expose: true
+      #  protocol: TCP
+      #microsoft-ds:
+      #  nodePort: 30445
+      #  port: 30445
+      #  exposedPort: 445
+      #  expose: true
+      #  protocol: TCP
     persistence:
       enabled: true
       storageClass: {{ k3s_traefik_persistence_storage_class }}

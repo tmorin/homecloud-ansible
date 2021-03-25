@@ -1,0 +1,29 @@
+---
+
+- name: Add the group
+  become: true
+  group:
+    name: "{{ k3s_dnas_username }}"
+    gid: "{{ k3s_dnas_gid }}"
+    state: present
+
+- name: Add the user
+  become: true
+  user:
+    name: "{{ k3s_dnas_username }}"
+    group: "{{ k3s_dnas_username }}"
+    uid: "{{ k3s_dnas_uid }}"
+    home: "{{ k3s_dnas_mount_where }}"
+    create_home: false
+    password: "{{ k3s_dnas_password_sha512 }}"
+    state: present
+
+- name: Chown the home directory
+  become: true
+  file:
+    path: "{{ k3s_dnas_mount_where }}"
+    state: directory
+    recurse: true
+    owner: "{{ k3s_dnas_username }}"
+    group: "{{ k3s_dnas_username }}"
+    mode: "0755"

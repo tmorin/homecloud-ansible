@@ -1,6 +1,6 @@
 galaxy_info:
   author: Thibault Morin
-  description: Install and configure a decentralized nas, that means an external drive, samba and syncthing.
+  description: Install and configure a decentralized NAS, that means an external drive, Samba and Syncthing.
   license: MIT
   min_ansible_version: 2.9
 

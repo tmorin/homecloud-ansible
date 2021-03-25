@@ -18,8 +18,8 @@ include('material-4.0/Device/Widgets')
 *** <$WidgetsMd> Longhorn
 *** <$KubernetesMd> Dashboard
 *** <$NextcloudMd> Nextcloud
+*** <$SambaMd> dnas-share (Samba, NFS)
 *** <$CalibrewebMd> calibre-web
 ** <$KeepalivedMd> Keepalived
 ** <$SyncthingMd> Syncthing
-** <$SambaMd> Samba
 @endwbs

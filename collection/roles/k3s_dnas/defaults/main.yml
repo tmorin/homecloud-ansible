@@ -1,0 +1,18 @@
+---
+
+k3s_dnas_username: "dnas"
+k3s_dnas_password: "dnas"
+k3s_dnas_uid: "1010"
+k3s_dnas_gid: "1010"
+
+k3s_dnas_mount_what: ""
+k3s_dnas_mount_where: "/mnt/dnas"
+k3s_dnas_mount_type: "ext4"
+k3s_dnas_mount_options: ""
+k3s_dnas_mount_name: '{{ k3s_dnas_mount_where | regex_replace("^/") | regex_replace("/", "-") }}'
+
+k3s_dnas_syncthing_gui_address: "0.0.0.0:8384"
+k3s_dnas_syncthing_gui_username: "dnas"
+# https://https://bcrypthashgenerator.tool-kit.dev
+k3s_dnas_syncthing_gui_password: "$2a$10$dvemZCjuv8CDNfMVexU1t.v0or0Q1PKlSVHl7tPThuEkmBq7B3fbi" # == dnas
+# k3s_dnas_syncthing_gui_password: "{{ 'dnas' | password_hash('bcrypt', 'dnas') }}" # :( it doesn't work

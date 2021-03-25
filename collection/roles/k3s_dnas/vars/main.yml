@@ -1,0 +1,5 @@
+---
+
+k3s_dnas_password_sha512: "{{ k3s_dnas_password | password_hash('sha512', 'dnas') }}"
+
+k3s_dnas_nodes: "{{ (groups.k3s | default([])) | map('extract', hostvars) | list | selectattr('k3s_dnas_mount_what', 'defined') }}"

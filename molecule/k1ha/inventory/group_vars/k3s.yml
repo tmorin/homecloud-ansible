@@ -8,6 +8,7 @@ k3s_deployments:
   - k3s_csi_driver_smb
   - k3s_longhorn
   - k3s_traefik
+  - k3s_dnas
 
 k3s_longhorn_settings:
   default-replica-count: 1

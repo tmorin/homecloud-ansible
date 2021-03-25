@@ -1,0 +1,55 @@
+---
+
+- name: set fact
+  set_fact:
+    dnas_username: "{{ item.k3s_dnas_username | default(k3s_dnas_username) }}"
+    dnas_password: "{{ item.k3s_dnas_password | default(k3s_dnas_password) }}"
+    dnas_uid: "{{ item.k3s_dnas_uid | default(k3s_dnas_uid) }}"
+    dnas_gid: "{{ item.k3s_dnas_gid | default(k3s_dnas_gid) }}"
+    dnas_mount_where: "{{ item.k3s_dnas_mount_where | default(k3s_dnas_mount_where) }}"
+
+- name: Install NFS dependencies
+  become: true
+  package:
+    name: nfs-common
+    state: present
+    force_apt_get: true
+
+- name: Create kustomize directory
+  file:
+    path: "/tmp/resources/kustomize/{{ item.ansible_hostname }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy dnas-share.kustomization.yaml
+  template:
+    src: dnas-share.kustomization.yaml
+    dest: "/tmp/resources/kustomize/{{ item.ansible_hostname }}/kustomization.yaml"
+    mode: '0644'
+    force: true
+  changed_when: false
+
+- name: Copy dnas-share.kustomize.secret.env
+  template:
+    src: dnas-share.kustomize.secret.env
+    dest: "/tmp/resources/kustomize/{{ item.ansible_hostname }}/dnas-share.kustomize.secret.env"
+    mode: '0644'
+    force: true
+  changed_when: false
+
+- name: Copy dnas-share.kustomize.yml
+  template:
+    src: dnas-share.kustomize.yml
+    dest: "/tmp/resources/kustomize/{{ item.ansible_hostname }}/dnas-share.kustomize.yml"
+    mode: '0644'
+    force: true
+  changed_when: false
+
+- name: Deploy manifest
+  become: true
+  shell: |
+    set -eo pipefail
+    kustomize build /tmp/resources/kustomize/{{ item.ansible_hostname }} | kubectl apply -f-
+  args:
+    executable: /bin/bash
+  changed_when: false

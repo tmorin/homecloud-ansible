@@ -6,6 +6,7 @@ k3s_services:
 k3s_deployments:
   - k3s_csi_driver_smb
   - k3s_traefik
+  - k3s_dnas
   - k3s_dashboard
 
 service_k3s_local_kubectl_config_file: "~/.kube/k1"

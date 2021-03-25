@@ -5,7 +5,7 @@ metadata:
   name: traefik-dashboard-auth
   namespace: kube-system
 data:
-  users: {{ k3s_traefik_dashboard_users }}
+  users: "{{ k3s_traefik_dashboard_users }}"
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware

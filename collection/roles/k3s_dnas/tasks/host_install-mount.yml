@@ -4,7 +4,7 @@
   become: true
   template:
     src: mnt-dnas.mount.jinja2
-    dest: /etc/systemd/system/{{ service_dnas_mount_name }}.mount
+    dest: /etc/systemd/system/{{ k3s_dnas_mount_name }}.mount
     owner: root
     group: root
     mode: 0644
@@ -13,6 +13,6 @@
   become: true
   systemd:
     daemon_reload: true
-    name: "{{ service_dnas_mount_name }}.mount"
+    name: "{{ k3s_dnas_mount_name }}.mount"
     enabled: true
     state: started

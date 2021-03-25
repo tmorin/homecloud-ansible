@@ -20,5 +20,5 @@ spec:
   volumes:
     - name: data
       persistentVolumeClaim:
-        claimName: test-csi-smb-dnas-pvc
+        claimName: test-csi-smb-dnas
 ---
