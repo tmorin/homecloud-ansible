@@ -444,7 +444,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>homecloud : a cloud at home with Kubernetes and Syncthing</h1>
 <div class="details">
 <span id="author" class="author">Thibault Morin</span><br>
-<span id="revdate">2021-03-11</span>
+<span id="revdate">2021-03-29</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -474,8 +474,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_the_common_configurations">The common configurations</a></li>
 <li><a href="#role_k3s_service">The k3s service</a></li>
 <li><a href="#_the_keepalived_service">The Keepalived service</a></li>
-<li><a href="#_the_dnas_service">The dnas service</a></li>
 <li><a href="#_the_kubernetes_deployment_manifests">The Kubernetes deployment manifests</a></li>
+<li><a href="#_the_dnas_integration">The dnas integration</a></li>
 <li><a href="#_the_ansible_inventory">The Ansible inventory</a></li>
 <li><a href="#_the_role_variables">The role variables</a></li>
 <li><a href="#_the_common_variables">The common variables</a></li>
@@ -587,7 +587,7 @@ The used operating system is based on Debian: Armbian <a href="#abn">[abn]</a>.<
 <div class="title">Figure 2. The provided user services of the cluster</div>
 </div>
 <div class="paragraph">
-<p>The Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.</p>
+<p>Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.</p>
 </div>
 <div class="paragraph">
 <p>However, to properly operate the above listed services, two hosting strategies are highly emphasis: containerized workloads and container orchestration.</p>
@@ -662,35 +662,19 @@ Some building blocks are parts of the virtual world whereas others to the physic
 </div>
 <div class="sect2">
 <h3 id="_the_container_engine_and_orchestrator">The container engine and orchestrator</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
 <div class="paragraph">
-<p><span class="yellow-background">TODO</span></p>
+<p>The containerization of workloads as well as their management are handled by many technologies.
+Nevertheless, an effort of standardization emerged from the industry which led to the creation of the Cloud Native Computing Foundation (CNCF) [cncf].
+The CNCF hosts many components, some of them are the first building blocks of the <code>homecloud</code> stack.</p>
 </div>
 <div class="paragraph">
-<p>Introduce the following items:</p>
+<p>The first is <code>containerd</code> <a href="#cntd">[cntd]</a>. It&#8217;s the container engine which handles the containerization of workloads.
+The second one is <code>kubernetes</code> <a href="#k8s">[k8s]</a>. It&#8217;s the container orchestrator managing the cluster of <code>containerd</code> instances.
+Finally, the last one is <code>k3s</code> <a href="#k3s">[k3s]</a>. It&#8217;s a distribution of <code>kubernetes</code> dedicated of IoT or other cloudless native environments &#8230;&#8203; like <code>homecloud</code>.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>containerd</p>
-</li>
-<li>
-<p>kubernetes</p>
-</li>
-<li>
-<p>k3s</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>The orchestration of containerized workloads is a good starting point.
+However, many other concerns have to be tackled, the next one is about availability.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1021,14 +1005,6 @@ The inventory groups of the hosts define the role.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_dnas_service">The dnas service</h3>
-<div class="paragraph">
-<p>The Ansible role <code>service_dnas</code> installs and configures Syncthing, Samba and NFS on the host.
-It manages the mount of the block device which contains the files to expose over Syncthing and Samba.
-It manages also basic configuration of Syncthing and Samba related to credentials.</p>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_the_kubernetes_deployment_manifests">The Kubernetes deployment manifests</h3>
 <div class="paragraph">
 <p>There is a dedicated Ansible role by manifests.
@@ -1037,7 +1013,13 @@ Each role provides the definition of the manifest as well as its deployment proc
 <div class="ulist">
 <ul>
 <li>
+<p><code>k3s_csi_driver_smb</code> a CSI plugin to mount Samba shares.</p>
+</li>
+<li>
 <p><code>k3s_dashboard</code> deploys the Kubernetes Dashboard.</p>
+</li>
+<li>
+<p><code>k3s_dnas</code> deploys the ingress controller: Traefik.</p>
 </li>
 <li>
 <p><code>k3s_longhorn</code> deploys the distributed block storage system: Longhorn.</p>
@@ -1046,6 +1028,14 @@ Each role provides the definition of the manifest as well as its deployment proc
 <p><code>k3s_traefik</code> deploys the ingress controller: Traefik.</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_dnas_integration">The dnas integration</h3>
+<div class="paragraph">
+<p>The Ansible role <code>k3s_dnas</code> installs and configures Syncthing, Samba and NFS.
+It manages the mount of the block device which contains the files to expose over Syncthing, Samba and NFS.
+It manages also the basic configuration of Syncthing, Samba and NFS like credentials.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1128,7 +1118,7 @@ A kind of cloud able to host private data and provide services all around the wo
 <div class="sectionbody">
 <div class="paragraph">
 <p>The purpose of <em>dnas</em> is to expose private files over the local network like a usual <a href="#g_nas">NAS</a>  but also from Internet.
-Samba provides remote accesses from the local network.
+Samba and NFS provide remote accesses from the local network.
 On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.</p>
 </div>
 <div class="imageblock">
@@ -1138,7 +1128,7 @@ On the other side, Syncthing brings the decentralized part with its peer-to-peer
 <div class="title">Figure 5. The dnas overview</div>
 </div>
 <div class="paragraph">
-<p>The same disk is <em>opened</em> to the internal network as a Samba share.
+<p>The same disk is <em>opened</em> to the internal network as a Samba/NFS share.
 The Syncthing service replicates data to the external SSD Disk.</p>
 </div>
 </div>
@@ -1331,10 +1321,19 @@ NAS is a hard drive attached to a network, used for storage and accessed through
 <p><a id="caw"></a>[caw] calibre-web <a href="https://github.com/janeczku/calibre-web" class="bare">https://github.com/janeczku/calibre-web</a></p>
 </li>
 <li>
+<p><a id="cncf"></a>[cncf] Cloud Native Computing Foundation, <a href="https://www.cncf.io" class="bare">https://www.cncf.io</a></p>
+</li>
+<li>
 <p><a id="cntd"></a>[cntd] Containerd, <a href="https://containerd.io" class="bare">https://containerd.io</a></p>
 </li>
 <li>
 <p><a id="dup"></a>[dup] duplicity, <a href="http://duplicity.nongnu.org" class="bare">http://duplicity.nongnu.org</a></p>
+</li>
+<li>
+<p><a id="k3s"></a>[k3s] k3s, <a href="https://k3s.io" class="bare">https://k3s.io</a></p>
+</li>
+<li>
+<p><a id="k8s"></a>[k8s] Kubernetes, <a href="https://kubernetes.io" class="bare">https://kubernetes.io</a></p>
 </li>
 <li>
 <p><a id="kad"></a>[kad] Keepalived, <a href="https://www.keepalived.org" class="bare">https://www.keepalived.org</a></p>
@@ -1382,7 +1381,7 @@ NAS is a hard drive attached to a network, used for storage and accessed through
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-03-17 12:24:57 UTC
+Last updated 2021-03-29 12:33:16 UTC
 </div>
 </div>
 </body>
