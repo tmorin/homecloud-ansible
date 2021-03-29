@@ -2,7 +2,7 @@
 // METADATA
 :doctype: article
 :author: Thibault Morin
-:revdate: 2021-03-11
+:revdate: 2021-03-29
 :homepage: https://github.com/tmorin/homecloud-ansible
 :toc:
 // FOOTNOTES
@@ -55,7 +55,7 @@ The primarily purpose of the cluster is to host the following user services:
 .The provided user services of the cluster
 image::user_services_layout.png[The provided user services of the cluster]
 
-The Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.
+Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.
 
 However, to properly operate the above listed services, two hosting strategies are highly emphasis: containerized workloads and container orchestration.
 
@@ -92,16 +92,16 @@ image::building_blocks_and_user_services.png[User Services and Building Blocks]
 
 === The container engine and orchestrator
 
-[NOTE]
-====
-[yellow-background]#TODO#
+The containerization of workloads as well as their management are handled by many technologies.
+Nevertheless, an effort of standardization emerged from the industry which led to the creation of the Cloud Native Computing Foundation (CNCF) [cncf].
+The CNCF hosts many components, some of them are the first building blocks of the `homecloud` stack.
 
-Introduce the following items:
+The first is `containerd` <<cntd>>. It's the container engine which handles the containerization of workloads.
+The second one is `kubernetes` <<k8s>>. It's the container orchestrator managing the cluster of `containerd` instances.
+Finally, the last one is `k3s` <<k3s>>. It's a distribution of `kubernetes` dedicated of IoT or other cloudless native environments ... like `homecloud`.
 
-- containerd
-- kubernetes
-- k3s
-====
+The orchestration of containerized workloads is a good starting point.
+However, many other concerns have to be tackled, the next one is about availability.
 
 === The cluster availability
 
@@ -499,8 +499,11 @@ https://www.techopedia.com/definition/4127/secure-shell-ssh
 * [[[alt]]] Ansible-lint, https://github.com/ansible-community/ansible-lint
 * [[[ans]]] Ansible, https://www.ansible.com
 * [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
+* [[[cncf]]] Cloud Native Computing Foundation, https://www.cncf.io
 * [[[cntd]]] Containerd, https://containerd.io
 * [[[dup]]] duplicity, http://duplicity.nongnu.org
+* [[[k3s]]] k3s, https://k3s.io
+* [[[k8s]]] Kubernetes, https://kubernetes.io
 * [[[kad]]] Keepalived, https://www.keepalived.org
 * [[[lhn]]] Longhorn, https://longhorn.io
 * [[[mol]]] Molecule, https://github.com/ansible-community/molecule
