@@ -5,14 +5,14 @@
   block:
     - name: Copy customization.yml
       become: true
-      template:
+      ansible.builtin.template:
         src: customization.yml
         dest: /var/lib/rancher/k3s/server/manifests/homecloud-dashboard-customization.yml
         force: true
         mode: 0644
       changed_when: false
     - name: Resolve latest dashboard version
-      shell: curl -w '%{url_effective}' -I -L -s \
+      ansible.builtin.shell: curl -w '%{url_effective}' -I -L -s \
         -S https://github.com/kubernetes/dashboard/releases/{{ k3s_dashboard_release }} \
         -o /dev/null | sed -e 's|.*/||'
       register: resolve_latest_dashboard_version
@@ -21,7 +21,7 @@
         warn: false
     - name: Deploy the k8s dashboard
       become: true
-      get_url:
+      ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/kubernetes/dashboard/{{ resolve_latest_dashboard_version.stdout }}/aio/deploy/recommended.yaml"
         dest: /var/lib/rancher/k3s/server/manifests/homecloud-dashboard-recommended.yaml
         force: true
@@ -29,7 +29,7 @@
       changed_when: false
     - name: Wait for k8s dashboard
       become: true
-      command: kubectl -n kubernetes-dashboard get deploy kubernetes-dashboard \
+      ansible.builtin.command: kubectl -n kubernetes-dashboard get deploy kubernetes-dashboard \
         -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
       changed_when: false
       register: kubcetl_result

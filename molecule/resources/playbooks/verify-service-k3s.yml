@@ -3,12 +3,12 @@
 - hosts: k3s
   tasks:
     - name: Get K3S info
-      command: which k3s
+      ansible.builtin.command: which k3s
       ignore_errors: true
       register: k3s_info
       changed_when: false
     - name: Verify K3S installation
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - not k3s_info.failed

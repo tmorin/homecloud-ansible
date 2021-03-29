@@ -5,7 +5,7 @@
   block:
     - name: Deploy traefik.yaml
       become: true
-      template:
+      ansible.builtin.template:
         src: traefik.yaml
         dest: /var/lib/rancher/k3s/server/manifests/homecloud-traefik.yaml
         mode: '0644'
@@ -14,7 +14,7 @@
     - name: Deploy traefik-dashboard-ingress.yml
       when: k3s_traefik_dashboard_users
       become: true
-      template:
+      ansible.builtin.template:
         src: traefik-dashboard-ingress.yml
         dest: /var/lib/rancher/k3s/server/manifests/homecloud-traefik-dashboard-ingress.yml
         mode: '0644'
@@ -22,7 +22,7 @@
       changed_when: false
     - name: Wait for Traefik
       become: true
-      command: kubectl -n kube-system get deploy traefik \
+      ansible.builtin.command: kubectl -n kube-system get deploy traefik \
         -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
       changed_when: false
       register: kubcetl_get_traefik

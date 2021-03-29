@@ -2,7 +2,7 @@
 
 - name: Check parameters
   delegate_to: localhost
-  assert:
+  ansible.builtin.assert:
     quiet: true
     that:
       - homecloud_virtual_ip | length > 0
@@ -17,7 +17,7 @@
 
 - name: Load the ip_vs module at bootstart
   become: true
-  template:
+  ansible.builtin.template:
     src: ip_vs.conf
     dest: /etc/modules-load.d/ip_vs.conf
     owner: root
@@ -26,14 +26,14 @@
 
 - name: Install keepalived
   become: true
-  package:
+  ansible.builtin.package:
     name: keepalived
     state: present
     force_apt_get: true
 
 - name: Configure keepalived
   become: true
-  template:
+  ansible.builtin.template:
     src: keepalived.conf
     dest: /etc/keepalived/keepalived.conf
     owner: root
@@ -42,7 +42,7 @@
 
 - name: Enable and start keepalived
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: keepalived
     enabled: true
     state: started

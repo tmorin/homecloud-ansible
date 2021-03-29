@@ -1,11 +1,16 @@
 ---
 
-- import_tasks: configure-hostname.yml
+- name: Include task
+  ansible.builtin.import_tasks: configure-hostname.yml
 
-- import_tasks: hold-packages.yml
+- name: Include task
+  ansible.builtin.import_tasks: hold-packages.yml
 
-- import_tasks: install-dependencies.yml
+- name: Include task
+  ansible.builtin.import_tasks: install-dependencies.yml
 
-- import_tasks: install-swapoff.yml
+- name: Include task
+  ansible.builtin.import_tasks: install-swapoff.yml
 
-- import_tasks: activate-iptables-legacy.yml
+- name: Include task
+  ansible.builtin.import_tasks: activate-iptables-legacy.yml

@@ -2,7 +2,7 @@
 
 - name: Set node labels
   become: true
-  command: kubectl label node --overwrite {{ node_name }} {{ node_label[0] }}={{ node_label[1] | default('') }}
+  ansible.builtin.command: kubectl label node --overwrite {{ node_name }} {{ node_label[0] }}={{ node_label[1] | default('') }}
   loop: "{{ (hostvars[node_name].service_k3s_node_labels | default({})).items() }}"
   loop_control:
     loop_var: node_label

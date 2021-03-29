@@ -2,6 +2,6 @@
 
 - name: Hold packages
   become: true
-  command: "apt-mark hold {{ item }}"
+  ansible.builtin.command: "apt-mark hold {{ item }}"
   loop: "{{ cluster_node_hold_packages | default([]) }}"
   changed_when: false

@@ -2,7 +2,7 @@
 
 - name: Copy swapoff.service
   become: true
-  template:
+  ansible.builtin.template:
     src: swapoff.service
     dest: /etc/systemd/system/swapoff.service
     owner: root
@@ -11,7 +11,7 @@
 
 - name: Enable and start swapoff.service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: swapoff.service
     enabled: true

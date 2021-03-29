@@ -1,9 +1,11 @@
 # homecloud-ansible
 
+[![badge for Ansible Collection](https://img.shields.io/badge/Ansible%20Collection-tmorin/homecloud-blue?logo=ansible&logoColor=white)](https://galaxy.ansible.com/tmorin/homecloud)
+[![badge for HTML paper](https://img.shields.io/badge/Paper-HTML-informational)](https://tmorin.github.io/homecloud-ansible)
+[![badge for PDF paper](https://img.shields.io/badge/Paper-PDF-informational)](https://tmorin.github.io/homecloud-ansible/homecloud-paper.pdf)
+
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/tmorin/homecloud-ansible/Continous%20Integration/master?label=GitHub%20Actions&logo=github+actions&logoColor=black)](https://github.com/tmorin/homecloud-ansible/actions?query=workflow%3A%22Continous+Integration%22+branch%3Amaster)
 [![Travis (.org) branch](https://img.shields.io/travis/tmorin/homecloud-ansible/master?label=Travis%20CI&logo=travis+CI&logoColor=black)](https://travis-ci.org/github/tmorin/homecloud-ansible)
-[![badge for HTML paper](https://img.shields.io/badge/paper-HTML-blue)](https://tmorin.github.io/homecloud-ansible)
-[![badge for PDF paper](https://img.shields.io/badge/paper-PDF-blue)](https://tmorin.github.io/homecloud-ansible/homecloud-paper.pdf)
 
 > `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home mainly based on Kubernetes and Syncthing.
 
@@ -32,6 +34,9 @@ The Ansible collection provides the following features:
 - a decentralized solution to synchronize files between local/remote nodes, `dnas`, powered with `Syncthing`, `NFS` and `Samba`
 
 Additionally, Armbian images can be created for each host of the inventory.
+
+Finally, once `homecloud` is bootstrapped, then end-user applications can be deployed on the `Kubernetes` cluster.
+Some of them are available as `Kustomize` resources in another repository [tmorin/homecloud-kustomize](https://github.com/tmorin/homecloud-kustomize).
 
 ## Requirements
 
@@ -100,26 +105,31 @@ The test suite targets the following operating systems:
 
 * the [armbian] scenario cannot be executed on Travis CI.
 
+Test the scenario `k1`
+```shell
+source venv/bin/activate
+molecule test -s k1
+```
 
-Configure local (Ansible agent) kubectl for k1
+Configure local (Ansible agent) kubectl for `k1`
 ```shell
 export KUBECONFIG=$HOME/.kube/k1
 kubectl get all --all-namespaces
 ```
 
-Configure local (Ansible agent) kubectl for k1ha
+Configure local (Ansible agent) kubectl for `k1ha`
 ```shell
 export KUBECONFIG=$HOME/.kube/k1ha
 kubectl get all --all-namespaces
 ```
 
-Configure local (Ansible agent) kubectl for k2
+Configure local (Ansible agent) kubectl for `k2`
 ```shell
 export KUBECONFIG=$HOME/.kube/k2
 kubectl get all --all-namespaces
 ```
 
-Configure local (Ansible agent) kubectl for k2ha
+Configure local (Ansible agent) kubectl for `k2ha`
 ```shell
 export KUBECONFIG=$HOME/.kube/k2ha
 kubectl get all --all-namespaces

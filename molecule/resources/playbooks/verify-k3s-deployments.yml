@@ -4,7 +4,7 @@
   tasks:
     - name: Verify k3s deployments
       when: inventory_hostname in groups.k3s_srv[:1] | default([])
-      include_tasks: ../tasks/verify-{{ k3s_deployment }}.yml
+      ansible.builtin.include_tasks: ../tasks/verify-{{ k3s_deployment }}.yml
       loop: "{{ k3s_deployments | default([]) }}"
       loop_control:
         loop_var: k3s_deployment

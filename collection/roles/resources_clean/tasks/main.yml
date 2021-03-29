@@ -1,14 +1,14 @@
 ---
 
 - name: 'find resources'
-  find:
+  ansible.builtin.find:
     paths: /tmp/resources
     patterns: "*"
   register: files_to_delete
   changed_when: false
 
 - name: 'delete resources'
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   with_items: "{{ files_to_delete.files }}"

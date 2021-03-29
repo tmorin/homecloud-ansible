@@ -1,7 +1,7 @@
 ---
 
 - name: 'create the resources directory'
-  file:
+  ansible.builtin.file:
     path: /tmp/resources
     state: directory
     mode: 0755

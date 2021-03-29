@@ -5,7 +5,7 @@
 
     - name: Update packages
       become: true
-      apt:
+      ansible.builtin.apt:
         update_cache: true
         autoclean: true
         autoremove: true

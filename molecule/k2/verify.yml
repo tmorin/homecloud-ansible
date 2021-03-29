@@ -1,25 +1,26 @@
 ---
 
-- import_playbook: ../resources/playbooks/verify-service-k3s.yml
-- import_playbook: ../resources/playbooks/verify-service-keepalived.yml
+- ansible.builtin.import_playbook: ../resources/playbooks/verify-service-k3s.yml
+
+- ansible.builtin.import_playbook: ../resources/playbooks/verify-service-keepalived.yml
 
 - hosts: k3s_srv[0]
   tasks:
     - name: Get nodes with label key1
       become: true
-      command: kubectl get node -l key1 -o custom-columns=name:.metadata.name --no-headers
+      ansible.builtin.command: kubectl get node -l key1 -o custom-columns=name:.metadata.name --no-headers
       changed_when: false
       register: get_label_key1
     - name: Get nodes with label key2
       become: true
-      command: kubectl get node -l key2 -o custom-columns=name:.metadata.name --no-headers
+      ansible.builtin.command: kubectl get node -l key2 -o custom-columns=name:.metadata.name --no-headers
       changed_when: false
       register: get_label_key2
     - name: Verify node labels
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - get_label_key1.stdout_lines | length == 2
           - get_label_key2.stdout_lines | length == 1
 
-- import_playbook: ../resources/playbooks/verify-k3s-deployments.yml
+- ansible.builtin.import_playbook: ../resources/playbooks/verify-k3s-deployments.yml

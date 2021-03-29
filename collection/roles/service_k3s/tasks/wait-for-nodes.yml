@@ -2,7 +2,7 @@
 
 - name: Wait for nodes availability
   become: true
-  command: kubectl get node -o jsonpath='{.items[?(@.status.conditions[-1].type=="Ready")].metadata.name}'
+  ansible.builtin.command: kubectl get node -o jsonpath='{.items[?(@.status.conditions[-1].type=="Ready")].metadata.name}'
   changed_when: false
   register: kubcetl_result
   delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"

@@ -2,7 +2,7 @@
 
 - name: Install dependencies from apt
   become: true
-  package:
+  ansible.builtin.package:
     name: cifs-utils
     state: present
     force_apt_get: true
@@ -12,7 +12,7 @@
   block:
     - name: Deploy the manifest
       become: true
-      template:
+      ansible.builtin.template:
         src: csi_driver_smb.yaml
         dest: /var/lib/rancher/k3s/server/manifests/homecloud-csi_driver_smb.yaml
         mode: '0644'
@@ -20,7 +20,7 @@
       changed_when: false
     - name: Wait for the controller
       become: true
-      command: kubectl -n kube-system get deploy csi-smb-controller \
+      ansible.builtin.command: kubectl -n kube-system get deploy csi-smb-controller \
         -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
       changed_when: false
       register: kubcetl_get_controller

@@ -6,23 +6,23 @@
   tasks:
     - name: Install dependencies
       become: true
-      package:
+      ansible.builtin.package:
         name:
           - jq
           - qemu-system-arm
           - qemu-user-static
     - name: "delete {{ image_armbian_working_directory }}"
       become: true
-      file:
+      ansible.builtin.file:
         path: "{{ image_armbian_working_directory }}"
         state: absent
     - name: "delete {{ image_armbian_release_directory }}"
       become: true
-      file:
+      ansible.builtin.file:
         path: "{{ image_armbian_release_directory }}"
         state: absent
     - name: Create the dummy rsa key
-      copy:
+      ansible.builtin.copy:
         dest: /tmp/dummy_pub_rsa
         content: dummy key
         mode: 0644

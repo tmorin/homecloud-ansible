@@ -2,7 +2,7 @@
 
 - name: 'check parameters'
   delegate_to: localhost
-  assert:
+  ansible.builtin.assert:
     that:
       - homecloud_node_ip | length > 0
       - homecloud_network_netmask | length > 0
@@ -11,7 +11,14 @@
       - image_armbian_archive_name | length > 0
       - image_armbian_image_name | length > 0
 
-- import_tasks: prepare-workdir.yml
-- import_tasks: get-armbian-image.yml
-- import_tasks: patch-host-image.yml
-- import_tasks: release-host-image.yml
+- name: Include task
+  ansible.builtin.import_tasks: prepare-workdir.yml
+
+- name: Include task
+  ansible.builtin.import_tasks: get-armbian-image.yml
+
+- name: Include task
+  ansible.builtin.import_tasks: patch-host-image.yml
+
+- name: Include task
+  ansible.builtin.import_tasks: release-host-image.yml

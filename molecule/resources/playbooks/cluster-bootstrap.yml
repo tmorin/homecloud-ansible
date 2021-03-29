@@ -3,28 +3,28 @@
 - hosts: all
   pre_tasks:
     - name: prepare
-      include_role:
+      ansible.builtin.include_role:
         name: resources_prepare
   tasks:
     # CLUSTER
     - name: Bootstrap cluster node
-      include_role:
+      ansible.builtin.include_role:
         name: cluster_node
     # DNAS
     - name: Bootstrap dnas services
-      include_role:
+      ansible.builtin.include_role:
         name: "{{ dnas_service }}"
       loop: "{{ dnas_services | default([]) }}"
       loop_control:
         loop_var: "dnas_service"
     # K3S
     - name: Bootstrap k3s services
-      include_role:
+      ansible.builtin.include_role:
         name: "{{ k3s_service }}"
       loop: "{{ k3s_services | default([]) }}"
       loop_control:
         loop_var: "k3s_service"
   post_tasks:
     - name: clean
-      include_role:
+      ansible.builtin.include_role:
         name: resources_clean

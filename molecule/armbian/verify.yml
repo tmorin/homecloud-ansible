@@ -6,16 +6,16 @@
   gather_facts: false
   tasks:
     - name: Stat armbian-n1
-      stat:
+      ansible.builtin.stat:
         path: "{{ image_armbian_release_directory }}/armbian-n1.img"
       register: stat_armbian_n1_img
     - name: Check armbian-n1
-      assert:
+      ansible.builtin.assert:
         that: stat_armbian_n1_img is success
     - name: Stat armbian-n2
-      stat:
+      ansible.builtin.stat:
         path: "{{ image_armbian_release_directory }}/armbian-n2.img"
       register: stat_armbian_n2_img
     - name: Check armbian-n2
-      assert:
+      ansible.builtin.assert:
         that: stat_armbian_n2_img is success

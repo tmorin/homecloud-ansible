@@ -57,9 +57,9 @@ install:
   - sudo systemctl restart libvirtd.service
   # configure vagrant
   - vagrant plugin install vagrant-libvirt
-  - vagrant box add generic/debian9 --provider=libvirt --box-version 3.1.6 || true
-  - vagrant box add generic/debian10 --provider=libvirt --box-version 3.1.6 || true
-  - vagrant box add generic/ubuntu1804 --provider=libvirt --box-version 3.1.6 || true
-  - vagrant box add generic/ubuntu2004 --provider=libvirt --box-version 3.1.6 || true
+  - vagrant box add generic/debian9 --provider=libvirt --box-version 3.2.12 || true
+  - vagrant box add generic/debian10 --provider=libvirt --box-version 3.2.12 || true
+  - vagrant box add generic/ubuntu1804 --provider=libvirt --box-version 3.2.12 || true
+  - vagrant box add generic/ubuntu2004 --provider=libvirt --box-version 3.2.12 || true
 script:
   - molecule test -s $TEST_NAME

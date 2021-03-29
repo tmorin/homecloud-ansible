@@ -3,24 +3,25 @@
 - name: Verify Longhorn UI
   block:
     - name: Configure endpoint verifier
-      set_fact:
+      ansible.builtin.set_fact:
         k8s_namespace: longhorn-system
         k8s_deploy_name: longhorn-ui
         k8s_service_name: longhorn-frontend-external
         k8s_url_protocol: http
         k8s_expected_status: HTTP/1.1 200 OK
-    - include_tasks: verify-k8s-http-endpoint.yml
+    - name: Include task
+      ansible.builtin.include_tasks: verify-k8s-http-endpoint.yml
 
 - name: Prepare testing environment
   block:
     - name: Create working directory
-      file:
+      ansible.builtin.file:
         dest: /tmp/resources/deployments
         state: directory
         mode: '755'
     - name: Clean resources
       become: true
-      command: kubectl delete \
+      ansible.builtin.command: kubectl delete \
         -f /tmp/resources/test-longhorn-rwo-step2.yml \
         -f /tmp/resources/test-longhorn-rwo-step1.yml \
         -f /tmp/resources/test-longhorn-rwx-step3.yml \
@@ -29,7 +30,7 @@
       changed_when: false
       ignore_errors: true
     - name: Copy deployment manifests
-      copy:
+      ansible.builtin.copy:
         src: ../deployments/
         dest: /tmp/resources/
         mode: '644'
@@ -38,11 +39,11 @@
   block:
     - name: ReadWriteOnce - Apply step1
       become: true
-      command: kubectl apply -f /tmp/resources/test-longhorn-rwo-step1.yml
+      ansible.builtin.command: kubectl apply -f /tmp/resources/test-longhorn-rwo-step1.yml
       changed_when: false
     - name: ReadWriteOnce - Wait for step1
       become: true
-      command: kubectl get pod test-longhorn-rwo-step1 -o jsonpath='{.status.phase}'
+      ansible.builtin.command: kubectl get pod test-longhorn-rwo-step1 -o jsonpath='{.status.phase}'
       changed_when: false
       register: kubcetl_result
       delay: 2
@@ -50,11 +51,11 @@
       until: "'Succeeded' in kubcetl_result.stdout"
     - name: ReadWriteOnce - Apply step2
       become: true
-      command: kubectl apply -f /tmp/resources/test-longhorn-rwo-step2.yml
+      ansible.builtin.command: kubectl apply -f /tmp/resources/test-longhorn-rwo-step2.yml
       changed_when: false
     - name: ReadWriteOnce - Wait for step2
       become: true
-      command: kubectl get pod test-longhorn-rwo-step2 -o jsonpath='{.status.phase}'
+      ansible.builtin.command: kubectl get pod test-longhorn-rwo-step2 -o jsonpath='{.status.phase}'
       changed_when: false
       register: kubcetl_result
       delay: 2
@@ -62,10 +63,10 @@
       until: "'Succeeded' in kubcetl_result.stdout"
     - name: ReadWriteOnce - Get step2 output
       become: true
-      command: kubectl logs test-longhorn-rwo-step2
+      ansible.builtin.command: kubectl logs test-longhorn-rwo-step2
       register: step2_result
     - name: ReadWriteOnce - Verify logs
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - step2_result.stdout_lines[0] | trim == 'hello from step1'
@@ -74,11 +75,11 @@
   block:
     - name: ReadWriteMany - Apply step1
       become: true
-      command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step1.yml
+      ansible.builtin.command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step1.yml
       changed_when: false
     - name: ReadWriteMany - Wait for step1
       become: true
-      command: kubectl get pod test-longhorn-rwx-step1 -o jsonpath='{.status.phase}'
+      ansible.builtin.command: kubectl get pod test-longhorn-rwx-step1 -o jsonpath='{.status.phase}'
       changed_when: false
       register: kubcetl_result
       delay: 2
@@ -86,11 +87,11 @@
       until: "'Succeeded' in kubcetl_result.stdout"
     - name: ReadWriteMany - Apply step2
       become: true
-      command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step2.yml
+      ansible.builtin.command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step2.yml
       changed_when: false
     - name: ReadWriteMany - Wait for step2
       become: true
-      command: kubectl get pod test-longhorn-rwx-step2 -o jsonpath='{.status.phase}'
+      ansible.builtin.command: kubectl get pod test-longhorn-rwx-step2 -o jsonpath='{.status.phase}'
       changed_when: false
       register: kubcetl_result
       delay: 2
@@ -98,11 +99,11 @@
       until: "'Succeeded' in kubcetl_result.stdout"
     - name: ReadWriteMany - Apply step3
       become: true
-      command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step3.yml
+      ansible.builtin.command: kubectl apply -f /tmp/resources/test-longhorn-rwx-step3.yml
       changed_when: false
     - name: ReadWriteMany - Wait for step3
       become: true
-      command: kubectl get pod test-longhorn-rwx-step3 -o jsonpath='{.status.phase}'
+      ansible.builtin.command: kubectl get pod test-longhorn-rwx-step3 -o jsonpath='{.status.phase}'
       changed_when: false
       register: kubcetl_result
       delay: 2
@@ -110,10 +111,10 @@
       until: "'Succeeded' in kubcetl_result.stdout"
     - name: ReadWriteMany - Get step3 output
       become: true
-      command: kubectl logs test-longhorn-rwx-step3
+      ansible.builtin.command: kubectl logs test-longhorn-rwx-step3
       register: step3_result
     - name: ReadWriteMany - Verify logs
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - step3_result.stdout_lines[0] | trim == 'hello from step1'

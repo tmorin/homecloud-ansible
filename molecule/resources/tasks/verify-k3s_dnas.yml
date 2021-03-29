@@ -5,7 +5,7 @@
   block:
     # MOUNT
     - name: Get DNAS mount status # noqa command-instead-of-module
-      shell: |
+      ansible.builtin.shell: |
         set -o pipefail
         mount | grep '{{ k3s_dnas_mount_what }}'>/dev/null && echo ok || echo ko
       args:
@@ -13,19 +13,19 @@
       register: dnas_mount_status
       changed_when: false
     - name: Verify DNAS mount output
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - dnas_mount_status.stdout == 'ok'
     # GUI
     - name: Get DNAS GUI status
-      shell: "curl --user dnas:dnas http://{{ homecloud_node_ip }}:8384>/dev/null && echo ok || echo ko"
+      ansible.builtin.shell: "curl --user dnas:dnas http://{{ homecloud_node_ip }}:8384>/dev/null && echo ok || echo ko"
       args:
         warn: false
       changed_when: false
       register: dnas_gui_status
     - name: Verify DNAS GUI output
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - dnas_gui_status.stdout == 'ok'

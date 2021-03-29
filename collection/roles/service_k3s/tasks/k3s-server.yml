@@ -2,12 +2,12 @@
 
 - name: Add kubectl completion
   become: true
-  shell: kubectl completion bash > /etc/bash_completion.d/kubectl
+  ansible.builtin.shell: kubectl completion bash > /etc/bash_completion.d/kubectl
   changed_when: false
 
 - name: Install helm
   become: true
-  shell: |
+  ansible.builtin.shell: |
     set -eo pipefail
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
     /usr/local/bin/helm completion bash > /etc/bash_completion.d/helm
@@ -18,7 +18,7 @@
 
 - name: Install kustomize
   become: true
-  shell: |
+  ansible.builtin.shell: |
     set -eo pipefail
     VERS=$(curl -w '%{url_effective}' -I -L -s \
       -S https://github.com/kubernetes-sigs/kustomize/releases/latest \

@@ -2,14 +2,14 @@
 
 - name: Stats /usr/sbin/iptables-legacy
   become: true
-  stat:
+  ansible.builtin.stat:
     path: /usr/sbin/iptables-legacy
   register: stat_iptables_legacy
 
 - name: Switch to iptables legacy
   when: stat_iptables_legacy.stat.exists
   become: true
-  shell: |
+  ansible.builtin.shell: |
     iptables -F
     update-alternatives --set iptables /usr/sbin/iptables-legacy
     update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
@@ -21,4 +21,4 @@
 - name: Reboot
   when: not cluster_node_skip_reboot and stat_iptables_legacy.stat.exists and switch_iptables_legacy.stdout_lines | length > 0
   become: true
-  reboot: { }
+  ansible.builtin.reboot: { }

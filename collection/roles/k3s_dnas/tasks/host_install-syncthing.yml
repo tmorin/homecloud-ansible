@@ -2,26 +2,26 @@
 
 - name: Install dependencies
   become: true
-  package:
+  ansible.builtin.package:
     name: apt-transport-https
     state: present
     force_apt_get: true
 
 - name: Import syncthing GPG key to apt
   become: true
-  apt_key:
+  ansible.builtin.apt_key:
     url: 'https://syncthing.net/release-key.txt'
     state: present
 
 - name: Add syncthing repository
   become: true
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: 'deb https://apt.syncthing.net/ syncthing stable'
     state: present
 
 - name: Install syncthing
   become: true
-  package:
+  ansible.builtin.package:
     name: syncthing
     state: present
     force_apt_get: true

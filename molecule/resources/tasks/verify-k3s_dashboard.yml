@@ -3,10 +3,11 @@
 - name: Verify Kubernetes dashboard
   block:
     - name: Configure endpoint verifier
-      set_fact:
+      ansible.builtin.set_fact:
         k8s_namespace: kubernetes-dashboard
         k8s_deploy_name: kubernetes-dashboard
         k8s_service_name: kubernetes-dashboard-external
         k8s_url_protocol: https
         k8s_expected_status: HTTP/2 200
-    - include_tasks: verify-k8s-http-endpoint.yml
+    - name: Include task
+      ansible.builtin.include_tasks: verify-k8s-http-endpoint.yml

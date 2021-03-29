@@ -4,12 +4,12 @@
   block:
     - name: Create the service
       become: true
-      command: kubectl -n {{ k8s_namespace }} expose deploy {{ k8s_deploy_name }} --name {{ k8s_service_name }} --type LoadBalancer
+      ansible.builtin.command: kubectl -n {{ k8s_namespace }} expose deploy {{ k8s_deploy_name }} --name {{ k8s_service_name }} --type LoadBalancer
       changed_when: false
       ignore_errors: true
     - name: Wait for the service {{ k8s_service_name }}
       become: true
-      command: kubectl -n {{ k8s_namespace }} get service {{ k8s_service_name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+      ansible.builtin.command: kubectl -n {{ k8s_namespace }} get service {{ k8s_service_name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
       changed_when: false
       register: kubcetl_result
       delay: 5
@@ -17,22 +17,22 @@
       until: kubcetl_result.stdout | length > 0
     - name: Get the load balancer ip
       become: true
-      command: kubectl -n {{ k8s_namespace }} get service {{ k8s_service_name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+      ansible.builtin.command: kubectl -n {{ k8s_namespace }} get service {{ k8s_service_name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
       changed_when: false
       register: load_balancer_ip
     - name: Get the load balancer port
       become: true
-      command: kubectl -n {{ k8s_namespace }} get service {{ k8s_service_name }} -o jsonpath='{.spec.ports[0].nodePort}'
+      ansible.builtin.command: kubectl -n {{ k8s_namespace }} get service {{ k8s_service_name }} -o jsonpath='{.spec.ports[0].nodePort}'
       changed_when: false
       register: load_balancer_port
     - name: Fetch the landing page
-      command: curl -Ik {{ k8s_url_protocol }}://{{ load_balancer_ip.stdout }}:{{ load_balancer_port.stdout }}
+      ansible.builtin.command: curl -Ik {{ k8s_url_protocol }}://{{ load_balancer_ip.stdout }}:{{ load_balancer_port.stdout }}
       changed_when: false
       register: curl_dashboard
       args:
         warn: false
     - name: Verify the landing page
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - not curl_dashboard.failed
@@ -40,6 +40,6 @@
   always:
     - name: Delete the service
       become: true
-      command: kubectl -n {{ k8s_namespace }} delete service {{ k8s_service_name }}
+      ansible.builtin.command: kubectl -n {{ k8s_namespace }} delete service {{ k8s_service_name }}
       changed_when: false
       ignore_errors: true

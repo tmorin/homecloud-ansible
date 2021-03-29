@@ -3,16 +3,16 @@
 - hosts: all
   pre_tasks:
     - name: prepare
-      include_role:
+      ansible.builtin.include_role:
         name: resources_prepare
   tasks:
     - name: Apply k3s deployments
-      include_role:
+      ansible.builtin.include_role:
         name: "{{ k3s_deployment }}"
       loop: "{{ k3s_deployments | default([]) }}"
       loop_control:
         loop_var: "k3s_deployment"
   post_tasks:
     - name: clean
-      include_role:
+      ansible.builtin.include_role:
         name: resources_clean

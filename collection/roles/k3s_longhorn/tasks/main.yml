@@ -2,7 +2,7 @@
 
 - name: Install dependencies from apt
   become: true
-  package:
+  ansible.builtin.package:
     name: open-iscsi,nfs-common,cifs-utils
     state: present
     force_apt_get: true
@@ -30,7 +30,7 @@
   block:
     - name: Add node label for Create Default Disk
       become: true
-      command: kubectl label node --overwrite {{ item.ansible_hostname }} \
+      ansible.builtin.command: kubectl label node --overwrite {{ item.ansible_hostname }} \
         node.longhorn.io/create-default-disk=true
       loop: "{{ (groups.k3s | default([])) | map('extract', hostvars) | list | selectattr('k3s_longhorn_disk_device', 'defined') }}"
       loop_control:
@@ -42,7 +42,7 @@
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
     - name: Resolve latest longhorn version
-      shell: curl -w '%{url_effective}' -I -L -s \
+      ansible.builtin.shell: curl -w '%{url_effective}' -I -L -s \
         -S https://github.com/longhorn/longhorn/releases/{{ k3s_longhorn_release }} \
         -o /dev/null | sed -e 's|.*/||'
       register: resolve_latest_longhorn_version
@@ -50,32 +50,32 @@
       args:
         warn: false
     - name: Fetch deployment latest manifest
-      get_url:
+      ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/longhorn/longhorn/{{ resolve_latest_longhorn_version.stdout }}/deploy/longhorn.yaml
         dest: /tmp/resources/longhorn.yaml
         force: true
       changed_when: false
     - name: Apply custom settings
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /tmp/resources/longhorn.yaml
         regexp: '    {{ item[0] }}:'
         line: '    {{ item[0] }}: {{ item[1] }}'
       changed_when: false
       loop: "{{ (k3s_longhorn_settings | default({})).items() }}"
     - name: Enable Create Default Disk on Labeled Nodes
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /tmp/resources/longhorn.yaml
         regexp: 'create-default-disk-labeled-nodes:'
         line: '    create-default-disk-labeled-nodes: true'
       changed_when: false
     - name: Deploy Longhorn
       become: true
-      command: mv -f /tmp/resources/longhorn.yaml /var/lib/rancher/k3s/server/manifests/homecloud-longhorn.yaml
+      ansible.builtin.command: mv -f /tmp/resources/longhorn.yaml /var/lib/rancher/k3s/server/manifests/homecloud-longhorn.yaml
       register: deploy_longhorn
       changed_when: false
     - name: Wait for Longhorn
       become: true
-      command: kubectl -n longhorn-system get deploy longhorn-driver-deployer \
+      ansible.builtin.command: kubectl -n longhorn-system get deploy longhorn-driver-deployer \
         -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
       changed_when: false
       register: kubcetl_get_longhorn

@@ -2,7 +2,7 @@
 
 - name: Transfer the mount configuration
   become: true
-  template:
+  ansible.builtin.template:
     src: mnt-dnas.mount.jinja2
     dest: /etc/systemd/system/{{ k3s_dnas_mount_name }}.mount
     owner: root
@@ -11,7 +11,7 @@
 
 - name: Enable and start the mount configuration
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: "{{ k3s_dnas_mount_name }}.mount"
     enabled: true

@@ -2,14 +2,14 @@
 
 - name: Install dependencies from apt
   become: true
-  package:
+  ansible.builtin.package:
     name: python3-lxml,python3-bcrypt,python3-passlib
     state: present
     force_apt_get: true
 
 - name: Enable and start syncthing.service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: "syncthing@{{ k3s_dnas_username }}.service"
     enabled: true
@@ -17,12 +17,12 @@
   changed_when: false
 
 - name: Wait for Synchting initialization
-  wait_for:
+  ansible.builtin.wait_for:
     timeout: 2
 
 - name: Stop syncthing.service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: "syncthing@{{ k3s_dnas_username }}.service"
     state: stopped
   changed_when: false
@@ -36,7 +36,7 @@
 
 - name: Remove the Sync folder from file system
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ k3s_dnas_mount_where }}/Sync"
     state: absent
 
@@ -63,7 +63,7 @@
 
 - name: Restart syncthing service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: "syncthing@{{ k3s_dnas_username }}.service"
     state: restarted
   changed_when: false

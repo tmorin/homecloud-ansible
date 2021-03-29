@@ -4,7 +4,7 @@
   delegate_to: localhost
   become: true
   when: image_armbian_clean_working_directory
-  script: "files/mounter.sh -c -hd {{ image_armbian_host_directory }}"
+  ansible.builtin.script: "files/mounter.sh -c -hd {{ image_armbian_host_directory }}"
   args:
     executable: /bin/bash
   changed_when: false
@@ -13,7 +13,7 @@
   delegate_to: localhost
   become: true
   when: image_armbian_clean_working_directory
-  script: "files/mounter.sh -p -hd {{ image_armbian_host_directory }} -bi {{ image_armbian_base_image_path }}"
+  ansible.builtin.script: "files/mounter.sh -p -hd {{ image_armbian_host_directory }} -bi {{ image_armbian_base_image_path }}"
   args:
     executable: /bin/bash
   changed_when: false
@@ -23,41 +23,41 @@
     - name: Mount host image
       delegate_to: localhost
       become: true
-      script: "files/mounter.sh -m -hd {{ image_armbian_host_directory }}"
+      ansible.builtin.script: "files/mounter.sh -m -hd {{ image_armbian_host_directory }}"
       args:
         executable: /bin/bash
       changed_when: false
       register: mount_image
     - name: debug mount_image
-      debug:
+      ansible.builtin.debug:
         var: mount_image
     - name: Set armbian_first_run.txt
       delegate_to: localhost
       become: true
-      template:
+      ansible.builtin.template:
         src: armbian_first_run.txt
         dest: "{{ image_armbian_host_directory }}/rootfs/boot/armbian_first_run.txt"
         mode: 0644
       changed_when: false
       register: armbian_first_run
     - name: debug armbian_first_run
-      debug:
+      ansible.builtin.debug:
         var: armbian_first_run
     - name: Customize the host image
       delegate_to: localhost
       become: true
-      script: "files/customizer.sh -rf {{ image_armbian_host_directory }}/rootfs -cu {{ image_armbian_username }}"
+      ansible.builtin.script: "files/customizer.sh -rf {{ image_armbian_host_directory }}/rootfs -cu {{ image_armbian_username }}"
       args:
         executable: /bin/bash
       changed_when: false
       register: customize_image
     - name: debug customize_image
-      debug:
+      ansible.builtin.debug:
         var: customize_image
     - name: Copy ssh public key
       delegate_to: localhost
       become: true
-      template:
+      ansible.builtin.template:
         src: "{{ image_armbian_ssh_pub_key_path }}"
         dest: "{{ image_armbian_host_directory }}/rootfs/home/{{ image_armbian_username }}/.ssh/authorized_keys"
         force: true
@@ -67,41 +67,41 @@
       changed_when: false
       register: copy_ssh_pub_key
     - name: debug copy_ssh_pub_key
-      debug:
+      ansible.builtin.debug:
         var: copy_ssh_pub_key
     - name: Fix /etc/hostname
       delegate_to: localhost
       become: true
-      copy:
+      ansible.builtin.copy:
         content: "{{ inventory_hostname }}"
         dest: "{{ image_armbian_host_directory }}/rootfs/etc/hostname"
         mode: 0644
       changed_when: false
       register: fix_hostname
     - name: debug fix_hostname
-      debug:
+      ansible.builtin.debug:
         var: fix_hostname
     - name: Fix /etc/hosts
       delegate_to: localhost
       become: true
-      replace:
+      ansible.builtin.replace:
         path: "{{ image_armbian_host_directory }}/rootfs/etc/hosts"
         regexp: rock64
         replace: "{{ inventory_hostname }}"
       changed_when: false
       register: fix_hosts
     - name: debug fix_hosts
-      debug:
+      ansible.builtin.debug:
         var: fix_hosts
   always:
     - name: Unmount host image
       delegate_to: localhost
       become: true
-      script: "files/mounter.sh -u -hd {{ image_armbian_host_directory }}"
+      ansible.builtin.script: "files/mounter.sh -u -hd {{ image_armbian_host_directory }}"
       args:
         executable: /bin/bash
       changed_when: false
       register: umount_image
     - name: debug umount_image
-      debug:
+      ansible.builtin.debug:
         var: umount_image

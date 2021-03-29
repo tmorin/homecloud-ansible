@@ -2,12 +2,12 @@
 
 - name: Set hostname
   become: true
-  hostname:
+  ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
 
 - name: Build hosts file
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/hosts
     regexp: '.*{{ item }}$'
     line: "{{ hostvars[item].homecloud_node_ip }} {{ item }}"

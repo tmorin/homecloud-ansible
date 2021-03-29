@@ -2,7 +2,7 @@
 
 - name: Install secondary server
   become: true
-  shell: |
+  ansible.builtin.shell: |
     set -o pipefail
     curl -sfL https://get.k3s.io | \
     K3S_TOKEN="{{ lookup('file', homecloud_vault_path~'/k3s-sever-token.txt') }}" \

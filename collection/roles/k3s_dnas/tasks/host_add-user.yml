@@ -2,14 +2,14 @@
 
 - name: Add the group
   become: true
-  group:
+  ansible.builtin.group:
     name: "{{ k3s_dnas_username }}"
     gid: "{{ k3s_dnas_gid }}"
     state: present
 
 - name: Add the user
   become: true
-  user:
+  ansible.builtin.user:
     name: "{{ k3s_dnas_username }}"
     group: "{{ k3s_dnas_username }}"
     uid: "{{ k3s_dnas_uid }}"
@@ -20,7 +20,7 @@
 
 - name: Chown the home directory
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ k3s_dnas_mount_where }}"
     state: directory
     recurse: true

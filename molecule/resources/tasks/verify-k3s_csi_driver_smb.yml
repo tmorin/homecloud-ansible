@@ -3,24 +3,24 @@
 - name: Prepare testing environment
   block:
     - name: Create working directory
-      file:
+      ansible.builtin.file:
         dest: /tmp/resources/deployments
         state: directory
         mode: '755'
     - name: Clean resources
       become: true
-      command: kubectl delete \
+      ansible.builtin.command: kubectl delete \
         -f /tmp/resources/test-csi-smb-dnas-step2.yml \
         -f /tmp/resources/test-csi-smb-dnas-step1.yml
       changed_when: false
       ignore_errors: true
     - name: Copy test-csi-smb-dnas-step1.yml
-      template:
+      ansible.builtin.template:
         src: ../deployments/test-csi-smb-dnas-step1.yml
         dest: /tmp/resources/test-csi-smb-dnas-step1.yml
         mode: '644'
     - name: Copy test-csi-smb-dnas-step2.yml
-      template:
+      ansible.builtin.template:
         src: ../deployments/test-csi-smb-dnas-step2.yml
         dest: /tmp/resources/test-csi-smb-dnas-step2.yml
         mode: '644'
@@ -29,11 +29,11 @@
   block:
     - name: Apply step1
       become: true
-      command: kubectl apply -f /tmp/resources/test-csi-smb-dnas-step1.yml
+      ansible.builtin.command: kubectl apply -f /tmp/resources/test-csi-smb-dnas-step1.yml
       changed_when: false
     - name: Wait for step1
       become: true
-      command: kubectl get pod test-csi-smb-dnas-step1 -o jsonpath='{.status.phase}'
+      ansible.builtin.command: kubectl get pod test-csi-smb-dnas-step1 -o jsonpath='{.status.phase}'
       changed_when: false
       register: kubcetl_result
       delay: 2
@@ -41,11 +41,11 @@
       until: "'Succeeded' in kubcetl_result.stdout"
     - name: Apply step2
       become: true
-      command: kubectl apply -f /tmp/resources/test-csi-smb-dnas-step2.yml
+      ansible.builtin.command: kubectl apply -f /tmp/resources/test-csi-smb-dnas-step2.yml
       changed_when: false
     - name: Wait for step2
       become: true
-      command: kubectl get pod test-csi-smb-dnas-step2 -o jsonpath='{.status.phase}'
+      ansible.builtin.command: kubectl get pod test-csi-smb-dnas-step2 -o jsonpath='{.status.phase}'
       changed_when: false
       register: kubcetl_result
       delay: 2
@@ -53,10 +53,10 @@
       until: "'Succeeded' in kubcetl_result.stdout"
     - name: Get step2 output
       become: true
-      command: kubectl logs test-csi-smb-dnas-step2
+      ansible.builtin.command: kubectl logs test-csi-smb-dnas-step2
       register: step2_result
     - name: Verify logs
-      assert:
+      ansible.builtin.assert:
         quiet: true
         that:
           - step2_result.stdout_lines[0] | trim == 'test-csi-smb-dnas-step1'

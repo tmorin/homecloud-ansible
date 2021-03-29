@@ -2,14 +2,14 @@
 
 - name: Create the vault directory
   delegate_to: localhost
-  file:
+  ansible.builtin.file:
     path: "{{ homecloud_vault_path }}"
     state: directory
     mode: 0755
 
 - name: Install dependencies from pip
   become: true
-  pip:
+  ansible.builtin.pip:
     name:
       - openshift
       - pyaml
@@ -18,27 +18,35 @@
 - name: Install the primary k3s server
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
-    - import_tasks: k3s-server-primary.yml
-    - import_tasks: get-server-token.yml
-    - import_tasks: configure-local-kubectl.yml
+    - name: Include task
+      ansible.builtin.import_tasks: k3s-server-primary.yml
+    - name: Include task
+      ansible.builtin.import_tasks: get-server-token.yml
+    - name: Include task
+      ansible.builtin.import_tasks: configure-local-kubectl.yml
 
 - name: Install the secondaries k3s servers
   when: inventory_hostname in groups.k3s_srv[1:] | default([])
   block:
-    - import_tasks: k3s-server-secondary.yml
+    - name: Include task
+      ansible.builtin.import_tasks: k3s-server-secondary.yml
 
 - name: Configure k3s servers
   when: inventory_hostname in groups.k3s_srv | default([])
   block:
-    - import_tasks: k3s-server.yml
+    - name: Include task
+      ansible.builtin.import_tasks: k3s-server.yml
 
 - name: Install the k3s agents
   when: inventory_hostname in groups.k3s_agt | default([])
   block:
-    - import_tasks: k3s-agent.yml
+    - name: Include task
+      ansible.builtin.import_tasks: k3s-agent.yml
 
 - name: Configure cluster nodes
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
-    - import_tasks: wait-for-nodes.yml
-    - import_tasks: configure_nodes.yml
+    - name: Include task
+      ansible.builtin.import_tasks: wait-for-nodes.yml
+    - name: Include task
+      ansible.builtin.import_tasks: configure_nodes.yml
