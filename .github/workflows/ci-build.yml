@@ -26,6 +26,9 @@ jobs:
         with:
           name: paper-website
           path: dist/paper
+      - name: Copy paper-pdf to website
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        run: copy dist/homecloud-paper.pdf dist/paper/homecloud-paper.pdf
       - name: Publish documentation
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: peaceiris/actions-gh-pages@v3

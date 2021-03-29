@@ -2,6 +2,8 @@
 
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/tmorin/homecloud-ansible/Continous%20Integration/master?label=GitHub%20Actions&logo=github+actions&logoColor=black)](https://github.com/tmorin/homecloud-ansible/actions?query=workflow%3A%22Continous+Integration%22+branch%3Amaster)
 [![Travis (.org) branch](https://img.shields.io/travis/tmorin/homecloud-ansible/master?label=Travis%20CI&logo=travis+CI&logoColor=black)](https://travis-ci.org/github/tmorin/homecloud-ansible)
+[![badge for HTML paper](https://img.shields.io/badge/paper-HTML-blue)](https://tmorin.github.io/homecloud-ansible)
+[![badge for PDF paper](https://img.shields.io/badge/paper-PDF-blue)](https://tmorin.github.io/homecloud-ansible/homecloud-paper.pdf)
 
 > `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home mainly based on Kubernetes and Syncthing.
 
@@ -20,19 +22,14 @@ An in-depth explanation is available in the [paper](./paper/README.adoc).
 
 ## Overview
 
-The Ansible collection provides the following building blocks:
+The Ansible collection provides the following features:
 
 - a `Kubernetes` cluster
-- a support of high availability handled by `Keepalived`
 - a modern reverse proxy for UDP, TCP and HTTP handled by `Traefik`
 - a distributed block storage system handled by `Longhorn`
+- the native Kubernetes dashboard
+- a support of high availability handled by `Keepalived`
 - a decentralized solution to synchronize files between local/remote nodes, `dnas`, powered with `Syncthing`, `NFS` and `Samba`
-
-The collection provides also ready-to-use services:
-
-- `Kubernetes Dashboard` : the built-in Kubernetes Dashboard.
-- `Nextcloud` : a platform providing the benefits of online collaboration without the compliance and security risks.
-- `Calibreweb` :  a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database.
 
 Additionally, Armbian images can be created for each host of the inventory.
 
@@ -48,6 +45,13 @@ If `longhorn` is enabled: 1 available storage block device (i.e. an sd-card, an 
 
 If `dnas` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk ...) for each node storing data
 
+## Dependencies
+
+In order to build the custom Armbian images, additional dependencies are required:
+```shell script
+apt-get install jq qemu-system-arm qemu-user-static
+```
+
 ## Local environment setup
 
 Create the Python virtual environment
@@ -61,27 +65,14 @@ Install the dependencies
 pip install -r requirements.txt
 ```
 
-Lint the Ansible collection
-```shell
-./lint
-```
-
-Configure local (Ansible agent) kubectl
-```shell
-export KUBECONFIG=$HOME/.kube/homecloud
-kubectl get all --all-namespaces
-```
-
-## Dependencies
-
-In order to build the custom Armbian images, additional dependencies are required:
-```shell script
-apt-get install jq qemu-system-arm qemu-user-static
-```
-
 The collection dependencies are bundled in [./molecule/resources/collections.yml](molecule/resources/collections.yml).
 ```shell
 ansible-galaxy collection install -r molecule/resources/collections.yml
+```
+
+Lint the Ansible collection
+```shell
+./lint
 ```
 
 ## Testing
