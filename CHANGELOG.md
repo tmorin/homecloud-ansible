@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/tmorin/homecloud-ansible/compare/v2.0.0...v2.1.0) (2021-03-29)
+
+
+### Features
+
+* **dnas:** refactor dnas service ([f72e60f](https://github.com/tmorin/homecloud-ansible/commit/f72e60fa90c12baa51afa9d6faad93018cab8934))
+* **paper:** introduce the container engine and orchestrator technologies ([57276e3](https://github.com/tmorin/homecloud-ansible/commit/57276e31cb5fb6d903d2a0b984c45cc6005a8197))
+
 ## [2.0.0](https://github.com/tmorin/homecloud-ansible/compare/v1.6.0...v2.0.0) (2021-03-17)
 
 
