@@ -1,6 +1,0 @@
----
-
-# https://www.armbian.com/rock64
-image_armbian_image_name: "armbian_rock64_buster_current.img"
-image_armbian_archive_name: "{{ image_armbian_image_name }}.xz"
-image_armbian_image_url: "https://redirect.armbian.com/rock64/Buster_current"

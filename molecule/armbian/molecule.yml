@@ -1,19 +1,17 @@
 ---
 
-dependency:
-  name: galaxy
-  options:
-    requirements-file: molecule/resources/collections.yml
-
 driver:
   name: delegated
   options:
-    managed: False
+    managed: false
     ansible_connection_options:
       ansible_connection: local
 
 platforms:
   - name: armbian-n1
+  - name: armbian-n2
+  - name: armbian-n3
+  - name: armbian-n4
 
 provisioner:
   name: ansible

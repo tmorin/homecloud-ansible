@@ -11,3 +11,5 @@ homecloud_network_nameservers: [ '1.1.1.1', '1.0.0.1' ]
 homecloud_is_https: false
 
 image_armbian_ssh_pub_key_path: "/tmp/dummy_pub_rsa"
+
+image_armbian_archive_name: "{{ image_armbian_image_name }}.xz"

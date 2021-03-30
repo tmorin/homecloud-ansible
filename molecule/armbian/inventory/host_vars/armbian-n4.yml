@@ -1,0 +1,8 @@
+---
+
+ansible_host: 192.168.100.14
+homecloud_node_ip: "{{ ansible_host }}"
+
+# https://www.armbian.com/rock64
+image_armbian_image_name: "armbian_rock64_focal_current.img"
+image_armbian_image_url: "https://redirect.armbian.com/region/EU/rock64/Focal_current"

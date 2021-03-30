@@ -1,12 +1,12 @@
 ---
 
-- name: "Get {{ image_armbian_base_archive_path }} stat"
+- name: "Stats {{ image_armbian_base_archive_path }}"
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_armbian_base_archive_path }}"
   register: downloaded_armbian_archive_file
 
-- name: "Get {{ image_armbian_base_image_path }} stat"
+- name: "Stats {{ image_armbian_base_image_path }}"
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_armbian_base_image_path }}"

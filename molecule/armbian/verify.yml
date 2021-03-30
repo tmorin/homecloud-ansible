@@ -1,10 +1,8 @@
 ---
-# This is an example playbook to execute Ansible tests.
 
-- name: Verify
-  hosts: localhost
-  gather_facts: false
+- hosts: localhost
   tasks:
+
     - name: Stat armbian-n1
       ansible.builtin.stat:
         path: "{{ image_armbian_release_directory }}/armbian-n1.img"
@@ -12,6 +10,7 @@
     - name: Check armbian-n1
       ansible.builtin.assert:
         that: stat_armbian_n1_img is success
+
     - name: Stat armbian-n2
       ansible.builtin.stat:
         path: "{{ image_armbian_release_directory }}/armbian-n2.img"
@@ -19,3 +18,19 @@
     - name: Check armbian-n2
       ansible.builtin.assert:
         that: stat_armbian_n2_img is success
+
+    - name: Stat armbian-n3
+      ansible.builtin.stat:
+        path: "{{ image_armbian_release_directory }}/armbian-n3.img"
+      register: stat_armbian_n3_img
+    - name: Check armbian-n3
+      ansible.builtin.assert:
+        that: stat_armbian_n3_img is success
+
+    - name: Stat armbian-n4
+      ansible.builtin.stat:
+        path: "{{ image_armbian_release_directory }}/armbian-n4.img"
+      register: stat_armbian_n4_img
+    - name: Check armbian-n4
+      ansible.builtin.assert:
+        that: stat_armbian_n4_img is success

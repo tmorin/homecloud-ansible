@@ -1,0 +1,9 @@
+---
+
+ansible_host: 192.168.100.13
+homecloud_node_ip: "{{ ansible_host }}"
+
+# https://www.armbian.com/rock64
+# https://redirect.armbian.com/region/EU/rock64/Buster_current
+image_armbian_image_name: "armbian_rock64_buster_current.img"
+image_armbian_image_url: "https://redirect.armbian.com/region/EU/rock64/Buster_current"

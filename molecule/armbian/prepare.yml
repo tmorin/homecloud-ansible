@@ -1,8 +1,6 @@
 ---
 
 - hosts: localhost
-  gather_facts: false
-  become: false
   tasks:
     - name: Install dependencies
       become: true
@@ -11,6 +9,9 @@
           - jq
           - qemu-system-arm
           - qemu-user-static
+        state: present
+        force_apt_get: true
+      ignore_errors: true
     - name: "delete {{ image_armbian_working_directory }}"
       become: true
       ansible.builtin.file:
