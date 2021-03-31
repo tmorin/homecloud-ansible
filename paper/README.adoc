@@ -310,7 +310,7 @@ Each role provides the definition of the manifest as well as its deployment proc
 
 * `k3s_csi_driver_smb` a CSI plugin to mount Samba shares.
 * `k3s_dashboard` deploys the Kubernetes Dashboard.
-* `k3s_dnas` deploys the ingress controller: Traefik.
+* `k3s_dnas` a decentralized NAS based in Synchting and Samba.
 * `k3s_longhorn` deploys the distributed block storage system: Longhorn.
 * `k3s_traefik` deploys the ingress controller: Traefik.
 
