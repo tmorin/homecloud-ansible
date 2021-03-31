@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/tmorin/homecloud-ansible/compare/v2.1.0...v2.2.0) (2021-03-31)
+
+
+### Features
+
+* upgrade to Ansible 3.1 ([e250f7e](https://github.com/tmorin/homecloud-ansible/commit/e250f7ea1fe7577a1afd1d4c7e1da9a5d9729263))
+
+
+### Bug Fixes
+
+* **k3s_dnas:** improve `dnas-share` Deployment with `requiredDuringSchedulingIgnoredDuringExecution` ([78cfe18](https://github.com/tmorin/homecloud-ansible/commit/78cfe1847e5dff459ac89e582bef05ea47f60ed9))
+* **paper:** add descrption of k3s_dnas ([4082d7d](https://github.com/tmorin/homecloud-ansible/commit/4082d7d991009de997c88793d96f10fdee2f1f3d))
+* **service_k3s:** configuration of the ansible agent was badly done ([e581234](https://github.com/tmorin/homecloud-ansible/commit/e58123490e92669c8fdc763a01e80a306145309a))
+* **service_k3s:** workers were badly annotated ([04051fe](https://github.com/tmorin/homecloud-ansible/commit/04051fe3b1d8194d96d54f1313c5e9d2b05b5255))
+
 ## [2.1.0](https://github.com/tmorin/homecloud-ansible/compare/v2.0.0...v2.1.0) (2021-03-29)
 
 
