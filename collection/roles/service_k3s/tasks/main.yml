@@ -7,14 +7,6 @@
     state: directory
     mode: 0755
 
-- name: Install dependencies from pip
-  become: true
-  ansible.builtin.pip:
-    name:
-      - openshift
-      - pyaml
-    extra_args: --user
-
 - name: Install the primary k3s server
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
