@@ -15,7 +15,7 @@ jobs:
           asciidoctor paper/README.adoc -D dist/paper -a toc=left -o index.html
           cp paper/*.png dist/paper
       - name: Build paper-pdf
-        run: asciidoctor-pdf paper/README.adoc -D dist -o homecloud-paper.pdf -a pdf-theme=paper/pdf-style/basic-theme.yml
+        run: asciidoctor-pdf paper/README.adoc -D dist -o homecloud-paper.pdf
       - name: Upload paper-pdf
         uses: actions/upload-artifact@v2
         with:
@@ -28,7 +28,7 @@ jobs:
           path: dist/paper
       - name: Copy paper-pdf to website
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        run: copy dist/homecloud-paper.pdf dist/paper/homecloud-paper.pdf
+        run: cp dist/homecloud-paper.pdf dist/paper/homecloud-paper.pdf
       - name: Publish documentation
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: peaceiris/actions-gh-pages@v3
