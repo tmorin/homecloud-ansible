@@ -2,7 +2,7 @@
 
 - name: Set role for agents
   become: true
-  ansible.builtin.command: kubectl label node --overwrite {{ node_name }} node-role.kubernetes.io/role=worker
+  ansible.builtin.command: kubectl label node --overwrite {{ node_name }} node-role.kubernetes.io/worker=true
   loop: "{{ groups.k3s_agt | default([]) }}"
   loop_control:
     loop_var: node_name

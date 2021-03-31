@@ -10,3 +10,5 @@ service_k3s_server_primary_ip: "{{ hostvars[groups['k3s_srv'][0]].homecloud_node
 service_k3s_node_labels: { }
 
 service_k3s_local_kubectl_config_file: "~/.kube/homecloud"
+
+service_k3s_kustomize_release: v4.0.5

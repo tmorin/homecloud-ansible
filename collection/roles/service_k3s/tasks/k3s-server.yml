@@ -20,9 +20,6 @@
   become: true
   ansible.builtin.shell: |
     set -eo pipefail
-    VERS=$(curl -w '%{url_effective}' -I -L -s \
-      -S https://github.com/kubernetes-sigs/kustomize/releases/latest \
-      -o /dev/null | sed -e 's|.*/||')
     ARCH=$(uname -m)
     case $ARCH in
       amd64)
@@ -40,7 +37,7 @@
       *)
       fatal "Unsupported architecture $ARCH"
     esac
-    curl -sfL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${VERS}/kustomize_${VERS}_linux_${ARCH}.tar.gz | \
+    curl -sfL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F{{ service_k3s_kustomize_release }}/kustomize_{{ service_k3s_kustomize_release }}_linux_${ARCH}.tar.gz | \
       tar xz -C /usr/local/bin/
     /usr/local/bin/kustomize completion bash > /etc/bash_completion.d/kustomize
   args:
