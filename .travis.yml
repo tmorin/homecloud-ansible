@@ -43,8 +43,8 @@ cache:
   pip: false
   apt: false
   directories:
-    - /home/travis/.ansible/collections
-    - /home/travis/.ansible/roles
+    #- /home/travis/.ansible/collections
+    #- /home/travis/.ansible/roles
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian9
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian10
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu1804
