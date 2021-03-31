@@ -37,10 +37,10 @@ env:
     - TEST_NAME=k1ha MOLECULE_N1_BOX=generic/debian10
     - TEST_NAME=k1ha MOLECULE_N1_BOX=generic/ubuntu1804
     - TEST_NAME=k1ha MOLECULE_N1_BOX=generic/ubuntu2004
-    - TEST_NAME=k2 MOLECULE_N1_BOX=generic/debian10 MOLECULE_N1_BOX=generic/debian9
-    - TEST_NAME=k2ha MOLECULE_N1_BOX=generic/ubuntu2004 MOLECULE_N1_BOX=generic/ubuntu1804
+    - TEST_NAME=k2 MOLECULE_N1_BOX=generic/debian10 MOLECULE_N1_BOX=generic/ubuntu1804
+    - TEST_NAME=k2ha MOLECULE_N1_BOX=generic/ubuntu2004 MOLECULE_N1_BOX=generic/debian9
 cache:
-#  pip: true
+  pip: true
   apt: true
   directories:
     - /home/travis/.ansible/collections
@@ -49,6 +49,11 @@ cache:
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian10
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu1804
     - /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu2004
+before_cache:
+  - rm -f /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian9/3.2.12/libvirt/box_update_check
+  - rm -f /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-debian10/3.2.12/libvirt/box_update_check
+  - rm -f /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu1804/3.2.12/libvirt/box_update_check
+  - rm -f /home/travis/.vagrant.d/boxes/generic-VAGRANTSLASH-ubuntu2004/3.2.12/libvirt/box_update_check
 install:
   # configure python
   - pip install --upgrade setuptools
@@ -63,4 +68,4 @@ install:
   - vagrant box add generic/ubuntu1804 --provider=libvirt --box-version $BOX_VERSION || true
   - vagrant box add generic/ubuntu2004 --provider=libvirt --box-version $BOX_VERSION || true
 script:
-  - molecule test -s $TEST_NAME
+  - echo molecule test -s $TEST_NAME
