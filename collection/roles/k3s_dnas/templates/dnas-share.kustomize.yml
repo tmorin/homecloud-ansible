@@ -80,6 +80,17 @@ spec:
                     values:
                       - "{{ item.ansible_hostname }}"
               weight: 1
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: "dnas.morin.io/node"
+                    operator: In
+                    values:
+                      - "true"
+                  - key: "dnas.morin.io/hostname"
+                    operator: In
+                    values:
+                      - "{{ item.ansible_hostname }}"
       containers:
         - image: klutchell/nfs-server
           name: nfs

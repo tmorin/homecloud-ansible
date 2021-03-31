@@ -40,8 +40,8 @@ env:
     - TEST_NAME=k2 MOLECULE_N1_BOX=generic/debian10 MOLECULE_N1_BOX=generic/ubuntu1804
     - TEST_NAME=k2ha MOLECULE_N1_BOX=generic/ubuntu2004 MOLECULE_N1_BOX=generic/debian9
 cache:
-  pip: true
-  apt: true
+  pip: false
+  apt: false
   directories:
     - /home/travis/.ansible/collections
     - /home/travis/.ansible/roles
@@ -68,4 +68,4 @@ install:
   - vagrant box add generic/ubuntu1804 --provider=libvirt --box-version $BOX_VERSION || true
   - vagrant box add generic/ubuntu2004 --provider=libvirt --box-version $BOX_VERSION || true
 script:
-  - echo molecule test -s $TEST_NAME
+    - molecule test -s $TEST_NAME
