@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/tmorin/homecloud-ansible/compare/v2.2.1...v2.3.0) (2021-04-01)
+
+
+### Features
+
+* **k3s_dnas:** the NFS share should be the root path ([fdedc84](https://github.com/tmorin/homecloud-ansible/commit/fdedc84a8ec97ca52024003b46ec7754bbc0c175))
+
+
+### Bug Fixes
+
+* **k3s_longhorn:** increase the timeout for the tasks "Wait for Longhorn" ([7e9ac01](https://github.com/tmorin/homecloud-ansible/commit/7e9ac01f9df32eda4726075b8b026a089063de0d))
+
 ### [2.2.1](https://github.com/tmorin/homecloud-ansible/compare/v2.2.0...v2.2.1) (2021-03-31)
 
 

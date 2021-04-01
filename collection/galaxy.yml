@@ -1,12 +1,13 @@
 namespace: tmorin
 name: homecloud
-version: 2.2.1
+version: 2.3.0
 readme: README.md
 authors:
   - Thibault Morin (https://tmorin.github.io)
 description: The collection provides a ready-to-use set of resources to
   bootstrap a cloud at home based on Kubernetes and Syncthing.
-license: [ MIT ]
+license:
+  - MIT
 tags:
   - syncthing
   - samba
