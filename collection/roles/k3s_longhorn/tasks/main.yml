@@ -79,6 +79,6 @@
         -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
       changed_when: false
       register: kubcetl_get_longhorn
-      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(3) }}"
-      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(40) }}"
+      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(5) }}"
+      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(80) }}"
       until: "'True' in kubcetl_get_longhorn.stdout"
