@@ -96,7 +96,7 @@ spec:
           name: nfs
           env:
             - name: NFS_EXPORT_0
-              value: "/{{ dnas_username }} *(rw,sync,no_root_squash,no_subtree_check,insecure)"
+              value: "/{{ dnas_username }} *(fsid=0,rw,sync,no_root_squash,no_subtree_check,insecure)"
           volumeMounts:
             - name: "{{ dnas_username }}"
               mountPath: "/{{ dnas_username }}"

@@ -50,7 +50,7 @@
       become: true
       ansible.posix.mount:
         path: /mnt/test_share_nfs
-        src: "{{ homecloud_node_ip }}:/mnt/dnas"
+        src: "{{ homecloud_node_ip }}:/"
         fstype: nfs
         state: present
       register: dnas_share_status
