@@ -8,7 +8,7 @@ galaxy_info:
     - name: Debian
       versions:
         - buster
-        - stretch
+        - bullseye
     - name: Ubuntu
       versions:
         - bionic

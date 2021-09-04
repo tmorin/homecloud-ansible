@@ -21,11 +21,11 @@ jobs:
     #          - scenario: c1
     #            n1_box: generic/ubuntu2004
     #          - scenario: c1-ceph
-    #            n1_box: generic/debian9
+    #            n1_box: generic/debian11
     #          - scenario: c1-ceph
     #            n1_box: generic/debian10
     #          - scenario: c2
-    #            n1_box: generic/debian9
+    #            n1_box: generic/debian11
     #            n2_box: generic/debian10
     env:
       MOLECULE_SCENARIO: ${{ matrix.scenario }}
@@ -36,8 +36,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         with:
-          key: vagrant-box-debian9
-          path: "~/.vagrant.d/boxes/generic-VAGRANTSLASH-debian9"
+          key: vagrant-box-debian11
+          path: "~/.vagrant.d/boxes/generic-VAGRANTSLASH-debian11"
       - uses: actions/cache@v2
         with:
           key: vagrant-box-debian10
