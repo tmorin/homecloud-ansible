@@ -13,8 +13,8 @@
     - name: Deploy the manifest
       become: true
       ansible.builtin.template:
-        src: csi_driver_smb.yaml
-        dest: /var/lib/rancher/k3s/server/manifests/homecloud-csi_driver_smb.yaml
+        src: csi-driver-smb.yaml
+        dest: /var/lib/rancher/k3s/server/manifests/homecloud-csi-driver-smb.yaml
         mode: '0644'
         force: true
       changed_when: false

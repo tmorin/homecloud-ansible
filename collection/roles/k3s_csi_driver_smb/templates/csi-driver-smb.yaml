@@ -7,4 +7,5 @@ metadata:
 spec:
   repo: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/charts
   chart: csi-driver-smb
+  version: {{ k3s_csi_driver_smb_release | default("latest") }}
 ---
