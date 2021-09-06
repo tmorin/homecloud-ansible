@@ -4,4 +4,4 @@ homecloud_virtual_ip: ''
 homecloud_node_ip: ''
 homecloud_node_interface: ''
 
-service_keepalived_router_id: 51
+service_keepalived_router_id: 100

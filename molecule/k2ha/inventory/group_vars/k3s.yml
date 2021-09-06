@@ -8,6 +8,8 @@ k3s_deployments:
   - k3s_longhorn
   - k3s_traefik
 
+service_keepalived_router_id: 122
+
 k3s_longhorn_settings:
   default-replica-count: 1
 
