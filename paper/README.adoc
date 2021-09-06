@@ -23,11 +23,11 @@ The intentions which led to the `homecloud` creation match ones related to the F
 Therefore, the original use case is:
 
 * be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, private projects, ...
-* ba able to manage a human size of users, basically a family.
+* be able to manage a human size of users, basically a family.
 
 Because big names of cloud computing are de facto discarded, the most affordable solution is to host all those services in a <<g_cluster, cluster>> of low cost ARM boards, especially at home.
 
-Nevertheless, many other use cases could match the need of a self-hosted cluster, of low cost ARM boards, which provides the principal characteristics of cloud computing.
+Nevertheless, many other use cases could match the need of a self-hosted cluster of low cost ARM boards, which provides the principal characteristics of cloud computing.
 
 == The original cluster layout
 
