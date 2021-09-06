@@ -1,0 +1,7 @@
+---
+
+# the path of the ubuntu archive
+image_ubuntu_raspi_base_archive_path: "{{ image_ubuntu_raspi_working_directory }}/{{ image_ubuntu_raspi_archive_name }}"
+
+# the path of the ubuntu image
+image_ubuntu_raspi_base_image_path: "{{ image_ubuntu_raspi_working_directory }}/{{ image_ubuntu_raspi_image_name }}"

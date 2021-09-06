@@ -4,5 +4,15 @@
   gather_facts: false
   become: false
   serial: 1
-  roles:
-    - image_armbian
+  tasks:
+    - name: Create the dummy rsa key
+      ansible.builtin.copy:
+        dest: /tmp/dummy_pub_rsa
+        content: dummy key
+        mode: 0644
+    - when: image_armbian_image_url | default("") | length > 0
+      ansible.builtin.include_role:
+        name: image_armbian
+    - when: image_ubuntu_raspi_image_url | default("") | length > 0
+      ansible.builtin.include_role:
+        name: image_ubuntu_raspi

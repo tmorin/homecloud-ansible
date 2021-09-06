@@ -1,0 +1,23 @@
+---
+
+homecloud_node_ip: ''
+homecloud_network_netmask: ''
+homecloud_network_gateway: ''
+homecloud_network_nameserver: [ ]
+
+# the url to get the ubuntu archive (c.f. https://ubuntu.com/download/raspberry-pi)
+image_ubuntu_raspi_image_url: ""
+# the name of the ubuntu archive (for instance ubuntu-20.04.3-preinstalled-server-arm64+raspi.img.xz)
+image_ubuntu_raspi_archive_name: ""
+# the name of the ubuntu image (for instance ubuntu-20.04.3-preinstalled-server-arm64+raspi.img)
+image_ubuntu_raspi_image_name: ""
+# clean the working directory of each host
+image_ubuntu_raspi_clean_working_directory: true
+# the directory where images will be temporary mounted and patched
+image_ubuntu_raspi_working_directory: "/tmp/homecloud/ubuntu_raspi_workdir"
+# the path to the SSH public key used by ansible
+image_ubuntu_raspi_ssh_pub_key_path: "~/.ssh/id_rsa.pub"
+# the username of the user which will be used by ansible
+image_ubuntu_raspi_username: "homecloud"
+# the directory where images will be released
+image_ubuntu_raspi_release_directory: "/tmp/homecloud/ubuntu_raspi_release"

@@ -1,0 +1,116 @@
+---
+
+- name: "Clean host directory {{ image_ubuntu_raspi_host_directory }}"
+  delegate_to: localhost
+  become: true
+  when: image_ubuntu_raspi_clean_working_directory
+  ansible.builtin.script: "files/mounter.sh -c -hd {{ image_ubuntu_raspi_host_directory }}"
+  args:
+    executable: /bin/bash
+  changed_when: false
+
+- name: "Prepare host directory {{ image_ubuntu_raspi_host_directory }}"
+  delegate_to: localhost
+  become: true
+  when: image_ubuntu_raspi_clean_working_directory
+  ansible.builtin.script: "files/mounter.sh -p -hd {{ image_ubuntu_raspi_host_directory }} -bi {{ image_ubuntu_raspi_base_image_path }}"
+  args:
+    executable: /bin/bash
+  changed_when: false
+
+- name: "Customize the ubuntu image"
+  block:
+    - name: "Mount host image"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.script: "files/mounter.sh -m -hd {{ image_ubuntu_raspi_host_directory }}"
+      args:
+        executable: /bin/bash
+      changed_when: false
+      register: mount_image
+#    - name: Debug mount_image
+#      ansible.builtin.debug:
+#        var: mount_image
+    - name: "Set network-config"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.template:
+        src: network-config
+        dest: "{{ image_ubuntu_raspi_host_directory }}/bootfs/network-config"
+        mode: 0644
+      changed_when: false
+    - name: "Read cmdline.txt"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.set_fact:
+        file_cmdline_txt_content: "{{ lookup('file', image_ubuntu_raspi_host_directory~'/bootfs/cmdline.txt') }}"
+      changed_when: false
+    - name: "Write cmdline.txt"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.copy:
+        content: "cgroup_memory=1 cgroup_enable=memory {{ file_cmdline_txt_content | trim }}"
+        dest: "{{ image_ubuntu_raspi_host_directory }}/bootfs/cmdline.txt"
+      changed_when: false
+      register: write_cmdline
+    - name: "Change username"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.lineinfile:
+        path: "{{ image_ubuntu_raspi_host_directory }}/rootfs/etc/cloud/cloud.cfg"
+        regexp: "^     name: ubuntu"
+        line: "     name: {{ image_ubuntu_raspi_username }}"
+      changed_when: false
+    - name: "Change gecos"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.lineinfile:
+        path: "{{ image_ubuntu_raspi_host_directory }}/rootfs/etc/cloud/cloud.cfg"
+        regexp: "^     gecos: Ubuntu"
+        line: "     gecos: {{ image_ubuntu_raspi_username }}"
+      changed_when: false
+    - name: "Configure set-passwords"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.lineinfile:
+        path: "{{ image_ubuntu_raspi_host_directory }}/rootfs/etc/cloud/cloud.cfg"
+        insertafter: "^   - default"
+        line: |
+          # set-passwords
+          ssh_pwauth: no
+          chpasswd:
+            expire: false
+            list:
+              - {{ image_ubuntu_raspi_username }}:RANDOM
+      changed_when: false
+    - name: "Configure ssh keys"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.lineinfile:
+        path: "{{ image_ubuntu_raspi_host_directory }}/rootfs/etc/cloud/cloud.cfg"
+        insertafter: "^     lock_passwd: True"
+        line: |
+          # ssh_authorized_keys
+               ssh_authorized_keys:
+                 - {{ lookup('file', image_ubuntu_raspi_ssh_pub_key_path) | trim }}
+      changed_when: false
+    - name: "Configure hostname"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.lineinfile:
+        path: "{{ image_ubuntu_raspi_host_directory }}/rootfs/etc/cloud/cloud.cfg"
+        insertafter: "^preserve_hostname: false"
+        line: "hostname: {{ inventory_hostname }}"
+      changed_when: false
+  always:
+    - name: "Unmount host image"
+      delegate_to: localhost
+      become: true
+      ansible.builtin.script: "files/mounter.sh -u -hd {{ image_ubuntu_raspi_host_directory }}"
+      args:
+        executable: /bin/bash
+      changed_when: false
+      register: umount_image
+#    - name: Debug umount_image
+#      ansible.builtin.debug:
+#        var: umount_image

@@ -1,0 +1,33 @@
+---
+
+- name: "Stats {{ image_ubuntu_raspi_base_archive_path }}"
+  delegate_to: localhost
+  ansible.builtin.stat:
+    path: "{{ image_ubuntu_raspi_base_archive_path }}"
+  register: downloaded_ubuntu_archive_file
+
+- name: "Stats {{ image_ubuntu_raspi_base_image_path }}"
+  delegate_to: localhost
+  ansible.builtin.stat:
+    path: "{{ image_ubuntu_raspi_base_image_path }}"
+  register: unpacked_ubuntu_image_file
+
+- name: Fetch ubuntu image
+  delegate_to: localhost
+  when: not downloaded_ubuntu_archive_file.stat.exists and not unpacked_ubuntu_image_file.stat.exists
+  ansible.builtin.get_url:
+    url: "{{ image_ubuntu_raspi_image_url }}"
+    dest: "{{ image_ubuntu_raspi_base_archive_path }}"
+    force: false
+
+- name: Unpack ubuntu archive
+  delegate_to: localhost
+  when: not unpacked_ubuntu_image_file.stat.exists
+  ansible.builtin.command:
+    chdir: "{{ image_ubuntu_raspi_working_directory }}"
+    cmd: "unxz {{ image_ubuntu_raspi_base_archive_path }}"
+  register: unpack
+
+- name: debug unpack
+  ansible.builtin.debug:
+    var: unpack

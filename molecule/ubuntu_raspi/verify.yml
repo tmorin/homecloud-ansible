@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Stat ubuntu-n1
+      ansible.builtin.stat:
+        path: "{{ image_ubuntu_raspi_release_directory }}/ubuntu-n1.img"
+      register: stat_ubuntu_n1_img
+    - name: Check ubuntu-n1
+      ansible.builtin.assert:
+        that: stat_ubuntu_n1_img is success
