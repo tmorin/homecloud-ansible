@@ -10,9 +10,11 @@
         dest: /tmp/dummy_pub_rsa
         content: dummy key
         mode: 0644
-    - when: image_armbian_image_url | default("") | length > 0
+    - name: Build Armbian image
+      when: image_armbian_image_url | default("") | length > 0
       ansible.builtin.include_role:
         name: image_armbian
-    - when: image_ubuntu_raspi_image_url | default("") | length > 0
+    - name: Build Ubuntu image
+      when: image_ubuntu_raspi_image_url | default("") | length > 0
       ansible.builtin.include_role:
         name: image_ubuntu_raspi

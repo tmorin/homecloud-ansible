@@ -28,7 +28,7 @@
         -f /tmp/resources/test-longhorn-rwx-step2.yml \
         -f /tmp/resources/test-longhorn-rwx-step1.yml
       changed_when: false
-      ignore_errors: true
+      failed_when: false
     - name: Copy deployment manifests
       ansible.builtin.copy:
         src: ../deployments/

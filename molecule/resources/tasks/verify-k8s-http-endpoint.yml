@@ -6,7 +6,7 @@
       become: true
       ansible.builtin.command: kubectl -n {{ k8s_namespace }} expose deploy {{ k8s_deploy_name }} --name {{ k8s_service_name }} --type LoadBalancer
       changed_when: false
-      ignore_errors: true
+      failed_when: false
     - name: Wait for the service {{ k8s_service_name }}
       become: true
       ansible.builtin.command: kubectl -n {{ k8s_namespace }} get service {{ k8s_service_name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
@@ -42,4 +42,4 @@
       become: true
       ansible.builtin.command: kubectl -n {{ k8s_namespace }} delete service {{ k8s_service_name }}
       changed_when: false
-      ignore_errors: true
+      failed_when: false

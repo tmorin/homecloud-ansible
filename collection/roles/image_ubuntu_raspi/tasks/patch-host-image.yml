@@ -28,9 +28,6 @@
         executable: /bin/bash
       changed_when: false
       register: mount_image
-#    - name: Debug mount_image
-#      ansible.builtin.debug:
-#        var: mount_image
     - name: "Set network-config"
       delegate_to: localhost
       become: true
@@ -51,6 +48,7 @@
       ansible.builtin.copy:
         content: "cgroup_memory=1 cgroup_enable=memory {{ file_cmdline_txt_content | trim }}"
         dest: "{{ image_ubuntu_raspi_host_directory }}/bootfs/cmdline.txt"
+        mode: 0644
       changed_when: false
       register: write_cmdline
     - name: "Change username"

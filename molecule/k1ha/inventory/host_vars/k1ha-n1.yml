@@ -2,6 +2,6 @@
 
 homecloud_node_ip: "{{ ansible_host }}"
 
-k3s_longhorn_disk_device: "/dev/vdb"
+k3s_longhorn_block_device: "/dev/vdb"
 
 k3s_dnas_mount_what: "/dev/vdc"

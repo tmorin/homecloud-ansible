@@ -15,6 +15,6 @@ k3s_longhorn_settings:
 
 service_k3s_local_kubectl_config_file: "~/.kube/k2"
 
-k3s_longhorn_disk_device: "/dev/vdb"
+k3s_longhorn_block_device: "/dev/vdb"
 
 k3s_traefik_persistence_storage_class: "longhorn"

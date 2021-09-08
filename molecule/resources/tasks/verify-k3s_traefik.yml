@@ -12,7 +12,7 @@
       ansible.builtin.command: kubectl delete \
         -f /tmp/resources/test-traefik.yml
       changed_when: false
-      ignore_errors: true
+      failed_when: false
     - name: Copy deployment manifests
       ansible.builtin.copy:
         src: ../deployments/
@@ -26,7 +26,7 @@
       ansible.builtin.command: kubectl apply \
         -f /tmp/resources/test-traefik.yml
       changed_when: false
-      ignore_errors: true
+      failed_when: false
     - name: Wait for whoami
       become: true
       ansible.builtin.command: kubectl get pod whoami \

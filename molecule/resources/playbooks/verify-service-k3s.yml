@@ -4,7 +4,7 @@
   tasks:
     - name: Get K3S info
       ansible.builtin.command: which k3s
-      ignore_errors: true
+      failed_when: false
       register: k3s_info
       changed_when: false
     - name: Verify K3S installation

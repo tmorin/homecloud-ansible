@@ -44,4 +44,4 @@
     executable: /bin/bash
     creates: /usr/local/bin/kustomize
     warn: false
-  ignore_errors: yes
+  failed_when: false

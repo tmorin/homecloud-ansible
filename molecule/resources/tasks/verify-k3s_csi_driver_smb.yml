@@ -13,7 +13,7 @@
         -f /tmp/resources/test-csi-smb-dnas-step2.yml \
         -f /tmp/resources/test-csi-smb-dnas-step1.yml
       changed_when: false
-      ignore_errors: true
+      failed_when: false
     - name: Copy test-csi-smb-dnas-step1.yml
       ansible.builtin.template:
         src: ../deployments/test-csi-smb-dnas-step1.yml
