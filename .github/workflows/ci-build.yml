@@ -53,6 +53,7 @@ jobs:
       - name: Lint the collection
         run: |
           export PATH="$PATH:$HOME/.local/bin"
+          export ANSIBLE_COLLECTIONS_PATH=~/.ansible/collections:/usr/share/ansible/collections:/etc/ansible/collections
           export ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:collection/roles
           ansible-lint
       - name: Build the collection
