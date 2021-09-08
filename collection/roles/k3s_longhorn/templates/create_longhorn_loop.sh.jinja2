@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+looDetail=$(losetup | grep "{{ k3s_longhorn_image_device }}")
+if [ -z "$looDetail" ]; then
+  losetup "{{ k3s_longhorn_image_device }}" "{{ k3s_longhorn_image_file }}"
+fi

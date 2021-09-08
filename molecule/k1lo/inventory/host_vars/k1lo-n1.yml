@@ -1,0 +1,5 @@
+---
+
+homecloud_node_ip: "{{ ansible_host }}"
+
+k3s_longhorn_image_device: "/dev/loop100"

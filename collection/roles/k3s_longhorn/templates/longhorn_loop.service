@@ -1,0 +1,18 @@
+[Unit]
+Description=Setup a loop device for Longhorn
+DefaultDependencies=false
+ConditionFileIsExecutable={{ k3s_longhorn_script_create_loop }}
+Before=local-fs.target
+After=systemd-udev-trigger.service
+Requires=systemd-udev-trigger.service
+
+[Service]
+Type=oneshot
+ExecStart={{ k3s_longhorn_script_create_loop }}
+TimeoutSec=60
+RemainAfterExit=yes
+
+[Install]
+WantedBy=local-fs.target
+Also=systemd-udev-trigger.service
+

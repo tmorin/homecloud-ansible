@@ -2,7 +2,14 @@
 
 k3s_longhorn_release: "master"
 
-k3s_longhorn_disk_device: ""
+k3s_longhorn_script_create_loop: "/usr/local/share/homecloud/scripts/create_longhorn_loop.sh"
+
+k3s_longhorn_image_size: "2G"
+k3s_longhorn_image_device: ""
+k3s_longhorn_image_file: "/var/lib/homecloud/longhorn.img"
+
+k3s_longhorn_block_device: ""
+
 k3s_longhorn_disk_path: "/var/lib/longhorn"
 k3s_longhorn_disk_type: "ext4"
 

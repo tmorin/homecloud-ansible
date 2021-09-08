@@ -1,0 +1,17 @@
+---
+
+- name: "Format the block device of Longhorn"
+  become: true
+  community.general.filesystem:
+    dev: "{{ k3s_longhorn_block_device }}"
+    force: false
+    fstype: "{{ k3s_longhorn_disk_type }}"
+
+- name: "Mount the block device on boot"
+  become: true
+  ansible.posix.mount:
+    boot: true
+    state: mounted
+    src: "{{ k3s_longhorn_block_device }}"
+    path: "{{ k3s_longhorn_disk_path }}"
+    fstype: "{{ k3s_longhorn_disk_type }}"

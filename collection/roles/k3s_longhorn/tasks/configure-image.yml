@@ -1,0 +1,77 @@
+---
+
+- name: "Create the image directory"
+  become: true
+  ansible.builtin.file:
+    path: "{{ k3s_longhorn_image_file | dirname }}"
+    state: directory
+    mode: 0755
+    recurse: true
+
+- name: "Stats the image file"
+  become: true
+  ansible.builtin.stat:
+    path: "{{ k3s_longhorn_image_file }}"
+  register: stat_k3s_longhorn_image_file
+
+- name: "Create the image file"
+  when: not stat_k3s_longhorn_image_file.stat.exists
+  become: true
+  ansible.builtin.command:
+    cmd: "dd if=/dev/zero of={{ k3s_longhorn_image_file }} bs={{ k3s_longhorn_image_size }} count=1"
+
+- name: "Create the scripts directory"
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/share/homecloud/scripts
+    state: directory
+    mode: 0755
+    recurse: true
+
+- name: "Transfer the script"
+  become: true
+  ansible.builtin.template:
+    src: create_longhorn_loop.sh.jinja2
+    dest: "{{ k3s_longhorn_script_create_loop }}"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Transfer the service configuration"
+  become: true
+  ansible.builtin.template:
+    src: longhorn_loop.service
+    dest: /etc/systemd/system/longhorn_loop.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Enable and start the mount configuration"
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: longhorn_loop.service
+    enabled: true
+    state: started
+
+- name: "Mount the loop"
+  become: true
+  ansible.builtin.shell:
+    cmd: "{{ k3s_longhorn_script_create_loop }} || true"
+  changed_when: false
+
+- name: "Format the block device of Longhorn"
+  become: true
+  community.general.filesystem:
+    dev: "{{ k3s_longhorn_image_device }}"
+    force: false
+    fstype: "{{ k3s_longhorn_disk_type }}"
+
+- name: "Mount the block device on boot"
+  become: true
+  ansible.posix.mount:
+    boot: true
+    state: mounted
+    src: "{{ k3s_longhorn_image_device }}"
+    path: "{{ k3s_longhorn_disk_path }}"
+    fstype: "{{ k3s_longhorn_disk_type }}"

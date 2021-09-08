@@ -1,84 +1,32 @@
 ---
 
-- name: Install dependencies from apt
+- name: "Install dependencies from apt"
   become: true
   ansible.builtin.package:
     name: open-iscsi,nfs-common,cifs-utils
     state: present
     force_apt_get: true
 
-- name: Format and mount the disk
-  when: k3s_longhorn_disk_device | default('') | length > 0
+- name: "Configure the disk"
+  when: k3s_longhorn_block_device | default('') | length > 0
   block:
-    - name: Format the block device of Longhorn
-      become: true
-      community.general.filesystem:
-        dev: "{{ k3s_longhorn_disk_device }}"
-        force: false
-        fstype: "{{ k3s_longhorn_disk_type }}"
-    - name: Mount the block device on boot
-      become: true
-      ansible.posix.mount:
-        boot: true
-        state: mounted
-        src: "{{ k3s_longhorn_disk_device }}"
-        path: "{{ k3s_longhorn_disk_path }}"
-        fstype: "{{ k3s_longhorn_disk_type }}"
+    - name: "Include task"
+      ansible.builtin.import_tasks: configure-block.yml
 
-- name: Configure Longhorn nodes
+- name: "Configure the image"
+  when: k3s_longhorn_image_device | default('') | length > 0
+  block:
+    - name: "Include task"
+      ansible.builtin.import_tasks: configure-image.yml
+
+- name: "Configure Longhorn nodes"
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
-    - name: Add node label for Create Default Disk
-      become: true
-      ansible.builtin.command: kubectl label node --overwrite {{ item.ansible_hostname }} \
-        node.longhorn.io/create-default-disk=true
-      loop: "{{ (groups.k3s | default([])) | map('extract', hostvars) | list | selectattr('k3s_longhorn_disk_device', 'defined') }}"
-      loop_control:
-        label: "{{ item.ansible_hostname }}"
-      register: set_node_label
-      changed_when: not 'not labeled' in set_node_label.stdout
+    - name: "Include task"
+      ansible.builtin.import_tasks: configure-node.yml
 
-- name: Deploy Longhorn
+- name: "Deploy Longhorn"
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
-    - name: Resolve latest longhorn version
-      ansible.builtin.shell: curl -w '%{url_effective}' -I -L -s \
-        -S https://github.com/longhorn/longhorn/releases/{{ k3s_longhorn_release }} \
-        -o /dev/null | sed -e 's|.*/||'
-      register: resolve_latest_longhorn_version
-      changed_when: false
-      args:
-        warn: false
-    - name: Fetch deployment latest manifest
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/longhorn/longhorn/{{ resolve_latest_longhorn_version.stdout }}/deploy/longhorn.yaml
-        dest: /tmp/resources/longhorn.yaml
-        force: true
-      changed_when: false
-    - name: Apply custom settings
-      ansible.builtin.lineinfile:
-        path: /tmp/resources/longhorn.yaml
-        regexp: '    {{ item[0] }}:'
-        line: '    {{ item[0] }}: {{ item[1] }}'
-      changed_when: false
-      loop: "{{ (k3s_longhorn_settings | default({})).items() }}"
-    - name: Enable Create Default Disk on Labeled Nodes
-      ansible.builtin.lineinfile:
-        path: /tmp/resources/longhorn.yaml
-        regexp: 'create-default-disk-labeled-nodes:'
-        line: '    create-default-disk-labeled-nodes: true'
-      changed_when: false
-    - name: Deploy Longhorn
-      become: true
-      ansible.builtin.command: mv -f /tmp/resources/longhorn.yaml /var/lib/rancher/k3s/server/manifests/homecloud-longhorn.yaml
-      register: deploy_longhorn
-      changed_when: false
-    - name: Wait for Longhorn
-      become: true
-      ansible.builtin.command: kubectl -n longhorn-system get deploy longhorn-driver-deployer \
-        -o jsonpath='{.status.conditions[?(@.type=="Available")].status}'
-      changed_when: false
-      register: kubcetl_get_longhorn
-      delay: "{{ homecloud_k8s_deploy_timeout_delay | default(5) }}"
-      retries: "{{ homecloud_k8s_deploy_timeout_retries | default(80) }}"
-      until: "'True' in kubcetl_get_longhorn.stdout"
+    - name: "Include task"
+      ansible.builtin.import_tasks: deploy.yml

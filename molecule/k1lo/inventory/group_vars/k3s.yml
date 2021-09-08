@@ -1,0 +1,14 @@
+---
+
+k3s_services:
+  - service_k3s
+
+k3s_deployments:
+  - k3s_longhorn
+
+service_keepalived_router_id: 113
+
+k3s_longhorn_settings:
+  default-replica-count: 1
+
+service_k3s_local_kubectl_config_file: "~/.kube/k1lo"

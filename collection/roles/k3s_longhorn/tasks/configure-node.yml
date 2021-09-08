@@ -1,0 +1,23 @@
+---
+
+- name: "Add node label for Create Default Disk Device"
+  become: true
+  ansible.builtin.command: kubectl label node --overwrite {{ item.ansible_hostname }} \
+    node.longhorn.io/create-default-disk=true \
+    homecloud.github.io/longhorn-disk=true
+  loop: "{{ (groups.k3s | default([])) | map('extract', hostvars) | list | selectattr('k3s_longhorn_block_device', 'defined') }}"
+  loop_control:
+    label: "{{ item.ansible_hostname }}"
+  register: set_node_label
+  changed_when: not 'not labeled' in set_node_label.stdout
+
+- name: "Add node label for Create Default Image Device"
+  become: true
+  ansible.builtin.command: kubectl label node --overwrite {{ item.ansible_hostname }} \
+    node.longhorn.io/create-default-disk=true \
+    homecloud.github.io/longhorn-image=true
+  loop: "{{ (groups.k3s | default([])) | map('extract', hostvars) | list | selectattr('k3s_longhorn_image_device', 'defined') }}"
+  loop_control:
+    label: "{{ item.ansible_hostname }}"
+  register: set_node_label
+  changed_when: not 'not labeled' in set_node_label.stdout
