@@ -5,7 +5,8 @@
 [![badge for PDF paper](https://img.shields.io/badge/Paper-PDF-informational)](https://tmorin.github.io/homecloud-ansible/homecloud-paper.pdf)
 
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/tmorin/homecloud-ansible/Continous%20Integration/master?label=GitHub%20Actions&logo=github+actions&logoColor=black)](https://github.com/tmorin/homecloud-ansible/actions?query=workflow%3A%22Continous+Integration%22+branch%3Amaster)
-[![Travis (.org) branch](https://img.shields.io/travis/tmorin/homecloud-ansible/master?label=Travis%20CI&logo=travis+CI&logoColor=black)](https://travis-ci.org/github/tmorin/homecloud-ansible)
+
+[comment]: <> ([![Travis &#40;.org&#41; branch]&#40;https://img.shields.io/travis/tmorin/homecloud-ansible/master?label=Travis%20CI&logo=travis+CI&logoColor=black&#41;]&#40;https://travis-ci.org/github/tmorin/homecloud-ansible&#41;)
 
 > `homecloud` provides a ready-to-use set of resources to bootstrap a cloud at home mainly based on Kubernetes and Syncthing.
 
@@ -40,15 +41,18 @@ Some of them are available as `Kustomize` resources in another repository [tmori
 
 ## Requirements
 
-Each hosts must fulfilled the following constraints:
+Each hosts must fulfill the following constraints:
 
 - Operating System: Ubuntu (18.04, 20.04) and Debian (Stretch, Buster)
 - CPU Architecture: amd64 or arm64
 - Memory: at least 2Go
 
-If `longhorn` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk ...) for each node storing data
+When `longhorn` is enabled, the data are stored a block device, i.e. `/dev/???`.
+The collection handles the preparation of two kinds of block devices: 
+the hardware component like a Sd-Card or a Loop Device based on a `.img` file.
 
-If `dnas` is enabled: 1 available storage block device (i.e. an sd-card, an usb disk ...) for each node storing data
+When `dnas` is enabled, the data are stored a block device, i.e. `/dev/???`.
+The collection handles the preparation of only block devices based on a hardware component like a Sd-Card, USB disk ...
 
 ## Dependencies
 
@@ -82,28 +86,27 @@ Lint the Ansible collection
 
 ## Testing
 
-Several cases are tested by continuous integration using [molecule], [vagrant] and the plugin [vagrant-libvirt].
+Several cases are tested using [molecule], [vagrant] and the plugin [vagrant-libvirt].
 
 ### Tested layouts
 
 The test suite targets the following operating systems:
 
-- Ubuntu Bionic/Focal
-- Debian Stretch/Buster
+- Ubuntu
+- Debian
 
-| |[k1]|[k1ha]|[k2]|[k2ha]|[armbian]*|
-|---|---|---|---|---|---|
-|servers|1|1|1|2|0|
-|agents|0|0|1|2|0|
-|keepalived|no|yes|yes|yes|no|
-|longhorn|no|yes|yes|yes|no|
-|traefik|yes|yes|yes|yes|no|
-|dashboard|yes|no|no|no|no|
-|dnas|yes|yes|no|no|no|
-|hardening|no|no|no|no|no|
-|Armbian image|no|no|no|no|yes|
-
-* the [armbian] scenario cannot be executed on Travis CI.
+| |[k1]|[k1ha]|[k1lo]|[k2]|[k2ha]|[armbian]|[ubuntu_raspi]|
+|---|---|---|---|---|---|---|---|
+|servers|1|1|1|1|2|0|0|
+|agents|0|0|0|1|0|0|0|
+|keepalived|no|yes|no|yes|yes|no|no|
+|longhorn|no|yes|yes|yes|yes|no|no|
+|traefik|yes|yes|no|yes|yes|no|no|
+|dashboard|yes|no|no|no|no|no|no|
+|dnas|yes|yes|no|no|no|no|no|
+|hardening|no|no|no|no|no|no|no|
+|Armbian image|no|no|no|no|no|yes|no|
+|Ubuntu image|no|no|no|no|no|no|yes|
 
 Test the scenario `k1`
 ```shell
@@ -137,9 +140,11 @@ kubectl get all --all-namespaces
 
 [k1]: molecule/k1
 [k1ha]: molecule/k1ha
+[k1lo]: molecule/k1lo
 [k2]: molecule/k2
 [k2ha]: molecule/k2ha
 [armbian]: molecule/armbian
+[ubuntu_raspi]: molecule/ubuntu_raspi
 [molecule]: https://github.com/ansible-community/molecule
 [vagrant]: https://www.vagrantup.com/
 [vagrant-libvirt]: https://github.com/vagrant-libvirt/vagrant-libvirt
