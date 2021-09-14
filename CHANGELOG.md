@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/tmorin/homecloud-ansible/compare/v2.3.0...v2.4.0) (2021-09-14)
+
+
+### Features
+
+* add support for Debian 11 (Bullseye) ([327208c](https://github.com/tmorin/homecloud-ansible/commit/327208c6643e93a2d2cfd209fd16fc84ed667d04))
+* **image_ubuntu_raspi:** add support to build Ubuntu images for Raspberry Pi ([3003c4a](https://github.com/tmorin/homecloud-ansible/commit/3003c4a74a0a50b38a8dfdfca3211399df2c7a4f))
+* **k3s_csi_driver_smb:** add an option to set a specific version ([3fee9b6](https://github.com/tmorin/homecloud-ansible/commit/3fee9b6cda1141eeec83db46d7c58b787555c406))
+
+
+### Bug Fixes
+
+* **k3s_longhorn:** the Longhorn disk can also be a an image available with a Loop Device ([8c6b867](https://github.com/tmorin/homecloud-ansible/commit/8c6b867f3b319594b5d5c2fd6437bcba382bed9a))
+* **paper:** simple typo fixes ([2537aaf](https://github.com/tmorin/homecloud-ansible/commit/2537aaff8d0ee6d460393dd761f1cd75e95569f7))
+
 ## [2.3.0](https://github.com/tmorin/homecloud-ansible/compare/v2.2.1...v2.3.0) (2021-04-01)
 
 
