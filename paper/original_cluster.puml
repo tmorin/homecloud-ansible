@@ -1,13 +1,13 @@
 @startuml original_cluster_layout
 !global $INCLUSION_MODE="local"
-!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
 !include $LIB_BASE_LOCATION/bootstrap.puml
 
-include('homecloud/bootstrap')
-include('homecloud/Hardware/Board')
-include('homecloud/Network/Internet')
-include('homecloud/Network/LocalNetwork')
-include('homecloud/Network/Router')
+include('homecloud-1/bootstrap')
+include('homecloud-1/Hardware/Board')
+include('homecloud-1/Network/Internet')
+include('homecloud-1/Network/LocalNetwork')
+include('homecloud-1/Network/Router')
 
 Internet('internet', 'Internet')
 LocalNetworkGroup('home', 'home network') {

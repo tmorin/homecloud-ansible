@@ -20,18 +20,18 @@ user_services <- building_blocks : support the execution of
 
 @startuml building_blocks_keepalived
 !global $INCLUSION_MODE="local"
-!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
 !include $LIB_BASE_LOCATION/bootstrap.puml
 skinparam RectangleShadowing false
 skinparam RectangleBorderStyle dashed
-include('homecloud/bootstrap')
-include('fontawesome-5.15/Solid/Circle')
-include('homecloud/Hardware/Board')
-include('homecloud/Network/Router')
-include('homecloud/Container/Container')
-include('homecloud/Brand/Keepalived')
-include('homecloud/Brand/Docker')
-include('homecloud/Brand/Ceph')
+include('homecloud-1/bootstrap')
+include('fontawesome-5/Solid/Circle')
+include('homecloud-1/Hardware/Board')
+include('homecloud-1/Network/Router')
+include('homecloud-1/Container/Container')
+include('homecloud-1/Brand/Keepalived')
+include('homecloud-1/Brand/Docker')
+include('homecloud-1/Brand/Ceph')
 rectangle virtual_server as "Virtual Server" {
   BoardGroup('board_n1', 'hc1-n1') {
     Keepalived('keepalived_1', 'Keepalived')

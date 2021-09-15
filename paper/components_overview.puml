@@ -1,17 +1,17 @@
 @startwbs components_overview_hierarchy
 skinparam monochrome true
 !global $INCLUSION_MODE="local"
-!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs/dist"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
 !include $LIB_BASE_LOCATION/bootstrap.puml
-include('homecloud/Brand/Traefik')
-include('homecloud/Brand/Nextcloud')
-include('homecloud/Brand/Syncthing')
-include('homecloud/Brand/Calibreweb')
-include('homecloud/Brand/Keepalived')
-include('homecloud/Brand/Samba')
-include('simpleicons-4/K/Kubernetes')
-include('fontawesome-5.15/Solid/Home')
-include('material-4.0/Device/Widgets')
+include('homecloud-1/Brand/Traefik')
+include('homecloud-1/Brand/Nextcloud')
+include('homecloud-1/Brand/Syncthing')
+include('homecloud-1/Brand/Calibreweb')
+include('homecloud-1/Brand/Keepalived')
+include('homecloud-1/Brand/Samba')
+include('simpleicons-5/K/Kubernetes')
+include('fontawesome-5/Solid/Home')
+include('material-4/Device/Widgets')
 * <$HomeMd> homecloud
 ** <$KubernetesMd> Kubernetes
 *** <$TraefikMd> Traefik
