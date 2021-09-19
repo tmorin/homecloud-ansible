@@ -1,0 +1,15 @@
+---
+
+- name: Set node taints
+  become: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    kubectl taint node --overwrite {{ node_name }} {{ node_taint[0] }}={{ node_taint[1] | default('') }} || true
+  args:
+    executable: /bin/bash
+    warn: false
+  loop: "{{ (hostvars[node_name].service_k3s_node_taints | default({})).items() }}"
+  loop_control:
+    loop_var: node_taint
+  register: set_node_taint
+  changed_when: false

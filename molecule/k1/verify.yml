@@ -4,6 +4,7 @@
 
 - hosts: k3s_srv[0]
   tasks:
+    # verify labels
     - name: Get nodes with label key0
       become: true
       ansible.builtin.command: kubectl get node -l key0 -o custom-columns=name:.metadata.name --no-headers

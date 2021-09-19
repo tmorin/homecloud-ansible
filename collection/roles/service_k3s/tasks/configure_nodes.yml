@@ -8,10 +8,15 @@
     loop_var: node_name
   register: set_role_agents
   changed_when: not 'not labeled' in set_role_agents.stdout
-#- ansible.builtin.debug: var=set_role_agents
 
 - name: Set node labels
   ansible.builtin.include_tasks: set-node-labels.yml
+  loop: "{{ groups.k3s | default([]) }}"
+  loop_control:
+    loop_var: node_name
+
+- name: Set node taints
+  ansible.builtin.include_tasks: set-node-taints.yml
   loop: "{{ groups.k3s | default([]) }}"
   loop_control:
     loop_var: node_name
