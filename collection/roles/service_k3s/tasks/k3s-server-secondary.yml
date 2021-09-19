@@ -5,6 +5,7 @@
   ansible.builtin.shell: |
     set -o pipefail
     curl -sfL https://get.k3s.io | \
+    INSTALL_K3S_VERSION="{{ service_k3s_version }}" \
     K3S_TOKEN="{{ lookup('file', homecloud_vault_path~'/k3s-sever-token.txt') }}" \
     sh -s - server \
     --node-name {{ inventory_hostname }} \

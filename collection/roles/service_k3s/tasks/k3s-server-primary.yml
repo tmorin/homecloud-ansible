@@ -5,6 +5,7 @@
   ansible.builtin.shell: |
     set -o pipefail
     curl -sfL https://get.k3s.io | \
+    INSTALL_K3S_VERSION="{{ service_k3s_version }}" \
     sh -s - server \
     --cluster-init \
     --node-name {{ inventory_hostname }} \

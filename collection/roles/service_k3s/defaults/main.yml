@@ -6,6 +6,9 @@ homecloud_k8s_deploy_timeout_retries: 40
 
 service_k3s_server_primary_ip: "{{ hostvars[groups['k3s_srv'][0]].homecloud_node_ip }}"
 
+# see `INSTALL_K3S_VERSION` on https://rancher.com/docs/k3s/latest/en/installation/install-options/
+service_k3s_version: ""
+
 # The value should be overridden from a host variable.
 service_k3s_node_labels: { }
 
