@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/tmorin/homecloud-ansible/compare/v2.4.0...v2.5.0) (2021-09-20)
+
+
+### Features
+
+* **service_k3s:** nodes can be tainted ([9fdd2f7](https://github.com/tmorin/homecloud-ansible/commit/9fdd2f73381343ee5b8b8f8f15e66db7864bcbb7))
+* **service_k3s:** the k3s version can be overridden ([b458a0e](https://github.com/tmorin/homecloud-ansible/commit/b458a0ec55d0e1534c07d834a1dbe92886e64950))
+* **service_k3s:** upgrade Kustomize to v4.3.0 ([8bcb6bd](https://github.com/tmorin/homecloud-ansible/commit/8bcb6bd3c44059edfe37f02cb93e94e1ae4bd3ce))
+
+
+### Bug Fixes
+
+* **image_armbian:** force `sync` before and after mount/losetup operations ([1354053](https://github.com/tmorin/homecloud-ansible/commit/1354053576ded7c60e9c797e77440c9e0e06ef38))
+* **image_ubuntu_raspi:** force `sync` before and after mount/losetup operations ([8cc97a7](https://github.com/tmorin/homecloud-ansible/commit/8cc97a78ba8a4062e993a93d91001b3bcf14a073))
+* **k3s_longhorn:** the role cannot be run twice when the image flavor is selected ([58afd49](https://github.com/tmorin/homecloud-ansible/commit/58afd492a06f62bf3fd580935cfbf6a71a8b0643))
+
 ## [2.4.0](https://github.com/tmorin/homecloud-ansible/compare/v2.3.0...v2.4.0) (2021-09-14)
 
 
