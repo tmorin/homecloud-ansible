@@ -60,7 +60,7 @@
     cmd: "{{ k3s_longhorn_script_create_loop }} || true"
   changed_when: false
 
-- name: "Format the block device of Longhorn"
+- name: "Format the block image of Longhorn"
   become: true
   when: not stat_k3s_longhorn_image_file.stat.exists
   community.general.filesystem:
@@ -68,8 +68,9 @@
     force: false
     fstype: "{{ k3s_longhorn_disk_type }}"
 
-- name: "Mount the block device on boot"
+- name: "Mount the block image on boot"
   become: true
+  when: not stat_k3s_longhorn_image_file.stat.exists
   ansible.posix.mount:
     boot: true
     state: mounted
