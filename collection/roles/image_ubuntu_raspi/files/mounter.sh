@@ -62,7 +62,6 @@ echo "---- execute action [$ACTION] in ${HOST_DIRECTORY} ----"
 set -x -e -o pipefail
 
 function execute_mount() {
-
   echo "mount ${MOUNT_BOOTFS_DIRECTORY}"
   local offsetStartOne
   local offsetStartOneInBytes
@@ -92,16 +91,18 @@ function execute_mount() {
 }
 
 function execute_umount() {
+  sync
   mount | grep "${MOUNT_BOOTFS_DIRECTORY}" && umount "${MOUNT_BOOTFS_DIRECTORY}" || echo "mount [${MOUNT_BOOTFS_DIRECTORY}] missing"
+  sync
   mount | grep "${MOUNT_ROOTFS_DIRECTORY}" && umount "${MOUNT_ROOTFS_DIRECTORY}" || echo "mount [${MOUNT_ROOTFS_DIRECTORY}] missing"
+  sync
 
   devices=$(losetup -l -O BACK-FILE,NAME -n -J | jq -r ".loopdevices | .[] | select(.\"back-file\" | contains(\"${IMAGE_FILE}\") ) | .name")
   declare -a arr=(${devices})
   for deviceOne in "${arr[@]}"; do
     losetup -d "${deviceOne}"
+    sync
   done
-
-  sync
 }
 
 function execute_prepare() {
