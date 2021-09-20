@@ -62,6 +62,7 @@
 
 - name: "Format the block device of Longhorn"
   become: true
+  when: not stat_k3s_longhorn_image_file.stat.exists
   community.general.filesystem:
     dev: "{{ k3s_longhorn_image_device }}"
     force: false
