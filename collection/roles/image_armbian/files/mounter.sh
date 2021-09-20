@@ -65,19 +65,24 @@ function execute_mount() {
   mkdir -p "${MOUNT_DIRECTORY}"
   offset=$(sudo fdisk -l "${IMAGE_FILE}" | grep -A2 -E "Device\s*Boot\s*Start\s*End" | tail -n +2 | sed -r "s/[^ ]* *([0-9]*).*$/\1/")
   offsetInBytes=$((offset * 512))
+  sync
   local device=$(sudo losetup -f "${IMAGE_FILE}" -o ${offsetInBytes} --show)
+  sync
   mount -t auto "${device}" "${MOUNT_DIRECTORY}"
   sync
 }
 
 function execute_umount() {
+  sync
   mount | grep "${MOUNT_DIRECTORY}" && umount "${MOUNT_DIRECTORY}" || echo "mount [${MOUNT_DIRECTORY}] missing"
+  sync
+
   devices=$(losetup -l -O BACK-FILE,NAME -n -J | jq -r ".loopdevices | .[] | select(.\"back-file\" | contains(\"${IMAGE_FILE}\") ) | .name")
   declare -a arr=(${devices})
   for device in "${arr[@]}"; do
     losetup -d "${device}"
+    sync
   done
-  sync
 }
 
 function execute_prepare() {
@@ -92,7 +97,9 @@ function execute_prepare() {
 }
 
 function execute_clean() {
+  sync
   rm -Rf "${HOST_DIRECTORY}"
+  sync
 }
 
 case ${ACTION} in
