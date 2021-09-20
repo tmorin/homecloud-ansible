@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.1](https://github.com/tmorin/homecloud-ansible/compare/v2.5.0...v2.5.1) (2021-09-20)
+
+
+### Bug Fixes
+
+* **k3s_longhorn:** the role should not fail when the image is already mounted ([fd4997d](https://github.com/tmorin/homecloud-ansible/commit/fd4997d1a7044ff3f6ba3b3179236f8ddeda47a0))
+
 ## [2.5.0](https://github.com/tmorin/homecloud-ansible/compare/v2.4.0...v2.5.0) (2021-09-20)
 
 
