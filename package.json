@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "@tmorin/plantuml-libs": "^4.3.1",
+    "@tmorin/plantuml-libs": "^4.5.0",
     "standard-version": "^9.1.1",
     "yaml": "^1.10.0"
   }
