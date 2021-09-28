@@ -1,0 +1,36 @@
+@startuml bs-files_sharing-usecases
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+include('material-4/Social/Person')
+include('material-4/Device/Devices')
+Person("owner", "owner")
+Person("recipient", "recipient")
+Devices("devices", "devices")
+Title("Files sharing", "Business Scenario / Usecase Diagram")
+rectangle homecloud {
+  usecase share_files as "share files"
+  usecase get_shared_files as "get shared files"
+  share_files <.r. get_shared_files : ««extends» »
+}
+owner -u-> share_files
+recipient -u-> get_shared_files
+devices -u-> get_shared_files
+@enduml
+
+@startuml bs-files_sharing-value_stream
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+Title("Share Files", "Business Scenario / Value Stream")
+left to right direction
+rectangle "Select Shared Files" as select_shared_files <<ValueStreamPrimary>>
+rectangle "Provide Shared Files" as provide_shared_files <<ValueStreamPrimary>>
+rectangle "Consume Shared Files" as consume_shared_files <<ValueStreamPrimary>>
+select_shared_files --> provide_shared_files
+provide_shared_files --> consume_shared_files
+@enduml

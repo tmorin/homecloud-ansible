@@ -1,0 +1,89 @@
+' Polar Night
+!global $THEME_NORD_0="#2e3440"
+!global $THEME_NORD_1="#3b4252"
+!global $THEME_NORD_2="#434c5e"
+!global $THEME_NORD_3="#4c566a"
+' Snow Storm
+!global $THEME_NORD_4="#d8dee9"
+!global $THEME_NORD_5="#e5e9f0"
+!global $THEME_NORD_6="#eceff4"
+' Frost
+!global $THEME_NORD_7="#8fbcbb"
+!global $THEME_NORD_8="#88c0d0"
+!global $THEME_NORD_9="#81a1c1"
+!global $THEME_NORD_10="#5e81ac"
+' Aurora
+!global $THEME_NORD_11="#bf616a"
+!global $THEME_NORD_12="#d08770"
+!global $THEME_NORD_13="#ebcb8b"
+!global $THEME_NORD_14="#a3be8c"
+!global $THEME_NORD_15="#b48ead"
+
+!global $FONT_COLOR=$THEME_NORD_0
+!global $FONT_COLOR_LIGHT=$THEME_NORD_3
+!global $BORDER_COLOR=$THEME_NORD_3
+
+skinparam shadowing false
+
+skinparam Arrow {
+    FontColor $THEME_NORD_3
+    Color $THEME_NORD_3
+    Thickness 1
+}
+
+skinparam usecase {
+    BorderThickness 1
+    BorderColor $THEME_NORD_3
+    BackgroundColor $THEME_NORD_5
+    FontColor $FONT_COLOR
+}
+
+skinparam State {
+    BorderThickness 3
+    BorderColor $THEME_NORD_3
+    BackgroundColor $THEME_NORD_5
+    FontColor $FONT_COLOR
+}
+
+skinparam package {
+    BorderThickness 1
+    BorderColor $THEME_NORD_3
+    BackgroundColor white
+    FontColor $FONT_COLOR
+}
+
+skinparam rectangle {
+    BorderThickness 1
+    BorderColor $THEME_NORD_3
+    BackgroundColor white
+    FontColor $FONT_COLOR
+}
+
+skinparam component {
+    BorderThickness 1
+    BorderColor $THEME_NORD_3
+    BackgroundColor $THEME_NORD_5
+    FontColor $FONT_COLOR
+}
+
+skinparam interface {
+    BorderThickness 1
+    BorderColor $THEME_NORD_3
+    BackgroundColor $THEME_NORD_5
+    FontColor $FONT_COLOR
+}
+
+skinparam Actor {
+    BorderColor $THEME_NORD_3
+    BackgroundColor $THEME_NORD_5
+    FontColor $FONT_COLOR
+}
+
+skinparam Rectangle<<ValueStreamPrimary>> {
+  BackgroundColor $THEME_NORD_5
+}
+skinparam Rectangle<<ValueStreamSecondary>> {
+  BorderStyle dotted
+  BorderThickness 1
+  BackgroundColor $THEME_NORD_5
+}

@@ -1,0 +1,24 @@
+@startuml bs-contacts_calendars_management-usecases
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+include('material-4/Social/Person')
+include('material-4/Device/Devices')
+Person("owner", "owner")
+Devices("devices", "devices")
+Title("Contacts & Calendars Management", "Business Scenario / Usecase Diagram")
+rectangle homecloud {
+  usecase manage_contacts as "manage contacts"
+  usecase synchronize_contacts as "synchronize contacts"
+  synchronize_contacts <.. manage_contacts : ««extends» »
+  usecase manage_calendars as "manage calendars"
+  usecase synchronize_files as "synchronize calendars"
+  synchronize_files <.. manage_calendars : ««extends» »
+}
+owner -u-> manage_contacts
+owner -u-> manage_calendars
+devices -d-> synchronize_files
+devices -d-> synchronize_contacts
+@enduml

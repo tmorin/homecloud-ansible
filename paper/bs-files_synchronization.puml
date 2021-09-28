@@ -1,0 +1,34 @@
+@startuml bs-files_synchronization-usecases
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+include('material-4/Social/Person')
+include('material-4/Device/Devices')
+Person("owner", "owner")
+Devices("devices", "devices")
+Title("Files Synchronization", "Business Scenario / Usecase Diagram")
+rectangle homecloud {
+  usecase manage_files as "manage files"
+  usecase synchronize_filess as "synchronize files"
+  synchronize_filess <.r. manage_files : ««extends» »
+}
+owner -u-> manage_files
+devices -u-> synchronize_filess
+@enduml
+
+@startuml bs-files_synchronization-value_stream
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+Title("Handle Files Changes", "Business Scenario / Value Stream")
+left to right direction
+rectangle "Change Files\non Device" as change_files <<ValueStreamPrimary>>
+rectangle "Synchronize Files" as synchronize_files <<ValueStreamPrimary>>
+rectangle "Manage Files\non //homecloud//" as manage_files <<ValueStreamPrimary>>
+change_files --> synchronize_files
+synchronize_files --> manage_files
+@enduml

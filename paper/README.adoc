@@ -1,102 +1,605 @@
-= homecloud : a cloud at home with Kubernetes and Syncthing
+= homecloud: a cloud at home with Kubernetes and Syncthing
 // METADATA
 :doctype: article
 :author: Thibault Morin
-:revdate: 2021-03-29
+:revdate: 2021-09-30
 :homepage: https://github.com/tmorin/homecloud-ansible
 :toc:
-// FOOTNOTES
-:fn-p64_disclamer: footnote:[The author, Thibault Morin, declares that there is no conflict of interest with PINE64. Thibault Morin is just a regular consumer of PINE64 products.]
-:fn-dmz_skipped: footnote:[To reduce the complexity of the diagram, the demilitarized zone of the home network is skipped.]
+:icons: font
+
+[abstract]
+== Abstract
+
+Provide resources to bootstrap and manage:
+
+1. an private cloud
+2. and self-hosted services
+
+The main artifact is an Ansible collection.
 
 == Introduction
 
-`homecloud` aims to provide a <<g_cloud_computing, cloud like environment>>, especially an <<g_internal_cloud, internal cloud>>, at home.
-The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes or Syncthing.
+The genesis of this initiative comes from two Framasoft momentum: De-google-ify Internet <<dgo>>; and its following one: Contributopia <<cpa>>.
+The main concern is _digital independence_.
+It's about surveillance and privacy of what we are, but also centralization of actors and usages.
 
-The main artifact is an Ansible <<ans>> collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.
+According to this context, the initiative provides a way to self-host services which deal with private data.
+It mainly leverages on n private cloud to support its realization.
+That means to run a cloud at home, so the name `homecloud`.
 
-== The original use case
+A _cloud_ is a network of hardware and software elements which provides dynamically and efficiently common resources (e.g. servers, storage ...) <<dcc>> .
+Obviously, the purpose is not to re-do the infrastructure of big actors in the living room.
 
-The intentions which led to the `homecloud` creation match ones related to the Framasoft initiative: De-google-ify Internet <<dgo>>; and its following one: Contributopia <<cpa>>.
+However, a cluster of affordable development boards (like _Raspberry PI_) associated to open source technologies (like _Kubernetes_) can be enough to get a working tiny private cloud ... in the living room.
 
-Therefore, the original use case is:
+== Vision
 
-* be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, private projects, ...
-* be able to manage a human size of users, basically a family.
+The primary goal of `homecloud` is to provide the main services which manage private data (files sharing, contacts and calendars) storing it locally.
 
-Because big names of cloud computing are de facto discarded, the most affordable solution is to host all those services in a <<g_cluster, cluster>> of low cost ARM boards, especially at home.
+The secondary goal of `homecloud` is to provide services embracing both organizational structures: centralized and decentralized.
 
-Nevertheless, many other use cases could match the need of a self-hosted cluster of low cost ARM boards, which provides the principal characteristics of cloud computing.
+`homecloud` is used by three kind of persons.
+Those which take care of their private data.
+Those which are skilled enough to administrate the system.
+And finally those which have been temporally allowed to interact with some services provided by the system.
+Additionally, `homecloud` can also be used by external systems like agents installed on smartphones, laptops, etc.
 
-== The original cluster layout
+.Vision: Context Diagram of `homecloud`
+image::vision_context.png[Context Diagram of `homecloud`]
 
-Originally{fn-p64_disclamer}, the cluster was composed of four ARM boards manufactured by PINE64 <<p64>>.
-However, there are no constraints about the number of nodes.
-A `homecloud` cluster can be composed of one or many nodes.
+=== Business scenarios
 
-.The original cluster layout
-image::original_cluster_layout.png[The original cluster layout]
+==== Photos Synchronization
 
-The four boards are inter-connected using the home's router which is already connected to internet{fn-dmz_skipped}.
-Each node is a PINE A64-LTS board <<plts>> embedding an `aarch64` CPU and 2G of memory.
-The used operating system is based on Debian: Armbian <<abn>>.
+[cols="^.^h,3a"]
+|===
+|Problem
+|Photos took on mobile phones are usually, by convenience, synchronized in a third party cloud.
+Therefore, the photos binaries are stored somewhere in the world, escaping their owner's control.
+Once synchronized, the mobile phone's owner can browse and manage them according to the vendor's user interfaces.
 
-== The user services
+|Environment
+|The synchronization process can be centralized or decentralized but also unidirectional or bidirectional.
 
-The primarily purpose of the cluster is to host the following user services:
+|Outcomes
+|With `homecloud`, the photos can also be synchronized but still remain private because they are stored locally, under the control of the mobile phone's owner.
+Moreover, they can also be managed using friendly user interfaces.
 
-* dnas: a decentralized NAS (c.f. appendix <<appendix_dnas>>) based on:
-** Syncthing: a free, open-source peer-to-peer file synchronization application <<syt>>.
-** Samba: the standard Windows interoperability suite of programs for Linux and Unix <<smb>>.
-* Nextcloud: a suite of client-server software for creating and using file hosting services <<ncd>>.
-* calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <<caw>>.
+|Human Actors
+|
+- the owner of the photos
 
-.The provided user services of the cluster
-image::user_services_layout.png[The provided user services of the cluster]
+|System Actors
+|
+- a centralized system with authorized agents on the mobile phone(s)
+- and/or a decentralized system leveraging on a network of peer-to-peer agents distributed on nodes (servers, computers, mobile phones ...)
+|===
 
-Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.
+.Business Scenario: Usecase Diagram of Photos Synchronization
+image::bs-photos_synchronization-usecases.png[Business Scenario: Usecase Diagram of Photos Synchronization]
 
-However, to properly operate the above listed services, two hosting strategies are highly emphasis: containerized workloads and container orchestration.
+===== Value Stream
 
-== The hosting strategies
+[cols="^.^h,3a"]
+|===
+|Name
+h|Handle Photos Changes
+|Description
+|The activities involved in keeping photos private from the device to `homecloud`.
+|Stakeholder
+|The owner of the photos.
+|Value
+|The photos are synchronized and can be managed with interfaces provided by `homeloud`.
+|===
+
+.Business Scenario: Value Stream of Handle Photos Changes
+image::bs-photos_synchronization-value_stream.png[Business Scenario: Value Stream of Handle Photos Changes]
+
+.Business Scenario: Value Stream Stages of Handle Photos Changes
+|===
+|Value Stream Stage|Description|Participating Stakeholders|Entrance Criteria|Exit Criteria|Value Items
+
+|Change Photos on Device
+|The act of taking or deleting photos on a device like a smartphone.
+|Owner of the photos
+|Owner using its device
+|Photos taken or deleted
+|Photos managed by the user it-self
+
+|Synchronize Photos
+|The act of replicating changes across systems.
+|Owner of the photos
+|Photos taken or deleted
+|Photos synchronized
+|Changes applied everywhere
+
+a|Manage Photos on `homecloud`
+|The act of copying, moving or deleting photos.
+|Owner of the photos
+|Photos synchronized
+|Changes to synchronize
+|Photos managed according to owner wishes
+|===
+
+==== Files Synchronization
+
+[cols="^.^h,3a"]
+|===
+
+|Problem
+|For convenience or backup purpose, it is common to synchronized files among devices or with centralized systems.
+For instance, to back up personal documents in case of disasters (e.g. hard disk crash) or to transfer user files from an old computer to a new one.
+Most of the built-in (and also convenient) solutions of famous operating systems like _Windows_ or _Android_ are mainly cloud based.
+Therefore, for a while, or permanently, the files are stored in a third party cloud, escaping the owner's control.
+
+|Environment
+|The synchronization process can be centralized or decentralized but also unidirectional or bidirectional.
+
+|Outcomes
+|With `homecloud`, the files can also be synchronized but still remain private because they are stored locally, under the control of the mobile phone's owner.
+
+|Human Actors
+|
+- the owner of the files
+
+|System Actors
+|
+- a centralized system with authorized agents on edge nodes (computer, mobile phones ...)
+- and/or a decentralized system leveraging on a network of peer-to-peer agents distributed on nodes (servers, computers, mobile phones ...)
+|===
+
+.Business Scenario: Usecase Diagram of Files Synchronization
+image::bs-files_synchronization-usecases.png[Business Scenario: Usecase Diagram of Files Synchronization]
+
+===== Value Stream
+
+[cols="^.^h,3a"]
+|===
+|Name
+h|Handle Files Changes
+|Description
+|The activities involved in keeping files private from the device to `homecloud`.
+|Stakeholder
+|The owner of the files.
+|Value
+|The files are synchronized and can be managed with interfaces provided by `homeloud`.
+|===
+
+.Business Scenario: Value Stream of Handle Files Changes
+image::bs-files_synchronization-value_stream.png[Business Scenario: Value Stream of Handle Files Changes]
+
+.Business Scenario: Value Stream Stages of Handle Files Changes
+|===
+|Value Stream Stage|Description|Participating Stakeholders|Entrance Criteria|Exit Criteria|Value Items
+
+|Change Files on Device
+|The act of creating, updating or deleting files on a device like a laptop.
+|Owner of the files
+|Owner using its device
+|Files mutated
+|Files managed by the user it-self
+
+|Synchronize Files
+|The act of replicating changes across systems.
+|Owner of the files
+|Files mutated
+|Files synchronized
+|Changes applied everywhere
+
+a|Manage Files on `homecloud`
+|The act of copying, moving or deleting files.
+|Owner of the files
+|Files synchronized
+|Changes to synchronize
+|Files managed according to owner wishes
+|===
+
+==== Files Sharing
+
+[cols="^.^h,3a"]
+|===
+
+|Problem
+|The synchronization of photos or files leads to a dynamic replication of data.
+However, for some cases the replication is overkill.
+For instance, to share a file over Internet to a well-known contact.
+But also, to stream on the TV a content available in the local network.
+In those cases, it is just enough share the content, because only the consumer knows if the content has to be stored permanently or not once received.
+
+|Environment
+|The share can be done within a local network, for instance using file systems like CIFS or over the web, for instance using a regular HTTP endpoint.
+
+|Outcomes
+|With `homecloud`, the content synchronized are also available for sharing, under the control of their owners, within the local network or over Internet.
+
+|Human Actors
+|
+- the owner of the shared content
+- the recipients of the shared content
+
+|System Actors
+|
+- a centralized system hosting and controlling the accesses
+|===
+
+.Business Scenario: Usecase Diagram of Files Sharing
+image::bs-files_sharing-usecases.png[Business Scenario: Usecase Diagram of Files Sharing]
+
+===== Value Stream
+
+[cols="^.^h,3a"]
+|===
+|Name
+h|Share Files
+|Description
+|The activities involved in selecting and providing shared files hosted on `homecloud`.
+|Stakeholder
+|The owner of the files.
+|Value
+|The files are shared abroad the `homecloud` boundaries.
+|===
+
+.Business Scenario: Value Stream of Share Files
+image::bs-files_sharing-value_stream.png[Business Scenario: Value Stream of Share Files]
+
+.Business Scenario: Value Stream Stages of Share Files
+|===
+|Value Stream Stage|Description|Participating Stakeholders|Entrance Criteria|Exit Criteria|Value Items
+
+|Select Shared Files
+|The act of define which files have to be shared.
+|Owner of the files
+|Files to share
+|Files selected
+|Files selected by the user it-self
+
+|Provide Shared Files
+|The act of providing the shared files to the targets.
+|Owner of the files
+|Files selected
+|Files shared
+|Files ready to be consumed
+
+|Consume Shared Files
+|The act of interacting (fetching, streaming, ...) with the shared files.
+a|- A Guest
+- Owner of the files
+- A `homecloud` service
+- An External System
+|Files shared
+|Files consumed
+|Files handled by the targets
+|===
+
+==== Contacts and Calendars Management
+
+[cols="^.^h,3a"]
+|===
+
+|Problem
+|With smartphones, it became common to have virtual address books.
+Because of convenient, the address books are usually synchronized with a third party solution which, most of the time, is managed by the operating system's owner.
+Therefore, a piece of who we are (i.e. who knows who) are stored in the cloud, somewhere in the world, escaping the control of the address book owner.
+
+|Environment
+|The synchronization within the local network but also over the Internet.
+
+|Outcomes
+|With `homecloud`, address books and other personal calendars are also synchronized but, they are stored locally, under the control of their owners.
+
+|Human Actors
+|
+- the owner of the personal data
+
+|System Actors
+|
+- a centralized system hosting and controlling the accesses
+- and/or a decentralized system leveraging on a network of peer-to-peer agents distributed on nodes (servers, computers, mobile phones ...)
+|===
+
+.Business Scenario: Usecase Diagram of Contacts & Calendars Management
+image::bs-contacts_calendars_management-usecases.png[Business Scenario: Usecase Diagram of Contacts & Calendars Management]
+
+=== Drivers
+
+[cols="^.^h,3a"]
+|===
+|Privacy
+|`homecloud` emerged because of private data concern.
+De facto private date are located within the `homecloud` boundaries.
+
+|Flexibility
+|A `homecloud` cluster is tailored by the user: the topology of the nodes, their operating systems, the available services, the domain names, passwords ...
+
+|Extensibility
+|The platform which supports the out-of-the-box `homecloud` services can also be used for other concerns.
+
+|Elasticity
+|`homecloud` resources can be added or removed manually or dynamically.
+
+|Performance
+|`homecloud` is not designed for high performances, intensive scaling and so on.
+Its main purpose is a _cloud at home_ able to run on a cheap infrastructure.
+In deed, the performances are in fact highly related to hardware concerns and so the user decisions.
+
+|Security
+|Despite delivered artifacts won't cover all security concerns, configured resources for the platform and services will fulfill the minimum secure practices.
+Nevertheless, the flexibility and extensibility of `homecloud` provides to the user ways to define its own level of security.
+
+|Disaster Recovery
+|`homecloud` provides services to prevent data loss with backup processes and data replication.
+
+|Observability
+|Resources of a `homecloud` cluster can be monitored and observed.
+|===
+
+=== Constraints
+
+[cols="^.^h,3a"]
+|===
+|Target deployment platform
+|
+- The system must run on development boards at least for production purpose.
+- The system must run in virtual environments at least for development and testing purposes.
+
+|Open source
+|The system must rely exclusively on open source technologies.
+Dispensation can be done when open source alternatives are not available.
+
+|Technology Maturity
+|Due to the nature of the initiative, `homecloud` may rely on adventurous solutions.
+Nevertheless, when available, matured technologies are emphasis.
+
+|Expected Technologies
+|`homecloud` relies on container orchestration to provide some cloud computing architectural artifacts.
+The most complete implementation embracing container orchestration is `kubernetes`.
+Therefore, the main technology involves in `homecloud` must be `kubernetes`.
+
+|Maintenance
+|A `homecloud` cluster must rely on approaches like automation and self-healing to decrease the maintenance activities.
+Moreover, a `homecloud` should be easily administrate by a single person.
+
+|Skills
+|A `homecloud` cluster cannot be managed by anyone, some skills related to system administration, container orchestration ... are expected.
+|===
+
+=== Principles
+
+[cols="^.^h,3a"]
+|===
+|Name
+h|Separation of Services and Platform
+|Statement
+|The services should not be tightly coupled to the `homecloud` platform.
+|Rationale
+|With a loose coupling approach between the platform and the services, each side can have its own lifecycle.
+Moreover, services provided by external sources can also be easily integrated.
+|Implications
+|`homecloud` provides must provide two main deliverables:
+
+- resources to bootstrap and maintain the platform
+- resources to install and maintain the built-in services
+
+Moreover, each deliverable can be implemented separately with different paces of development or technologies.
+|===
+
+[cols="^.^h,3a"]
+|===
+|Name
+h|Convergence of Centralization and Decentralization
+|Statement
+|Services provided by `homecloud ` should embrace both organizational structures centralized and decentralized.
+|Rationale
+|Some services, especially those leveraging on files, can be handled from a centralized (e.g. a client/server relationship) or decentralized (e.g. a peer to peer network) approach.
+The best approach depends on the context of the usage.
+That why, as long as it is possible, the built-in services of `homecloud` should embrace both organizational structures.
+|Implications
+|The solutions which embrace both organizational structures, especially those working on files, have to be carefully implemented to avoid conflict and data loss.
+|===
+
+=== Requirements
+
+==== Centralized Synchronization
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to synchronize files between a client and a server.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Synchronize Photos
+- Synchronize Files
+|Principles
+|- Centralized approach
+|Specification
+|- The synchronization should leverage on the WebDav protocol.
+- The synchronization can be handled by a non-standard solution.
+- The synchronized content must be readable and mutable by a decentralized solution.
+|===
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to synchronize contacts between a client and a server.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Synchronize Contacts
+|Principles
+|- Centralized approach
+|Specification
+|- The synchronization should leverage on the CardDav protocol.
+- The synchronization can be handled by a non-standard solution.
+|===
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to synchronize calendars between a client and a server.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Synchronize Calendars
+|Principles
+|- Centralized approach
+|Specification
+|- The synchronization should leverage on the CalDav protocol.
+- The synchronization can be handled by a non-standard solution.
+|===
+
+==== Decentralized Synchronization
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to synchronize files between peers.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Synchronize Photos
+- Synchronize Files
+|Principles
+|- Decentralized approach
+|Specification
+|- The synchronization can be handled by a non-standard solution.
+|===
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to synchronize contacts between peers.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Synchronize Contacts
+|Principles
+|- Decentralized approach
+|Specification
+|- The synchronization should leverage on the vCard format.
+- The synchronization can be handled by a non-standard solution.
+|===
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to synchronize calendars between peers.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Synchronize Calendars
+|Principles
+|- Decentralized approach
+|Specification
+|- The synchronization should leverage on the iCalendar format.
+- The synchronization can be handled by a non-standard solution.
+|===
+
+==== Sharing
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to share files to external systems.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Share Photos
+- Share Files
+|Principles
+|- Centralized approach
+|Specification
+|- The following protocols must be supported: CIFS, NFS and WebDav.
+|===
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to share files to guest.
+|Rational
+|The requirement is expected by use cases.
+|Use Cases
+|- Share Photos
+- Share Files
+|Principles
+|- Centralized approach
+|Specification
+|- A User Interface must be available to create the share.
+- A User Interface must be available to provide the shared content to the guest.
+|===
+
+==== Non-Functional
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to back up and restore data managed by other `homecloud` services.
+|Rational
+|The requirement is expected to meet drivers.
+|Drivers
+|- Disaster Recovery
+|Specification
+|- The solution should be a "native" feature of the main platform technology.
+|===
+
+[cols="^.^h,3a"]
+|===
+|Statement
+|The system must provide a service to observe the `homecloud` resources.
+|Rational
+|The requirement is expected to meet drivers.
+|Drivers
+|- Observability
+|Specification
+|- The solution may store data.
+- The solution must provide a user interface.
+|===
+
+=== Work Packages
+
+`homecloud` leverages on three main work packages.
+The first one, the _Platform_, provides support for the two other ones.
+The second one, the _Decentralized NAS_, is a regular centralized <<g_nas, NAS>> dedicated to store the private photos and files.
+However, a peer-to-peer system is plugged to it, so that replication can also be handled with a decentralized approach.
+Finally, the _Services_, relies on the _Decentralized NAS_ to manage its content and to provide the remaining services: contacts management, files sharing ...
+
+.Vision: Component Diagram of the Work Packages
+image::vison_work_packages.png[Vision: Component Diagram of the Work Packages]
+
+== The Platform
+
+=== The hosting strategies
+
+To properly operate services, `homecloud` leverages on two hosting strategies: containerized workloads and container orchestration.
 
 The first strategy, the containerized workload (i.e. the <<g_containerization, containerization>>), provides many benefits about the packaging, distribution and usage of the services them-self <<rhc>>.
 
 The key characteristics are:
 
-* Portability : a container can be easily deployed in a container environment whatever the host's operating system within the respect of the container's and host's architecture.
-* Configurability : a container can be easily configured about its infrastructure (cpu, memory ...) but also about the underlying workload (overriding containerized file or environment variables).
-* Isolation : a container cannot exceed its infrastructure limit and so cannot impact sibling running containers.
-* Efficient disk usage : a containerized workload needs less disk usage than virtualized one.
+* Portability: a container can be easily deployed in a container environment whatever the host's operating system within the respect of the container's and host's architecture.
+* Configurability: a container can be easily configured about its infrastructure (cpu, memory ...) but also about the underlying workload (overriding containerized file or environment variables).
+* Isolation: a container cannot exceed its infrastructure limit and so cannot impact sibling running containers.
+* Efficient disk usage: a containerized workload needs less disk usage than virtualized one.
 
 The second one, the container orchestration, provides also many benefits about the overall handling of containerized workloads <<rhco>>.
 
 The key characteristics are:
 
-* Automatic deployments : a container orchestrator manages it-self the deployment process of containerized workloads across the nodes.
-* Container management : a container orchestrator provides services to monitor and interact with containerized workloads deployed among the cluster nodes.
-* Resource allocation : a container orchestrator monitors and manages the resources to satisfy the requirements of the deployed containerized workloads.
-* Networking configuration : a container orchestrator manages it-self the networking configuration to provide isolation and/or inter-connection between containerized workloads according to their needs.
+* Automatic deployments: a container orchestrator manages it-self the deployment process of containerized workloads across the nodes.
+* Container management: a container orchestrator provides services to monitor and interact with containerized workloads deployed among the cluster nodes.
+* Resource allocation: a container orchestrator monitors and manages the resources to satisfy the requirements of the deployed containerized workloads.
+* Networking configuration: a container orchestrator manages it-self the networking configuration to provide isolation and/or inter-connection between containerized workloads according to their needs.
 
-However, a wish list of services, and a couple of hosting strategies are not enough to provide an efficient cluster.
+However, a couple of hosting strategies are not enough to provide an efficient platform.
 Some pieces are still missing: a set of building blocks able to support the services embracing the hosting strategies.
-
-== The building blocks
-
-The purpose of the building blocks is to support the execution of the user services.
-Some building blocks are parts of the virtual world whereas others to the physical one.
-
-.User Services and Building Blocks
-image::building_blocks_and_user_services.png[User Services and Building Blocks]
 
 === The container engine and orchestrator
 
 The containerization of workloads as well as their management are handled by many technologies.
-Nevertheless, an effort of standardization emerged from the industry which led to the creation of the Cloud Native Computing Foundation (CNCF) [cncf].
+Nevertheless, an effort of standardization emerged from the industry which led to the creation of the Cloud Native Computing Foundation (CNCF) <<cncf>>.
 The CNCF hosts many components, some of them are the first building blocks of the `homecloud` stack.
 
-The first is `containerd` <<cntd>>. It's the container engine which handles the containerization of workloads.
+The first one is `containerd` <<cntd>>. It's the container engine which handles the containerization of workloads.
 The second one is `kubernetes` <<k8s>>. It's the container orchestrator managing the cluster of `containerd` instances.
 Finally, the last one is `k3s` <<k3s>>. It's a distribution of `kubernetes` dedicated of IoT or other cloudless native environments ... like `homecloud`.
 
@@ -117,9 +620,6 @@ Therefore, the cluster is not reliable because the cluster is not <<g_ha, highly
 One of the simplest solutions to prevent unavailability of the cluster is to use the virtual server technique <<vswt>>.
 That means, from the router point of view, the cluster is in fact just a unique server which can be reached with a unique IP address which will never ever change.
 
-Keepalived is one of the most popular implementations of the virtual server technique <<kad>>.
-An overview of the Keepalived integration is available in the appendix: <<appendix_keepalived_integration>>.
-
 Now the cluster is highly available, the next topic is to be sure the containerized workloads are fully highly available too.
 
 === The distributed block storage
@@ -131,9 +631,6 @@ For instance, if a container hosting a database is destroyed and then re-created
 
 In order to get the availability of the data among the nodes of the cluster, a distributed storage system has to be configured.
 
-Kubernetes and its ecosystem provide many solutions which solve the availability issue of the data among the nodes.
-One of them, the lighter on, is Longhorn <<lhn>>.
-
 Now containers are able to recover their data over their lifecycles, there is another topic to deal with: how final services will be found and reached from Internet?
 
 === The reverse proxy
@@ -141,9 +638,6 @@ Now containers are able to recover their data over their lifecycles, there is an
 A <<g_reverse_proxy_server, reverse proxy>> handles the requests coming from the external world and then dispatch them to the internal one.
 In the `homecloud` context, the reverse proxy handles the requests coming from Internet and then dispatch them to the containerized workloads.
 The handling of incoming requests can be straight forward or much complex: enhancement of requests, security, load balancing ...
-
-Traefik is one of the most popular technology about reverse proxy <<tra>>.
-Moreover, it can be easily integrated in Kubernetes.
 
 Presently, the cluster is able to properly serves services within usual circumstances.
 Nevertheless, unexpected events can occur and lead to unavailability of the cluster.
@@ -154,11 +648,7 @@ Unavailability is not welcome and another building block should prevent it: the 
 [NOTE]
 ====
 [yellow-background]#TODO#
-
-Introduce the following items:
-
-- prometheus <<pmt>>
-- graphana <<pmt>>
+Introduce observability
 ====
 
 === Orchestrator management
@@ -168,51 +658,24 @@ However, its usage requires access to the terminals of cluster nodes locally or 
 Another way is to use a web-app which will be able to directly deals with the Kubernetes API.
 So that, the management activities can be done without direct access to the cluster nodes.
 
-Portainer is one of the lighter solutions to manage Kubernetes clusters from a web-app <<por>>.
-Moreover, it provides natively the support of Kubernetes for the expected architectures.
-
 The management of the Kubernetes resources cannot resolve all maintenance cases.
 The Murphy’s law is too strong, too true.
 _Anything that can go wrong will go wrong_, and it could be disaster.
-Therefore, a final building block has to be defined: the backup and restore.
+Therefore, another building block has to be defined: the backup and restore.
 
 === Backup and restore
 
 In the `homecloud` context, the term disaster means: data stored in Ceph have been lost.
 For instance, the Nextcloud database cannot be used any more because of data corruption which cannot be resolved by the MariaDB engine it-self.
 Therefore, `homecloud` must provide a way <<g_disaster_recovery, to recover the disaster>>.
-The most affordable way to recover data is to regularly backup them and storing them into another system.
+The most affordable way to recover data is to regularly backup them and storing them in another system.
 
-Longhorn provides a built-in feature to backup blocks on external system.
+At this point, all main building blocks have been introduced.
+Nevertheless, side concerns have to be yet tackled.
 
-[NOTE]
-====
-[yellow-background]#TODO#
+=== Security hardening
 
-Introduce Duplicity <<dup>>.
-
-- backup + restore of specific directories/files
-- large set of destinations like SFTP, AWS S3, Google Drive, ...
-====
-
-At this point, all building blocks have been introduced, it's time to summarize the cluster's components.
-
-== The components overview
-
-All `homecloud` services and building blocks, can be breakdown in two categories:
-
-1. services managed by Operating System
-2. services managed by Kubernetes
-
-.The components hierarchy
-image::components_overview_hierarchy.png[The components hierarchy]
-
-Running a highly available cluster able to provide services to end users within isolated execution contexts and, moreover, protected by a modern reverse proxy from Internet accesses is good.
-However, it doesn't mean the cluster is secured against external threats ...
-
-== Security Hardening
-
-An internal cloud, 1) hosted on low cost ARM boards, 2) available from a domestic Internet access and, 3) managed with non-professional manners could be a target for external threats.
+A private cloud, 1) hosted on low cost ARM boards, 2) available from a domestic Internet access and, 3) managed with non-professional manners could be a target for external threats.
 Therefore, in the `homecloud` context, the best way is, by default, <<g_hardening, to harder>> every thing.
 
 However, the goals of the security hardening subject are wides and sometime not easily reachable.
@@ -225,189 +688,317 @@ It focuses only on the virtual world, i.e. from the operating systems to the app
 
 Resources exist to deal with the security hardening subject in the scope of a cluster of servers.
 One of the most popular projects is the DevSec Project <<dsp>>.
-It covers two hardening area with the Ansible collection `devsec.hardening` <<acsh>> :
 
-* the operating system GNU/Linux
-* the SSH configuration
+=== Infrastructure as code
 
-== Infrastructure as code
-
-A `homecloud` cluster can be fully installed manually node by node, task by task, package by package ...
-However, this approach, even if highly instructive, is time-consuming and error prone.
+A `homecloud` cluster can be fully installed manually node by node, task by task, package by package, etc.
+However, this approach, even if highly instructive, is time-consuming and error-prone.
 In the IT industry there is more efficient way to manage infrastructure stuff: the infrastructure as code <<rhic>>.
 
-There are many solutions which embraces infrastructure as code.
-One of the most popular one is Ansible.
-It is an open source tool to automate IT tasks with a declarative model.
-Ansible projects can be stored in a Version Control System but also easily tested in virtual environments, especially in a <<g_continuous_integration, continuous integration>> process.
+It relies on a declarative model stored in a revision control system (e.g. GIT).
+The model is then used to drive tools which automate the IT tasks.
+So that, processes become a development artifact.
+Therefore, to _source code_ of the artifacts can be developed and tested iteratively in virtual environments, especially in a <<g_continuous_integration, continuous integration>> context.
 
-== The Ansible collection
+=== Characteristics
 
-An Ansible collection is mainly composed of Ansible Roles.
-A role helps to bundle resources like variables, tasks or templates.
-The purpose of a role is to mutate the state of a system (i.e. a host): change file content, install packages, execute command, etc.
-Ansible Roles are usually executed in Ansible Playbook.
-An Ansible Playbook helps to orchestrate roles according to an inventory of hosts.
-In the `homecloud` context, the inventory describes the nodes of the cluster.
+.The Platform: The Characteristics Stack
+image::platform_stack.svg[The Platform: The Characteristics Stack]
 
-The purpose of the `homecloud` Ansible Collection is to provide a set of Roles as well as a set of Playbooks helping to bootstrap the main building blocks of an internal cloud.
+.The Platform: The Characteristics Matrix
+[cols="2h,1a,3a"]
+|===
+|Characteristic |MoSCoW value |Solutions
 
-=== The customization of Armbian images
+|Container Orchestration
+|Must Have
+|- Kubernetes <<k8s>> distributed by k3s <<k3s>>
 
-In order to mutate a host using <<g_ssh, SSH>>, Ansible expects a location (e.g. its IP), and a remote user properly configured.
-According to the original cluster layout, it means each node of the cluster must be manually configured before to execute the playbooks of the `homecloud` collection.
+|Reverse Proxy
+|Must Have
+|- Traefik <<tra>>
 
-In fact, Armbian is by default configured to get an IP by <<g_dhcp, DHCP>> and to configure users at the first boot.
-Therefore, to save time, it is better to implement an Ansible role able to generate a customized `.img` file per cluster node.
-So that, a static IP and a proper user can be configured automatically for each cluster node.
-The last remaining action is to manually writes the `.img` file on the respective eMMC or SD-Card.
+|Infrastructure as code
+|Must Have
+|- Ansible <<ans>>
+- Kustomize <<ktz>>
+- Helm <<hlm>>
 
-The Ansible role `image_armbian` manages the whole processing:
+|High Availability
+|Should Have
+|- Keepalived <<kad>>
 
-* download the `.img` files
-* for each node patch a dedicated `.img` file
+|Distributed Storage
+|Should Have
+|- Longhorn <<lhn>>
 
-=== The common configurations
+|Backup and Restore
+|Should Have
+|- Longhorn <<lhn>>
+- duplicity <<dup>>
 
-Some configurations have to be applied to all nodes of the cluster.
-They deal with hostnames, memory management or even package management.
-It is the purpose of the Ansible role `cluster_node`.
+|Security Hardening
+|Could Have
+|- devsec.hardening <<acsh>>
 
-Basically, all nodes should know the hostname of all cluster nodes.
+|Cluster Management
+|Could Have
+|- Kubernetes Dashboard <<kdb>>
+- Portainer <<por>>
 
-About memory, Armbian enables by default <<g_memory_swapping, memory swapping>>.
-However, its usage on ARM boards leads to poor performances.
-Therefore, the Swap must be disabled on each node of the cluster.
+|Observability
+|Could Have
+|- Prometheus <<pmt>> & Grafana  <<grf>>
+|===
 
-Finally, it can be necessary to freeze packages.
-For instance, the PINE A64-LTS cannot work with eMMC on recent Linux releases.
-Therefore, the respective packages have to be frozen otherwise the system couldn't restart.
+== Decentralized NAS
 
-[#role_k3s_service]
-=== The k3s service
+The purpose of a Decentralized NAS (also named _dnas_) is to expose private files over the local network like a usual <<g_nas, NAS>> but also from Internet.
+Moreover, changes are handled by centralized protocols (e.g. CIFS, NFS) and also decentralized ones (e.g. p2p).
 
-The k3s service is one of the main building block of `homecloud`.
-The service must be available on each host of the cluster.
-It installs and configures Kubernetes.
-The Ansible role `service_k3s` configures the hosts accordingly.
+.Decentralized NAS: Context Diagram of Decentralized NAS
+image::dnas_context.png[Decentralized NAS: Context Diagram of Decentralized NAS]
 
-According to the k3s terminology, a host can be a server or an agent.
-The inventory groups of the hosts define the role.
+=== Characteristics
 
-* `k3s_srv` contains the server nodes.
-* `k3s_agt` contains the agent nodes.
+.Decentralized NAS: The Characteristics Stack
+image::dnas_stack.svg[Decentralized NAS: The Characteristics Stack]
 
-=== The Keepalived service
+.Decentralized NAS: The Characteristics Matrix
+[cols="2h,1a,3a"]
+|===
+|Characteristic |MoSCoW value |Solutions
 
-The Ansible role `service_keepalived` installs and configure Keepalived as an operating service on each host of the cluster.
+|Synchronization over P2P
+|Must Have
+|Syncthing <<syt>>
 
-The role configures also the load of the kernel module `ip_vs` on system boot.
+|Share over CIFS
+|Must Have
+|Samba <<smb>>
 
-=== The Kubernetes deployment manifests
+|Share over NFS
+|Must Have
+|NFS Server <<nfs>>
 
-There is a dedicated Ansible role by manifests.
-Each role provides the definition of the manifest as well as its deployment process.
+|External Storage
+|Must Have
+|USB Drive, SD-Card, etc.
+|===
 
-* `k3s_csi_driver_smb` a CSI plugin to mount Samba shares.
-* `k3s_dashboard` deploys the Kubernetes Dashboard.
-* `k3s_dnas` a decentralized NAS based in Synchting and Samba.
-* `k3s_longhorn` deploys the distributed block storage system: Longhorn.
-* `k3s_traefik` deploys the ingress controller: Traefik.
+=== Software Architecture
 
-=== The dnas integration
+The solution leverages on three main runtimes:
 
-The Ansible role `k3s_dnas` installs and configures Syncthing, Samba and NFS.
-It manages the mount of the block device which contains the files to expose over Syncthing, Samba and NFS.
-It manages also the basic configuration of Syncthing, Samba and NFS like credentials.
+- a NFS server to serve files over the NFS protocol
+- a Samba server to serve files over the CIFS protocol
+- a Syncthing instance to handle files replication over a P2P network
 
-=== The Ansible inventory
+All runtimes rely on the same source of truth: a location in the file-system.
+The location  can be related to a mount of an external block storage, e.g. USB Drive, SD-Card.
 
-The inventory defines the nodes of the `homecloud` cluster according to their purposes.
+.Decentralized NAS: Container Diagram of Decentralized NAS
+image::dnas_software.png[Decentralized NAS: Container Diagram of Decentralized NAS]
 
-.The hierarchy of the inventory groups
-[source,text]
-....
-all
-  boards
-    pine64
-    ...
-  k3s
-    k3s_srv
-    k3s_agt
-  dnas
-....
+=== Deployment
 
-=== The role variables
+Syncthing is managed as a regular service of the operating system.
+That means, the process has direct accesses to the host resources, especially the network stack.
+The CIFS server and Samba are deployed in Kubernetes within the same pod.
+Because the three services rely on the same location in the host filesystem, they have to run on the same `homecloud` node, i.e. the same board.
 
-By convention, the name of the role is the prefix of its variable names.
-The convention prevents naming collisions and increase readability of the inventory declarations.
+Many instances of Decentralized NAS can co-exist within the same `homecloud` cluster.
+In that case, Syncthing is used to synchronized data between them.
 
-For instance, the email tp provide to Let's Encrypt is defined with a variable name starting with `k3s_traefik` because the variable is only used in the Ansible role `k3s_traefik`: `k3s_traefik_acme_email`.
+.Decentralized NAS: Layout of a dnas node
+image::dnas_deployment_node.svg[Decentralized NAS: Layout of a dnas node]
 
-=== The common variables
+=== Example
 
-Some Ansible roles share the same variables.
-In order to avoid confusions, by convention, the prefix of common variables is `homecloud_`.
+In the following example, Decentralized NAS is deployed on two nodes, i.e. two different boards.
 
-For instance, the variable `homecloud_virtual_ip` is common because it drives the configuration of Traefik as well as declarations of Keepalived.
+_User Phone_ pushes photos to _Node #2_ with its Syncthing application.
+The photos are then stored in the _Node #2_ file system and also synchronized with _Node #1_ because of the Syncthing peering.
 
-== Quality
+On _User Laptop_, private documents (spreadsheets, pictures, etc.) are synchronized with _Node #1_ using Syncthing.
+Because of the Syncthing peering with _Node #2_, the documents are also replicated there.
+Additionally, a _File Navigator_ is connected to the _Samba_ server on _Node #1_, so that photos pushed by _User Phone_ can be locally browsed.
+Moreover, downloaded ROMS are pushed to the Decentralized NAS with the same CIFS channel.
 
-The good point of the infrastructure as code approach is to provide a source code which can be validated in the continuous integration process.
+Finally, on _Console_, the gaming platform can fetch the ROMs (pushed by _User Laptop_) on the NFS Server of _Node #2_.
 
-The validation of the described Ansible collection focuses on two axes.
-The first one checks the syntax of the source code in order increase good practices and preventing the bad one.
-The second axe checks the implementation performing end-to-end tests.
-Those kinds of tests provide two main benefits: 1) the implemented features are tested before to reach the real life and 2) potential regressions are early identified.
+.Decentralized NAS: An example of Decentralized NAS usage
+image::dnas_infrastructure.png[Decentralized NAS: An example of Decentralized NAS usage]
 
-For each axe, the Ansible community provides a solution which can be easily integrated in a continuous integration process.
+== Services
 
-Ansible-lint is the solution to check the syntax <<alt>>.
-Fortunately, it is shipped with a large set of rules.
+The purpose of Services is to expose services over the web via front-ends for end users as well as web-services for external systems.
 
-Molecule is the test framework which help to prepare and execute test scenarios with many virtualization providers <<mol>>.
-Therefore, the Ansible collection can directly be tested on a virtual server with 1, 2 or more nodes.
+.Services: Context Diagram of Decentralized NAS
+image::services_context.png[Services: Context Diagram of Services]
 
-== Conclusion
+=== Characteristics
 
-Put all together, the described approaches, concepts and technologies help the design as well as the implementation of an internal cloud.
-A kind of cloud able to host private data and provide services all around the world for a reasonable amount of users.
+Because of its _cloud_ nature, `homecloud` can support many services.
+Nevertheless, only those identified within the vision description (c.f. <<Vision>>) will be detailed.
 
-[appendix]
-[#appendix_dnas]
-== dnas, a decentralized NAS
+.Services: The Characteristics Stack
+image::services_stack.svg[Services: The Characteristics Stack]
 
-The purpose of _dnas_ is to expose private files over the local network like a usual <<g_nas, NAS>>  but also from Internet.
-Samba and NFS provide remote accesses from the local network.
-On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.
+.Services: The Characteristics Matrix
+[cols="2h,1a,3a"]
+|===
+|Characteristic |MoSCoW value |Solutions
 
-.The dnas overview
-image::user_services_dnas.png[The dnas overview]
+|Contacts Management
+|Must Have
+|Nextcloud <<ncd>>
 
-The same disk is _opened_ to the internal network as a Samba/NFS share.
-The Syncthing service replicates data to the external SSD Disk.
+|Calendars Management
+|Must Have
+|Nextcloud <<ncd>>
 
-[appendix]
-[#appendix_keepalived_integration]
-== Keepalived integration
+|Files (Photos) Synchronization
+|Must Have
+|Nextcloud <<ncd>>
 
-For each board, i.e. node of the cluster, the Keepalived application runs as an operating system service.
+|Files Sharing
+|Must Have
+|Nextcloud <<ncd>>
+|===
 
-.Overview of the Keepalived integration
-image::building_blocks_keepalived.png[Overview of the Keepalived integration]
+=== Software Architecture
+
+The solution leverages on only one system, Nextcloud, which is composed of three main runtimes:
+
+- the monolith which handles the requests
+- the database which contains the data like users, contacts, ...
+- the cache which contains transient data for improvement
+
+Moreover, the solution relies on the Decentralized NAS to have access to private files.
+So that, private files can be fetched and mutated from both approaches centralized and decentralized.
+
+.Services: Container Diagram of Services
+image::services_software.png[Services: Container Diagram of Services]
+
+=== Deployment
+
+The Nextcloud system is fully managed by Kubernetes.
+
+.Services: Nextcloud and Kubernetes integration
+image::services_deployment_nextcloud.png[Services: Nextcloud and Kubernetes integration]
+
+=== Example
+
+The following example shows photos took on _User Phone_ are synchronized _User Phone_
+
+In the following example, the Services is deployed on two nodes, i.e. two different boards.
+
+_User Phone_ pushes photos to _Nextcloud Monolith_ with the local mobile Nexcloud application.
+On _Nextcloud Monolith_, the photos are directly written in a CIFS share provided by _Decentralized NAS_.
+So that, the photos are stored in the local _dnas data_ drive and then replicated on _Node #2_ over Syncthing.
+
+On _User Laptop_, downloaded ROMS are synchronized with _Node #1_ using the local desktop Nexcloud application.
+Like for the photos, the ROMS are store in the local _dnas data_ drive and then replicated on _Node #2_.
+The same photos can also be browsed using the front-end of Nextcloud Monolith with an _Internet Navigator_.
+
+Finally, on _Console_, the gaming platform can fetch the ROMs (pushed by _User Laptop_) on the NFS Server of _Node #2_.
+
+.Services: An example of Services usage
+image::services_infrastructure.png[Services: An example of Services usage]
+
+== Deliverables
+
+The `homecloud` work packages are bundled in two main deliverables:
+
+1. an Ansible Collection <<ans>> which implements both work packages the Platform and Decentralized NAS
+2. Kustomize Modules <<ktz>> which implements the work package Services
+
+.Deliverables: The Platform Matrix
+[cols="h,a,a,a"]
+|===
+|Solution |Characteristics |Deliverable |Runtime
+
+|devsec.hardening
+|- Security Hardening
+|Ansible Collection
+|Operating System
+
+|Keepalived
+|- High Availability
+|Ansible Collection
+|Operating System
+
+|k3s
+|- Container Orchestration
+|Ansible Collection
+|Operating System
+
+|Traefik
+|- Reverse Proxy
+|Ansible Collection
+|Kubernetes
+
+|Longhorn
+|- Distributed Storage
+- Backup and Restore
+|Ansible Collection
+|Kubernetes
+
+|Kubernetes Dashboard
+|- Cluster Management
+|Ansible Collection
+|Kubernetes
+
+|Portainer
+|- Cluster Management
+|Ansible Collection
+|Kubernetes
+
+|Prometheus & Grafana
+|- Observability
+|Ansible Collection
+|Kubernetes
+|===
+
+.Deliverables: The Decentralized NAS Matrix
+[cols="h,a,a,a"]
+|===
+|Solution |Characteristics |Deliverable |Runtime
+|Syncthing
+|- Files Synchronization
+|Ansible Collection
+|Operating System
+
+|Samba Server
+|- Files Sharing
+|Ansible Collection
+|Kubernetes
+
+|NFS Server
+|- Files Sharing
+|Ansible Collection
+|Kubernetes
+|===
+
+.Deliverables: The Services Matrix
+[cols="h,a,a,a"]
+|===
+|Solution |Characteristics |Deliverable |Runtime
+
+|Nextcloud
+|- Contacts Management
+- Calendars Management
+- Photos Synchronization
+- Files Synchronization
+- Files Sharing
+- Backup and Restore (with duplicity)
+|Kustomize Module
+|Kubernetes
+|===
 
 [glossary]
 == Glossary
-
-[glossary]
-[[g_cloud_computing]]Cloud Computing::
-Cloud computing is the use of various services, such as software development platforms, servers, storage and software, over the internet, often referred to as the "cloud." +
-https://www.techopedia.com/definition/2/cloud-computing
-
-[[g_cloud_monitoring]]Cloud Monitoring::
-Cloud monitoring is the process of reviewing, monitoring and managing the operational workflow and processes within a cloud-based IT asset or infrastructure.
-It is the use of manual or automated IT monitoring and management techniques to ensure that a cloud infrastructure or platform performs optimally. +
-https://www.techopedia.com/definition/29862/cloud-monitoring
 
 [[g_containerization]]Containerization::
 Containerization is a type of virtualization strategy that emerged as an alternative to traditional hypervisor-based virtualization. +
@@ -416,15 +1007,6 @@ https://www.techopedia.com/definition/31234/containerization-computers
 [[g_continuous_integration]]Continuous Integration (CI)::
 Continuous integration (CI) is a software development practice in which each member of a development team integrates his work with that produced by others on a continuous basis. +
 https://www.techopedia.com/definition/24368/continuous-integration-ci
-
-[[g_cluster]]Cluster::
-A cluster, in the context of servers, is a group of computers that are connected with each other and operate closely to act as a single computer. +
-https://www.techopedia.com/definition/997/cluster-servers
-
-[[g_dhcp]]Dynamic Host Configuration Protocol (DHCP)::
-Dynamic Host Configuration Protocol (DHCP) is a network management protocol used to dynamically assign an IP address to any new node entering the network.
-DHCP permits a node to be configured automatically, thereby avoiding the necessity of involvement by a network administrator. +
-https://www.techopedia.com/definition/11337/dynamic-host-configuration-protocol-dhcp
 
 [[g_disaster_recovery]]Disaster Recovery::
 Disaster recovery is a set of policies and procedures which focus on protecting an organization from any significant effects in case of a negative event, which may include cyberattacks, natural disasters or building or device failures. +
@@ -439,40 +1021,30 @@ https://www.techopedia.com/definition/24833/hardening
 High availability refers to systems that are durable and likely to operate continuously without failure for a long time. +
 https://www.techopedia.com/definition/1021/high-availability-ha
 
-[[g_internal_cloud]]Internal Cloud::
-An internal cloud is a cloud computing service model implemented within an organization's dedicated resources and infrastructure. +
-https://www.techopedia.com/definition/26648/internal-cloud
-
-[[g_memory_swapping]]Memory Swapping::
-Memory swapping is a memory reclamation method wherein memory contents not currently in use are swapped to a disk to make the memory available for other applications or processes.
-The exact state or "page" of memory is copied to the disk to make the data contiguous and easy to restore later. +
-https://www.techopedia.com/definition/30467/memory-swapping
+[[g_port_forwarding]]Port Forwarding::
+Port forwarding is a networking technique through which a gateway or similar device transmits all incoming communication/traffic of a specific port to the same port on any internal network node. +
+https://www.techopedia.com/definition/4057/port-forwarding
 
 [[g_nas]]Network-attached storage (NAS)::
 Network attached storage (NAS) is a dedicated server, also referred to as an appliance, used for file storage and sharing.
 NAS is a hard drive attached to a network, used for storage and accessed through an assigned network address. +
 https://www.techopedia.com/definition/26197/network-attached-storage-nas
 
-[[g_port_forwarding]]Port Forwarding::
-Port forwarding is a networking technique through which a gateway or similar device transmits all incoming communication/traffic of a specific port to the same port on any internal network node. +
-https://www.techopedia.com/definition/4057/port-forwarding
-
 [[g_reverse_proxy_server]]Reverse Proxy Server::
 A reverse proxy server is a type of proxy server that manages a connection or any specific requests coming from an external network/Internet toward an internal network. +
 https://www.techopedia.com/definition/16048/reverse-proxy-server
 
-[[g_ssh]]Secure Shell (SSH)::
-SSH is a cryptographic protocol and interface for executing network services, shell services and secure network communication with a remote computer. +
-https://www.techopedia.com/definition/4127/secure-shell-ssh
-
 [bibliography]
-
 == References
 
 *Opinions*
 
 * [[[cpa]]] Contributopia, https://contributopia.org/en
 * [[[dgo]]] De-google-ify Internet, https://degooglisons-internet.org/en
+
+*Publication*
+
+* [[[dcc]]] The NIST Definition of Cloud Computing, https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-145.pdf
 
 *Concepts*
 
@@ -487,26 +1059,21 @@ https://www.techopedia.com/definition/4127/secure-shell-ssh
 * [[[hwn]]] How To Harden Your Home Wireless Network?, https://informationhacker.com/how-to-harden-your-home-wireless-network
 * [[[dsp]]] DevSec Project, https://dev-sec.io
 
-*Hardware*
-
-* [[[p64]]] PINE64, https://www.pine64.org
-* [[[plts]]] PINE A64-LTS, https://www.pine64.org/devices/single-board-computers/pine-a64-lts
-
 *Technologies*
 
-* [[[abn]]] Armbian, https://www.armbian.com
 * [[[acsh]]] Ansible Collection - devsec.hardening, https://galaxy.ansible.com/devsec/hardening
-* [[[alt]]] Ansible-lint, https://github.com/ansible-community/ansible-lint
 * [[[ans]]] Ansible, https://www.ansible.com
-* [[[caw]]] calibre-web https://github.com/janeczku/calibre-web
 * [[[cncf]]] Cloud Native Computing Foundation, https://www.cncf.io
 * [[[cntd]]] Containerd, https://containerd.io
 * [[[dup]]] duplicity, http://duplicity.nongnu.org
+* [[[grf]]] Grafana, https://grafana.com/
+* [[[hlm]]] Helm, https://helm.sh
 * [[[k3s]]] k3s, https://k3s.io
 * [[[k8s]]] Kubernetes, https://kubernetes.io
 * [[[kad]]] Keepalived, https://www.keepalived.org
+* [[[kdb]]] Kubernetes Dashboard, https://github.com/kubernetes/dashboard
+* [[[ktz]]] Kustomize, https://kustomize.io
 * [[[lhn]]] Longhorn, https://longhorn.io
-* [[[mol]]] Molecule, https://github.com/ansible-community/molecule
 * [[[ncd]]] Nextcloud, https://nextcloud.com
 * [[[nfs]]] Network File System, https://tools.ietf.org/html/rfc5661
 * [[[pmt]]] Prometheus, https://prometheus.io

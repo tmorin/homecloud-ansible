@@ -1,0 +1,123 @@
+@startuml dnas_context
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+!include nord.puml
+include('c4nord/bootstrap')
+include('c4model/Boundary/SystemBoundary')
+include('c4model/Element/System')
+include('c4model/Element/ExternalSystem')
+include('c4model/Element/Person')
+include('c4model/Element/ExternalPerson')
+Title("Context of the Decentralized NAS", "Decentralized NAS / Context Diagram")
+SystemBoundary("homecloud", "homecloud") {
+  System("platform", "Platform", "Provide support to operate services delivering value to end-users.")
+  System("services", "Services", "Provide services delivering value to end-users.")
+  System("dnas", "Decentralized NAS", "Expose private files with centralized and decentralized protocols.")
+  dnas -u-> platform : Relationship("Relies on")
+  services --> dnas : Relationship("Uses", "CIFS/NFS")
+}
+System("dnas_nodes", "P2P Nodes", "Decentralized nodes which synchronizes files over P2P.")
+dnas_nodes -u-> dnas : Relationship("Uses", "P2P")
+ExternalSystem("external_system", "External System", "Smartphones, laptops or any other systems interacting with private files.")
+external_system -u-> dnas : Relationship("Uses", "CIFS/NFS")
+@enduml
+
+@startuml dnas_software
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('c4nord/bootstrap')
+include('c4model/Boundary/SystemBoundary')
+include('c4model/Element/Database')
+include('c4model/Element/Container')
+include('c4model/Element/System')
+include('c4model/Element/ExternalSystem')
+include('c4model/Element/Person')
+include('c4model/Element/ExternalPerson')
+Title("Software Architecture of the Decentralized NAS", "Decentralized NAS / Container Diagram")
+SystemBoundary("homecloud", "homecloud") {
+  SystemBoundary("dnas", "Decentralized NAS") {
+    Database("fs", "Files System", "A location in the file system which contains the private files.", "USB Drive/SD-Card/...")
+    Container("server_cifs", "CIFS Server", "A server exposing data over the centralized CIFS protocol.", "Samba Server")
+    Container("server_nfs", "NFS Server", "A server exposing data over the centralized NFS protocol.", "NFS Server")
+    Container("main_p2p_node", "Main P2P Node", "A server exposing data over a decentralized P2P protocol.", "syncthing")
+    server_cifs -u-> fs : Relationship("Read/Write")
+    server_nfs -u-> fs : Relationship("Read/Write")
+    main_p2p_node -u-> fs : Relationship("Read/Write")
+  }
+  System("services", "Services", "Provide services delivering value to end-users.")
+  services ---> server_cifs : Relationship("Uses", "CIFS")
+  services ---> server_nfs : Relationship("Uses", "NFS")
+}
+ExternalSystem("external_system", "External System", "Smartphones, laptops or any other systems interacting with private files.")
+external_system -u-> server_cifs : Relationship("Uses", "CIFS")
+external_system -u-> server_nfs : Relationship("Uses", "NFS")
+Container("p2p_node", "P2P Nodes", "Decentralized nodes which synchronizes files over P2P.", "syncthing")
+p2p_node -u-> main_p2p_node : Relationship("Uses", "P2P")
+@enduml
+
+@startuml dnas_infrastructure
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+include('homecloud-2/Brand/Kubernetes')
+include('homecloud-2/Brand/Syncthing')
+include('homecloud-2/Container/Container')
+include('homecloud-2/Container/Pod')
+include('homecloud-2/Brand/Nfs')
+include('homecloud-2/Brand/Samba')
+include('homecloud-2/Hardware/Hdd')
+include('homecloud-2/Hardware/Board')
+include('homecloud-2/Hardware/Laptop')
+include('homecloud-2/Hardware/Smartphone')
+include('material-4/Av/WebAsset')
+include('material-4/Av/Games')
+Title("An example of Decentralized NAS usage", "Decentralized NAS / Infrastructure Diagram")
+BoardGroup(n1, "Node #1", "board") {
+  Hdd(n1_data, "dnas data", "Systemd Mount")
+  Syncthing("n1_syncthing", "Syncthing", "Systemd Service")
+  KubernetesGroup(n1_k8s, "kubernetes") {
+    PodGroup(n1_dnas, "dnas", "pod") {
+      Samba(n1_cifs, "Samba", "container")
+      Nfs(n1_nfs, "NFS Server", "container")
+    }
+  }
+  n1_cifs -u-> n1_data
+  n1_nfs -u-> n1_data
+  n1_syncthing -u-> n1_data
+  n1_syncthing -[hidden]l- n1_cifs
+}
+
+BoardGroup(n2, "Node #2", "board") {
+  Hdd(n2_data, "dnas data", "Systemd Mount")
+  KubernetesGroup(n2_k8s, "kubernetes") {
+    PodGroup(n2_dnas, "dnas", "pod") {
+      Samba(n2_cifs, "Samba", "container")
+      Nfs(n2_nfs, "NFS Server", "container")
+    }
+  }
+  Syncthing("n2_syncthing", "Syncthing", "Systemd Service")
+  n2_cifs -u-> n2_data
+  n2_nfs -u-> n2_data
+  n2_syncthing -u-> n2_data
+}
+
+n1_syncthing <-r-> n2_syncthing : Relationship("Synchronizes", "P2P")
+
+LaptopGroup(laptop, "User Laptop", "laptop") {
+  Syncthing("syncthing_laptop_node", "Syncthing", "application")
+  syncthing_laptop_node <-u-> n1_syncthing : Relationship("Synchronizes\ndocuments", "P2P")
+  WebAsset("file_navigator", "File Navigator", "application")
+  file_navigator -u-> n1_cifs : Relationship("Browses photos\nPushes photos", "CIFS")
+}
+SmartphoneGroup("smartphone", "User Phone", "smartphone") {
+  Syncthing("syncthing_smartphone_node", "Syncthing", "application")
+  syncthing_smartphone_node -u-> n2_syncthing : Relationship("Pushes\nphotos", "P2P")
+}
+BoardGroup("raspberrypi", "TV Box", "Raspberry Pi") {
+  Games("recalbox", "Recalbox", "retrogaming platform")
+  recalbox -u-> n2_nfs : Relationship("Fetches\nROMs", "NFS")
+}
+@enduml

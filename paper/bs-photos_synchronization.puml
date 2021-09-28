@@ -1,0 +1,34 @@
+@startuml bs-photos_synchronization-usecases
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+include('material-4/Social/Person')
+include('material-4/Device/Devices')
+Person("owner", "owner")
+Devices("devices", "devices")
+Title("Photos Synchronization", "Business Scenario / Usecase Diagram")
+rectangle homecloud {
+  usecase manage_photos as "manage photos"
+  usecase synchronize_photos as "synchronize photos"
+  synchronize_photos <.r. manage_photos : ««extends» »
+}
+owner -u-> manage_photos
+devices -u-> synchronize_photos
+@enduml
+
+@startuml bs-photos_synchronization-value_stream
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+Title("Handle Photos Changes", "Business Scenario / Value Stream")
+left to right direction
+rectangle "Change Photos\non Device" as change_photos <<ValueStreamPrimary>>
+rectangle "Synchronize Photos" as synchronize_photo <<ValueStreamPrimary>>
+rectangle "Manage Photos\non //homecloud//" as manage_photos <<ValueStreamPrimary>>
+change_photos --> synchronize_photo
+synchronize_photo --> manage_photos
+@enduml

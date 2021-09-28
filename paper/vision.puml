@@ -1,0 +1,56 @@
+@startuml vision_context
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('c4nord/bootstrap')
+include('c4model/Element/System')
+include('c4model/Element/ExternalSystem')
+include('c4model/Element/Person')
+include('c4model/Element/ExternalPerson')
+Title("Context of //homecloud//", "Vision / Context Diagram")
+System("homecloud", "homecloud", "A cloud at home which provides services keeping private data private.")
+ExternalSystem("external_system", "External System", "Smartphones, laptops or any other systems consuming homecloud services.")
+Person("user", "User", "A person taking care ot his/her private data.")
+Person("administrator", "Administrator", "A person allowed to interact with the homecloud platform.")
+ExternalPerson("guest", "Guest", "A person allowed by a //User// to interact with some homecloud services.")
+administrator --> homecloud : Relationship("Administrates the platform running")
+user --> homecloud  : Relationship("Consumes services provided by")
+guest -u-> homecloud  : Relationship("Consumes services provided by")
+external_system -u-> homecloud  : Relationship("Consumes services provided by")
+@enduml
+
+@startuml vison_work_packages
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+!include ./nord.puml
+Title("Overview of the Work Packages", "Vision / Component Diagram")
+actor "Devices" as devices
+package homecloud {
+  component "Platform" as platform
+  component "Decentralized NAS" as dnas
+  interface decentralized [
+      P2P
+      <color:$THEME_NORD_3><size:10>[decentralized]</size></color>
+  ]
+  interface centralized [
+    NFS/CIFS
+    <color:$THEME_NORD_3><size:10>[centralized]</size></color>
+  ]
+  component "Services" as services
+  interface HTTP
+  interface WebDav
+  [platform] <~~ [dnas] : <<use>>
+  [dnas] -- decentralized
+  [dnas] -- centralized
+  [platform] <~~ [services] : <<use>>
+  [services] -- WebDav
+  [services] -- HTTP
+  [services] --> centralized
+}
+devices -u-> WebDav
+devices -u-> HTTP
+devices -u-> decentralized
+devices -u-> centralized
+@enduml

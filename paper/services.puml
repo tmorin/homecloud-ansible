@@ -1,0 +1,155 @@
+@startuml services_context
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+!include nord.puml
+include('c4nord/bootstrap')
+include('c4model/Boundary/SystemBoundary')
+include('c4model/Element/System')
+include('c4model/Element/ExternalSystem')
+include('c4model/Element/Person')
+include('c4model/Element/ExternalPerson')
+Title("Context of the Services", "Services / Context Diagram")
+SystemBoundary("homecloud", "homecloud") {
+  System("platform", "Platform", "Provide support to operate services delivering value to end-users.")
+  System("services", "Services", "Provide services delivering value to end-users.")
+  System("dnas", "Decentralized NAS", "Expose private files with centralized and decentralized protocols.")
+  services --> platform : Relationship("Relies on")
+  services --> dnas : Relationship("Uses", "CIFS/NFS")
+}
+Person("user", "User", "The owner of private data managed by homecloud.")
+user --> services : Relationship("Uses", "HTTPS")
+ExternalSystem("external_system", "External System", "Smartphones, laptops or any other systems interacting with private files.")
+external_system --> services : Relationship("Uses", "HTTPS")
+@enduml
+
+@startuml services_software
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('c4nord/bootstrap')
+include('c4model/Boundary/SystemBoundary')
+include('c4model/Element/Database')
+include('c4model/Element/Container')
+include('c4model/Element/System')
+include('c4model/Element/ExternalSystem')
+include('c4model/Element/Person')
+include('c4model/Element/ExternalPerson')
+Title("Software Architecture of the Services", "Services / Container Diagram")
+SystemBoundary("homecloud", "homecloud") {
+  System("dnas", "Decentralized NAS", "Expose private files with centralized and decentralized protocols.")
+  SystemBoundary("services", "Services") {
+    Database(nextcloud_database, "Nextcloud Database", "The database contains the users, contacts, calendars and other Nextcloud data.")
+    Database(nextcloud_cache, "Nextcloud Cache", "The database helps to improve performances keeping transient data in memory.")
+    Container(nextcloud_application, "Nextcloud Application", "The monolith which exposes a front-end and web-services.")
+    nextcloud_application --> nextcloud_database : Relationship("Uses", "TCP")
+    nextcloud_application --> nextcloud_cache : Relationship("Uses", "TCP")
+    nextcloud_application --> dnas : Relationship("Uses", "CIFS")
+  }
+}
+Person("user", "User", "The owner of private data managed by homecloud.")
+user --> nextcloud_application : Relationship("Uses", "HTTPS")
+ExternalSystem("external_system", "External System", "Smartphones, laptops or any other systems interacting with private files.")
+external_system --> nextcloud_application : Relationship("Uses", "HTTPS")
+@enduml
+
+@startuml services_deployment_nextcloud
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+include('homecloud-2/Brand/Kubernetes')
+include('homecloud-2/Brand/Traefik')
+include('homecloud-2/Container/Container')
+include('homecloud-2/Container/Pod')
+include('homecloud-2/Container/VolumeLonghorn')
+include('homecloud-2/Container/VolumeK8S')
+KubernetesGroup("kubernetes") {
+  Traefik("ingress_route", "Ingress Route", "Traefik")
+
+  VolumeLonghorn("volume_application", "application", "Volume/Longhorn")
+  VolumeLonghorn("volume_database", "database", "Volume/Longhorn")
+  VolumeK8S("volume_dnas", "dnas", "Volume/CIFS")
+  VolumeK8S("volume_backup", "backup", "Volume/CIFS")
+
+  PodGroup("application", "application", "Deployment") {
+    Container("nextcloud", "nextcloud", "Container/PHP")
+  }
+  PodGroup("database", "database", "Deployment") {
+    Container("mariadb", "mariadb", "Container/MariaDB")
+    Container("backup", "backup", "Container/Duplicity")
+  }
+  PodGroup("cache", "cache", "Deployment") {
+    Container("redis", "redis", "Container/Redis")
+  }
+
+  ingress_route --> nextcloud : Relationship("", "HTTP")
+
+  nextcloud --> mariadb : Relationship("", "TCP")
+  nextcloud --> redis : Relationship("", "TCP")
+  backup -r-> mariadb : Relationship("creates SQL\ndumps", "TCP")
+
+  nextcloud -u-> volume_application : Relationship("reads/writes\nNextcloud files")
+  nextcloud -u-> volume_dnas : Relationship("reads/writes\nprivate files")
+  mariadb -u--> volume_database : Relationship("reads/writes\ndatabase files")
+  backup -u--> volume_backup : Relationship("pushes\ndump files")
+}
+@enduml
+
+@startuml services_infrastructure
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="../.gdiag/plantuml-libs"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('homecloud-2/bootstrap')
+include('homecloud-2/Brand/Kubernetes')
+include('homecloud-2/Brand/Syncthing')
+include('homecloud-2/Container/Container')
+include('homecloud-2/Container/Pod')
+include('homecloud-2/Brand/Dnas')
+include('homecloud-2/Brand/Nfs')
+include('homecloud-2/Brand/Samba')
+include('homecloud-2/Brand/Nextcloud')
+include('homecloud-2/Hardware/Hdd')
+include('homecloud-2/Hardware/Board')
+include('homecloud-2/Hardware/Laptop')
+include('homecloud-2/Hardware/Smartphone')
+include('material-4/Av/WebAsset')
+include('material-4/Av/Games')
+Title("An example of Services usage", "Services / Infrastructure Diagram")
+BoardGroup(n1, "Node #1", "board") {
+  Hdd(n1_data, "dnas data", "Systemd Mount")
+  Syncthing("n1_syncthing", "Syncthing", "Systemd Service")
+  KubernetesGroup(n1_k8s, "kubernetes") {
+    Dnas("n1_dnas", "Decentralized NAS", "Deployment")
+    Nextcloud("n1_nextcloud", "Nextcloud Monolith", "Deployment")
+  }
+  n1_syncthing -u-> n1_data
+  n1_dnas -u-> n1_data
+  n1_nextcloud -r-> n1_dnas : Relationship("", "CIFS")
+}
+BoardGroup(n2, "Node #2", "board") {
+  Hdd(n2_data, "dnas data", "Systemd Mount")
+  Syncthing("n2_syncthing", "Syncthing", "Systemd Service")
+  KubernetesGroup(n2_k8s, "kubernetes") {
+    Dnas("n2_dnas", "Decentralized NAS", "Deployment")
+  }
+  n2_syncthing -u-> n2_data
+  n2_dnas -u-> n2_data
+}
+n1_syncthing <-r-> n2_syncthing : Relationship("Synchronizes", "P2P")
+
+SmartphoneGroup("smartphone", "User Phone", "smartphone") {
+  Nextcloud("nextcloud_smartphone_node", "Nextcloud App", "application")
+  nextcloud_smartphone_node -u-> n1_nextcloud : Relationship("Pushes\nphotos", "HTTPS")
+}
+LaptopGroup(laptop, "User Laptop", "laptop") {
+  Nextcloud("nextcloud_laptop_node", "Nextcloud Desktop", "application")
+  WebAsset("internet_navigator", "Internet Navigator", "application")
+  internet_navigator -u-> n1_nextcloud : Relationship("Browses photos", "HTTPS")
+  nextcloud_laptop_node -u-> n1_nextcloud : Relationship("Synchronize ROMS", "HTTPS")
+}
+BoardGroup("raspberrypi", "TV Box", "Raspberry Pi") {
+  Games("recalbox", "Recalbox", "retrogaming platform")
+  recalbox -u-> n2_dnas : Relationship("Fetches\nROMs", "NFS")
+}
+@enduml
