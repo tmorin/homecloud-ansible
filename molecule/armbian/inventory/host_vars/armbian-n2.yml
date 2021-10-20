@@ -1,6 +1,6 @@
 ---
 
-ansible_host: 192.168.100.12
+ansible_host: 192.168.100.72
 homecloud_node_ip: "{{ ansible_host }}"
 
 # https://www.armbian.com/sopine-a64/

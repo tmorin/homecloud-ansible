@@ -2,6 +2,7 @@
 
 ROOT_FS=""
 CREATE_USER="homecloud"
+DELETE_INITIAL_USER="yes"
 LOCK_ROOT="yes"
 
 POSITIONAL=()
@@ -39,9 +40,12 @@ if [[ -z "${ROOT_FS}" ]]; then
   exit 1
 fi
 
+if [[ "${DELETE_INITIAL_USER}" == "yes" ]]; then
+  chroot "${ROOT_FS}" /bin/bash -exc "userdel -rf aosc"
+fi
+
 if [[ -n "${CREATE_USER}" ]]; then
   chroot "${ROOT_FS}" /bin/bash -exc "
-echo create the user ${CREATE_USER}
 # create the user with the password disabled
 useradd -m -d /home/${CREATE_USER} -s /bin/bash ${CREATE_USER}
 # prepare the .ssh directory
@@ -61,3 +65,5 @@ usermod --lock root
 passwd -l root
 chage -d $(date "+%F") -E 2999-01-01 -I -1 -m 0 -M 999999 -W 31 root"
 fi
+
+chroot "${ROOT_FS}" /bin/bash -exc "apt-get update --assume-yes"

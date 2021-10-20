@@ -1,7 +1,9 @@
 ---
 
-ansible_host: 192.168.100.13
+ansible_host: 192.168.100.73
 homecloud_node_ip: "{{ ansible_host }}"
+homecloud_node_interface: "eth0"
+homecloud_node_mac: "b6:09:a4:06:01:2c"
 
 # https://www.armbian.com/rock64
 # https://redirect.armbian.com/region/EU/rock64/Buster_current

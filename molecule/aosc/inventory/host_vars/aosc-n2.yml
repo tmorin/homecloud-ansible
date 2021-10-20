@@ -1,0 +1,9 @@
+---
+
+ansible_host: 192.168.100.62
+homecloud_node_ip: "{{ ansible_host }}"
+
+# https://aosc.io/downloads/alternative/#base
+# https://releases.aosc.io/os-arm64/sunxi64/base/sopine-baseboard/sun50i-a64-sopine-baseboard_sunxi64-base_2020-06-07_emmc.img.lz4
+image_aosc_image_name: "sun50i-a64-sopine-baseboard_sunxi64-base_2020-06-07_emmc.img"
+image_aosc_image_url: "https://releases.aosc.io/os-arm64/sunxi64/base/sopine-baseboard/{{ image_aosc_archive_name }}"

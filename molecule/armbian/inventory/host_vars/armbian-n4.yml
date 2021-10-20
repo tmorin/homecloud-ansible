@@ -1,7 +1,9 @@
 ---
 
-ansible_host: 192.168.100.14
+ansible_host: 192.168.100.74
 homecloud_node_ip: "{{ ansible_host }}"
+homecloud_node_interface: "eth0"
+homecloud_node_mac: "b6:09:a4:06:01:2d"
 
 # https://www.armbian.com/rock64
 image_armbian_image_name: "armbian_rock64_focal_current.img"

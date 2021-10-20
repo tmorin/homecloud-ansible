@@ -1,0 +1,33 @@
+---
+
+- name: "Stats {{ image_aosc_base_archive_path }}"
+  delegate_to: localhost
+  ansible.builtin.stat:
+    path: "{{ image_aosc_base_archive_path }}"
+  register: downloaded_aosc_archive_file
+
+- name: "Stats {{ image_aosc_base_image_path }}"
+  delegate_to: localhost
+  ansible.builtin.stat:
+    path: "{{ image_aosc_base_image_path }}"
+  register: unpacked_aosc_image_file
+
+- name: Fetch aosc image
+  delegate_to: localhost
+  when: not downloaded_aosc_archive_file.stat.exists and not unpacked_aosc_image_file.stat.exists
+  ansible.builtin.get_url:
+    url: "{{ image_aosc_image_url }}"
+    dest: "{{ image_aosc_base_archive_path }}"
+    force: false
+
+- name: Unpack aosc archive
+  delegate_to: localhost
+  when: not unpacked_aosc_image_file.stat.exists
+  ansible.builtin.command:
+    chdir: "{{ image_aosc_working_directory }}"
+    cmd: "unlz4 {{ image_aosc_base_archive_path }}"
+  register: unpack
+
+- name: debug unpack
+  ansible.builtin.debug:
+    var: unpack

@@ -1,0 +1,7 @@
+---
+
+# the path of the aosc archive
+image_aosc_base_archive_path: "{{ image_aosc_working_directory }}/{{ image_aosc_archive_name }}"
+
+# the path of the aosc image
+image_aosc_base_image_path: "{{ image_aosc_working_directory }}/{{ image_aosc_image_name }}"

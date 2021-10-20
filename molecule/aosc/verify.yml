@@ -1,0 +1,20 @@
+---
+
+- hosts: localhost
+  tasks:
+
+    - name: Stat aosc-n1
+      ansible.builtin.stat:
+        path: "{{ image_aosc_release_directory }}/aosc-n1.img"
+      register: stat_aosc_n1_img
+    - name: Check aosc-n1
+      ansible.builtin.assert:
+        that: stat_aosc_n1_img is success
+
+#    - name: Stat aosc-n2
+#      ansible.builtin.stat:
+#        path: "{{ image_aosc_release_directory }}/aosc-n2.img"
+#      register: stat_aosc_n2_img
+#    - name: Check aosc-n2
+#      ansible.builtin.assert:
+#        that: stat_aosc_n2_img is success

@@ -18,3 +18,7 @@
       when: image_ubuntu_raspi_image_url | default("") | length > 0
       ansible.builtin.include_role:
         name: image_ubuntu_raspi
+    - name: Build AOSC image
+      when: image_aosc_image_url | default("") | length > 0
+      ansible.builtin.include_role:
+        name: image_aosc

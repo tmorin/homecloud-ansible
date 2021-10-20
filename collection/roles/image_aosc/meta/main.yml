@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Thibault Morin
+  description: create a dedicated .img for each inventory's host
+  license: MIT
+  min_ansible_version: 3.1
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+
+  galaxy_tags:
+    - debian
+    - ubuntu
+
+dependencies: [ ]

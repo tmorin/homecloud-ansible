@@ -1,0 +1,25 @@
+---
+
+- name: "Chown {{ image_aosc_host_directory }}"
+  delegate_to: localhost
+  become: true
+  ansible.builtin.file:
+    path: "{{ image_aosc_host_directory }}"
+    mode: u=rwX,g=rX,o=rX
+    owner: "1000"
+    group: "1000"
+    recurse: true
+  changed_when: false
+
+- name: Create the image release directory
+  delegate_to: localhost
+  ansible.builtin.file:
+    path: "{{ image_aosc_release_directory }}"
+    state: directory
+    mode: 0755
+
+- name: Move host images
+  delegate_to: localhost
+  become: true
+  ansible.builtin.raw: "mv -f {{ image_aosc_host_directory }}/image.img {{ image_aosc_release_directory }}/{{ inventory_hostname }}.img"
+  changed_when: false

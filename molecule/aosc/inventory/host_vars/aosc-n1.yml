@@ -1,0 +1,9 @@
+---
+
+ansible_host: 192.168.100.61
+homecloud_node_ip: "{{ ansible_host }}"
+
+# https://aosc.io/downloads/alternative/#base
+# https://releases.aosc.io/os-arm64/rockchip64/base/rock64/rk3328-rock64_rk64-base_2020-06-08_emmc.img.lz4
+image_aosc_image_name: "rk3328-rock64_rk64-base_2020-06-08_emmc.img"
+image_aosc_image_url: "https://releases.aosc.io/os-arm64/rockchip64/base/rock64/{{ image_aosc_archive_name }}"

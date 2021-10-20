@@ -1,0 +1,23 @@
+---
+
+homecloud_node_ip: ''
+homecloud_network_netmask: ''
+homecloud_network_gateway: ''
+homecloud_network_nameserver: [ ]
+
+# the url to get the aosc archive (c.f. https://aosc.io/downloads/alternative/#base)
+image_aosc_image_url: ""
+# the name of the aosc archive (for instance rk3328-rock64_rk64-base_2020-06-08_emmc.img.lz4)
+image_aosc_archive_name: ""
+# the name of the aosc image (for instance rk3328-rock64_rk64-base_2020-06-08_emmc.img)
+image_aosc_image_name: ""
+# clean the working directory of each host
+image_aosc_clean_working_directory: true
+# the directory where images will be temporary mounted and patched
+image_aosc_working_directory: "/tmp/homecloud/aosc_workdir"
+# the path to the SSH public key used by ansible
+image_aosc_ssh_pub_key_path: "~/.ssh/id_rsa.pub"
+# the username of the user which will be used by ansible
+image_aosc_username: "homecloud"
+# the directory where images will be released
+image_aosc_release_directory: "/tmp/homecloud/aosc_release"

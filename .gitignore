@@ -1,10 +1,11 @@
-dist/
-env
-venv
 .gdiag
 .idea/
+.tmp/
+.vagrant/
 *.log
-node_modules/
 *.swp
 *.tar.gz
-.vagrant/
+dist/
+node_modules/
+venv/
+venv-vagrant/

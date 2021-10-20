@@ -4,7 +4,7 @@ homecloud_vault_path: "/tmp/molecule/vault"
 image_ubuntu_raspi_working_directory: "/tmp/molecule/ubuntu_raspi/working_directory"
 image_ubuntu_raspi_release_directory: "/tmp/molecule/ubuntu_raspi/release_directory"
 
-homecloud_virtual_ip: '192.168.100.10'
+homecloud_virtual_ip: '192.168.100.80'
 homecloud_network_netmask: '255.255.255.0'
 homecloud_network_gateway: '192.168.0.1'
 homecloud_network_nameservers: [ '1.1.1.1', '1.0.0.1' ]

@@ -1,6 +1,6 @@
 ---
 
-ansible_host: 192.168.100.11
+ansible_host: 192.168.100.81
 homecloud_node_ip: "{{ ansible_host }}"
 
 # https://ubuntu.com/download/raspberry-pi
