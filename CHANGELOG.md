@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/tmorin/homecloud-ansible/compare/v2.5.1...v2.6.0) (2021-10-25)
+
+
+### Features
+
+* **image_aosc:** add support to customize ASOC images ([353e3d6](https://github.com/tmorin/homecloud-ansible/commit/353e3d6738b31d70f461b1075730b473e88d3069))
+* **image_armbian:** add an option to override the MAC address ([a4b9973](https://github.com/tmorin/homecloud-ansible/commit/a4b99736bae4e6321f0bcd31a962132951f8d9d5))
+
 ### [2.5.1](https://github.com/tmorin/homecloud-ansible/compare/v2.5.0...v2.5.1) (2021-09-20)
 
 

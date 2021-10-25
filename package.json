@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "2.5.1",
+  "version": "2.6.0",
   "scripts": {
     "gdiag": "gdiag --wd=paper",
     "gdiag:clean": "gdiag --wd=paper -c",
