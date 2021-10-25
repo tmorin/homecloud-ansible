@@ -1,6 +1,7 @@
 ---
 
 homecloud_node_ip: ''
+homecloud_node_mac: ''
 homecloud_network_netmask: ''
 homecloud_network_gateway: ''
 homecloud_network_nameserver: [ ]

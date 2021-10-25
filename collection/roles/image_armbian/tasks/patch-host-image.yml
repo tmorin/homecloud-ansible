@@ -93,6 +93,15 @@
     - name: Debug fix_hosts
       ansible.builtin.debug:
         var: fix_hosts
+    - name: "Set custom MAC address"
+      delegate_to: localhost
+      when: homecloud_node_mac | length > 0
+      become: true
+      ansible.builtin.replace:
+        path: "{{ image_armbian_host_directory }}/rootfs/lib/armbian/armbian-firstrun-config"
+        regexp: "\\$\\{FIXED_IP_SETTINGS\\}$"
+        replace: "${FIXED_IP_SETTINGS} ethernet.cloned-mac-address \"{{ homecloud_node_mac }}\" -ethernet.mac-address \"\""
+      changed_when: false
   always:
     - name: Unmount host image
       delegate_to: localhost

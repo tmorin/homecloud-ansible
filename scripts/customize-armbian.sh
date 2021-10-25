@@ -15,6 +15,6 @@ sudo collection/roles/image_armbian/files/mounter.sh -hd "$hd" -bi "$bi" -c
 
 sudo collection/roles/image_armbian/files/mounter.sh -hd "$hd" -bi "$bi" -p
 
-sudo collection/roles/image_armbian/files/customizer.sh -rf "$rf"
+sudo collection/roles/image_armbian/files/customizer.sh -rf "$rf" -dlr
 
 sudo collection/roles/image_armbian/files/mounter.sh -hd "$hd" -bi "$bi" -u
