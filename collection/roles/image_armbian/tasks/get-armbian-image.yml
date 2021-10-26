@@ -4,12 +4,18 @@
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_armbian_base_archive_path }}"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: downloaded_armbian_archive_file
 
 - name: "Stats {{ image_armbian_base_image_path }}"
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_armbian_base_image_path }}"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: unpacked_armbian_image_file
 
 - name: Fetch armbian image

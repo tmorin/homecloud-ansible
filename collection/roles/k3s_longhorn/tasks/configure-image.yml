@@ -12,6 +12,9 @@
   become: true
   ansible.builtin.stat:
     path: "{{ k3s_longhorn_image_file }}"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: stat_k3s_longhorn_image_file
 
 - name: "Create the image file"

@@ -4,12 +4,18 @@
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_aosc_base_archive_path }}"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: downloaded_aosc_archive_file
 
 - name: "Stats {{ image_aosc_base_image_path }}"
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_aosc_base_image_path }}"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: unpacked_aosc_image_file
 
 - name: Fetch aosc image

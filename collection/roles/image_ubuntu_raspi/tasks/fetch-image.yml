@@ -4,12 +4,18 @@
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_ubuntu_raspi_base_archive_path }}"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: downloaded_ubuntu_archive_file
 
 - name: "Stats {{ image_ubuntu_raspi_base_image_path }}"
   delegate_to: localhost
   ansible.builtin.stat:
     path: "{{ image_ubuntu_raspi_base_image_path }}"
+    get_attributes: no
+    get_checksum: no
+    get_mime: no
   register: unpacked_ubuntu_image_file
 
 - name: Fetch ubuntu image
