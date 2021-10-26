@@ -1,8 +1,4 @@
 ansible~=4.7
 ansible-lint[yamllint]~=5.0
 molecule~=3.5
-#molecule-vagrant~=0.6
 molecule-vagrant!=0.6.3
-#python-vagrant~=0.5
-#jmespath~=0.10
-#pyyaml~=5.0

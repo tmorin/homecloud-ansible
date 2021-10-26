@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/tmorin/homecloud-ansible/compare/v2.6.0...v2.6.1) (2021-10-26)
+
+
+### Bug Fixes
+
+* **k3s_longhorn:** dd parameter must be configurable to handle low cost dev board ([246a26f](https://github.com/tmorin/homecloud-ansible/commit/246a26fc3e3866ae12b8df537c9138a251004759))
+
 ## [2.6.0](https://github.com/tmorin/homecloud-ansible/compare/v2.5.1...v2.6.0) (2021-10-25)
 
 
