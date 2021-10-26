@@ -7,6 +7,13 @@
     state: directory
     mode: 0755
 
+- name: "Install dependencies from apt"
+  become: true
+  ansible.builtin.package:
+    name: apparmor-utils
+    state: present
+    force_apt_get: true
+
 - name: Install the primary k3s server
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
   block:
