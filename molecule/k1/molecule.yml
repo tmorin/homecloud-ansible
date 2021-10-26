@@ -1,9 +1,9 @@
 ---
 
-#dependency:
-#  name: galaxy
-#  options:
-#    requirements-file: molecule/resources/collections.yml
+dependency:
+  name: galaxy
+  options:
+    requirements-file: molecule/resources/collections.yml
 
 driver:
   name: vagrant
