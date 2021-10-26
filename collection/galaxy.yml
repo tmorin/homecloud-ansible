@@ -22,4 +22,3 @@ issues: https://github.com/tmorin/homecloud-ansible/issues
 dependencies:
   ansible.posix: "*"
   community.general: "*"
-  devsec.hardening: "*"
