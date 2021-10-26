@@ -4,7 +4,8 @@ k3s_longhorn_release: "master"
 
 k3s_longhorn_script_create_loop: "/usr/local/share/homecloud/scripts/create_longhorn_loop.sh"
 
-k3s_longhorn_image_size: "2G"
+k3s_longhorn_image_dd_bs: "10M"
+k3s_longhorn_image_dd_cnt: "100"
 k3s_longhorn_image_device: ""
 k3s_longhorn_image_file: "/var/lib/homecloud/longhorn.img"
 

@@ -14,4 +14,5 @@ cd /vagrant
 virtualenv venv-vagrant
 source venv-vagrant/bin/activate
 pip install -r requirements.txt
+vagrant plugin install vagrant-libvirt
 "

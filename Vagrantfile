@@ -66,6 +66,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install -y jq qemu qemu-system qemu-user-static qemu-user python3-virtualenv lz4 xz-utils btrfs-progs
+    apt-get install -y btrfs-progs jq lz4 python3-virtualenv qemu qemu-system qemu-user qemu-user-static xz-utils
+    apt-get install -y bridge-utils libvirt-daemon-system qemu-kvm virtinst
   SHELL
 end

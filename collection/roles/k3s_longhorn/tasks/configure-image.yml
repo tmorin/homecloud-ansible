@@ -18,7 +18,7 @@
   when: not stat_k3s_longhorn_image_file.stat.exists
   become: true
   ansible.builtin.command:
-    cmd: "dd if=/dev/zero of={{ k3s_longhorn_image_file }} bs={{ k3s_longhorn_image_size }} count=1"
+    cmd: "dd if=/dev/zero of={{ k3s_longhorn_image_file }} bs={{ k3s_longhorn_image_dd_bs }} count={{ k3s_longhorn_image_dd_cnt }}"
 
 - name: "Create the scripts directory"
   become: true
