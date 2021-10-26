@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.2](https://github.com/tmorin/homecloud-ansible/compare/v2.6.1...v2.6.2) (2021-10-26)
+
+
+### Bug Fixes
+
+* `ansible.builtin.stat` is too long because of useless processing (checksum, ...) ([66c598d](https://github.com/tmorin/homecloud-ansible/commit/66c598db282f6781a004a8ebf9e3d637452714bd))
+
 ### [2.6.1](https://github.com/tmorin/homecloud-ansible/compare/v2.6.0...v2.6.1) (2021-10-26)
 
 
