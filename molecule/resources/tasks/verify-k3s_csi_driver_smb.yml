@@ -54,6 +54,7 @@
     - name: Get step2 output
       become: true
       ansible.builtin.command: kubectl logs test-csi-smb-dnas-step2
+      changed_when: false
       register: step2_result
     - name: Verify logs
       ansible.builtin.assert:

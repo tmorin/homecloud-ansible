@@ -64,6 +64,7 @@
     - name: ReadWriteOnce - Get step2 output
       become: true
       ansible.builtin.command: kubectl logs test-longhorn-rwo-step2
+      changed_when: false
       register: step2_result
     - name: ReadWriteOnce - Verify logs
       ansible.builtin.assert:
@@ -112,6 +113,7 @@
     - name: ReadWriteMany - Get step3 output
       become: true
       ansible.builtin.command: kubectl logs test-longhorn-rwx-step3
+      changed_when: false
       register: step3_result
     - name: ReadWriteMany - Verify logs
       ansible.builtin.assert:
