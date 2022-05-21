@@ -17,4 +17,4 @@ service_k3s_node_taints: { }
 
 service_k3s_local_kubectl_config_file: "~/.kube/homecloud"
 
-service_k3s_kustomize_release: v4.3.0
+service_k3s_kustomize_release: v4.5.5
