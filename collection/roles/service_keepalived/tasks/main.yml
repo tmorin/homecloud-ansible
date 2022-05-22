@@ -15,7 +15,7 @@
     name: ip_vs
     state: present
 
-- name: Load the ip_vs module at bootstart
+- name: Load the ip_vs module at bootstrap
   become: true
   ansible.builtin.template:
     src: ip_vs.conf
