@@ -101,18 +101,18 @@ The test suite targets the following operating systems:
 - Ubuntu
 - Debian
 
-| |[k1]|[k1ha]|[k1lo]|[k2]|[k2ha]|[armbian]|[ubuntu_raspi]|
-|---|---|---|---|---|---|---|---|
-|servers|1|1|1|1|2|0|0|
-|agents|0|0|0|1|0|0|0|
-|keepalived|no|yes|no|yes|yes|no|no|
-|longhorn|no|yes|yes|yes|yes|no|no|
-|traefik|yes|yes|no|yes|yes|no|no|
-|dashboard|yes|no|no|no|no|no|no|
-|dnas|yes|yes|no|no|no|no|no|
-|hardening|no|no|no|no|no|no|no|
-|Armbian image|no|no|no|no|no|yes|no|
-|Ubuntu image|no|no|no|no|no|no|yes|
+|               | [k1] | [k1ha] | [k1lo] | [k2] | [k2ha] | [armbian] | [ubuntu_raspi] |
+|---------------|------|--------|--------|------|--------|-----------|----------------|
+| servers       | 1    | 1      | 1      | 1    | 2      | 0         | 0              |
+| agents        | 0    | 0      | 0      | 1    | 0      | 0         | 0              |
+| keepalived    | no   | yes    | no     | yes  | yes    | no        | no             |
+| longhorn      | no   | yes    | yes    | yes  | yes    | no        | no             |
+| traefik       | yes  | yes    | no     | yes  | yes    | no        | no             |
+| dashboard     | yes  | no     | no     | no   | no     | no        | no             |
+| dnas          | yes  | yes    | no     | no   | no     | no        | no             |
+| hardening     | no   | no     | no     | no   | no     | no        | no             |
+| Armbian image | no   | no     | no     | no   | no     | yes       | no             |
+| Ubuntu image  | no   | no     | no     | no   | no     | no        | yes            |
 
 Test the scenario `k1`
 ```shell
@@ -163,8 +163,8 @@ They are located in the molecule directory: [molecule/resources/playbooks](molec
 
 #### Hardening
 
-The playbook [cluster-hardening.yml](molecule/resources/playbooks/cluster-hardening.yml) apply hardening recommendations on the operating system and SSH.
-The activities are managed by the Ansible collection [devsec.hardening](https://galaxy.ansible.com/devsec/hardening).
+Presently, the repository doesn't provide playbooks for OS hardening.
+However, an existing initiative may help you to build your own: [devsec.hardening](https://galaxy.ansible.com/devsec/hardening).
 
 #### Bootstrap the cluster
 
