@@ -1,6 +1,6 @@
 ---
 
-k3s_longhorn_release: "master"
+k3s_longhorn_release: "v1.2.4"
 
 k3s_longhorn_script_create_loop: "/usr/local/share/homecloud/scripts/create_longhorn_loop.sh"
 
