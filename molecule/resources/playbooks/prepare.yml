@@ -11,6 +11,11 @@
         autoremove: true
         force_apt_get: true
 
+    - name: Update packages
+      become: true
+      shell: |
+        echo 'nameserver 1.1.1.1' | sudo tee /etc/resolv.conf >/dev/null
+
     - name: Format the block device of DNAS
       when: k3s_dnas_mount_what is defined
       become: true
