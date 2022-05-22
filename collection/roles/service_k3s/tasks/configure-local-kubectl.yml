@@ -25,7 +25,7 @@
         regexp: "    server: https://127.0.0.1:6443"
         line: "    server: https://{{ service_k3s_server_primary_ip }}:6443"
       changed_when: false
-    - name: Fix the k8s configuration permisions
+    - name: Fix the k8s configuration permissions
       delegate_to: localhost
       ansible.builtin.file:
         path: "{{ service_k3s_local_kubectl_config_file }}"
