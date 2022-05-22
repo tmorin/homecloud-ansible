@@ -60,13 +60,29 @@ Vagrant.configure("2") do |config|
   #
   # View the documentation for the provider you are using for more
   # information on available options.
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "4096"
+    vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
+  end
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
+    set -ex
+
+    echo "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee -a /etc/apt/sources.list.d/hashicorp.list
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+
     apt-get update
+
+    apt-get install -y vagrant virtualbox
+    apt-get install -y bridge-utils qemu-kvm virtinst libvirt-daemon-system
+    apt-get install -y ruby-dev libvirt-dev libssl-dev
     apt-get install -y btrfs-progs jq lz4 python3-virtualenv qemu qemu-system qemu-user qemu-user-static xz-utils
-    apt-get install -y bridge-utils libvirt-daemon-system qemu-kvm virtinst
+
+    vagrant plugin install vagrant-libvirt
+
+    kvm-ok || true
   SHELL
 end

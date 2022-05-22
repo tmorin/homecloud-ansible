@@ -11,10 +11,12 @@
         autoremove: true
         force_apt_get: true
 
-    - name: Update packages
+    - name: Force a DNS server
       become: true
-      shell: |
-        echo 'nameserver 1.1.1.1' | sudo tee /etc/resolv.conf >/dev/null
+      ansible.builtin.copy:
+        content: "nameserver 1.1.1.1"
+        dest: /etc/resolv.conf
+        mode: "0644"
 
     - name: Format the block device of DNAS
       when: k3s_dnas_mount_what is defined
