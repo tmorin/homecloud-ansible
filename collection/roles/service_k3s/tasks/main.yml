@@ -10,9 +10,20 @@
 - name: "Install dependencies from apt"
   become: true
   ansible.builtin.package:
-    name: apparmor-utils
+    name:
+      - apparmor-utils
+      - bash-completion
     state: present
     force_apt_get: true
+
+- name: "Create /etc/bash_completion.d"
+  become: true
+  ansible.builtin.file:
+    path: /etc/bash_completion.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
 
 - name: Install the primary k3s server
   when: inventory_hostname in groups.k3s_srv[:1] | default([])
