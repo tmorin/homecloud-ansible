@@ -12,7 +12,7 @@ driver:
 
 platforms:
   - name: k2-n1
-    box: "${MOLECULE_N1_BOX-generic/debian10}"
+    box: "${MOLECULE_N1_BOX-generic/debian11}"
     memory: 2096
     cpu: 2
     interfaces:
@@ -22,7 +22,7 @@ platforms:
     provider_raw_config_args:
       - "storage :file, :size => '2G'"
   - name: k2-n2
-    box: "${MOLECULE_N2_BOX-generic/ubuntu2004}"
+    box: "${MOLECULE_N2_BOX-generic/ubuntu2110}"
     memory: 2096
     cpu: 2
     interfaces:

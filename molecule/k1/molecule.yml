@@ -12,7 +12,7 @@ driver:
 
 platforms:
   - name: k1-n1
-    box: "${MOLECULE_N1_BOX-generic/debian10}"
+    box: "${MOLECULE_N1_BOX-generic/debian11}"
     memory: 4096
     cpu: 2
     interfaces:
