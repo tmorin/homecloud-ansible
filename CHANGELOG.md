@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/tmorin/homecloud-ansible/compare/v2.6.2...v2.7.0) (2022-05-23)
+
+
+### Features
+
+* **k3s_longhorn:** set the version to `v1.2.4` ([15c4037](https://github.com/tmorin/homecloud-ansible/commit/15c4037cfe5dfcdd4add6e23ea50d6d3a3b4b608))
+* **paper:** review the paper ([cba5efe](https://github.com/tmorin/homecloud-ansible/commit/cba5efe25723c166a563d7d2d0eeaa9f55302d48))
+* upgrade the kustomize version ([d9d1f7c](https://github.com/tmorin/homecloud-ansible/commit/d9d1f7cb0290e9cf4b0a29bc60131884bc4a467f))
+
+
+### Bug Fixes
+
+* **service_k3s:** `apparmor-utils` is expected by some systems like Longhorn ([4e48362](https://github.com/tmorin/homecloud-ansible/commit/4e483628ca4494838626b3a7c7b0155ed14e5031))
+* **service_k3s:** install packages missing in Armbian images ([9b841b3](https://github.com/tmorin/homecloud-ansible/commit/9b841b3c4bc74d08b252f3db55046c5006d94d96))
+* set the right Ansible Core version range in runtime.yml ([4d037d9](https://github.com/tmorin/homecloud-ansible/commit/4d037d9207808088d28c00031fd0a4668338d7fd))
+* set the right value for `min_ansible_version` ([61b3765](https://github.com/tmorin/homecloud-ansible/commit/61b37656d8df4cd12fd7c39b803546eacebbea84))
+
 ### [2.6.2](https://github.com/tmorin/homecloud-ansible/compare/v2.6.1...v2.6.2) (2021-10-26)
 
 
