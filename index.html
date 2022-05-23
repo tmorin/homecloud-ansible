@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <meta name="author" content="Thibault Morin">
-<title>homecloud : a cloud at home with Kubernetes and Syncthing</title>
+<title>homecloud: a cloud at home with Kubernetes and Syncthing</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -194,7 +194,8 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
 details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
 details{margin-left:1.25rem}
-details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;-webkit-tap-highlight-color:transparent}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
 details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
 details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
 details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
@@ -236,9 +237,8 @@ pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
 table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
 table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
 table.linenotable td.code{padding-left:.75em}
-table.linenotable td.linenos{border-right:1px solid;opacity:.35;padding-right:.5em}
-pre.pygments .lineno{border-right:1px solid;opacity:.35;display:inline-block;margin-right:.75em}
-pre.pygments .lineno::before{content:"";margin-right:-.125em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
 .quoteblock{margin:0 1em 1.25em 1.5em;display:table}
 .quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
 .quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
@@ -275,7 +275,7 @@ table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-c
 table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
 table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
 table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
-table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
 th.halign-left,td.halign-left{text-align:left}
 th.halign-right,td.halign-right{text-align:right}
 th.halign-center,td.halign-center{text-align:center}
@@ -291,10 +291,11 @@ ol{margin-left:1.75em}
 ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
 dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
-ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
 ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
 ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
 ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
 ul.checklist>li>p:first-child{margin-left:-1em}
 ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
 ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
@@ -337,8 +338,6 @@ sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
 #footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
 #footnotes .footnote:last-of-type{margin-bottom:0}
 #content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
-.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
-.gist .file-data>table td.line-data{width:99%}
 div.unbreakable{page-break-inside:avoid}
 .big{font-size:larger}
 .small{font-size:smaller}
@@ -437,24 +436,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>homecloud : a cloud at home with Kubernetes and Syncthing</h1>
+<h1>homecloud: a cloud at home with Kubernetes and Syncthing</h1>
 <div class="details">
 <span id="author" class="author">Thibault Morin</span><br>
-<span id="revdate">2021-03-29</span>
+<span id="revdate">2021-09-30</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#_abstract">Abstract</a></li>
 <li><a href="#_introduction">Introduction</a></li>
-<li><a href="#_the_original_use_case">The original use case</a></li>
-<li><a href="#_the_original_cluster_layout">The original cluster layout</a></li>
-<li><a href="#_the_user_services">The user services</a></li>
-<li><a href="#_the_hosting_strategies">The hosting strategies</a></li>
-<li><a href="#_the_building_blocks">The building blocks</a>
+<li><a href="#_vision">Vision</a>
 <ul class="sectlevel2">
+<li><a href="#_business_scenarios">Business scenarios</a></li>
+<li><a href="#_drivers">Drivers</a></li>
+<li><a href="#_constraints">Constraints</a></li>
+<li><a href="#_principles">Principles</a></li>
+<li><a href="#_requirements">Requirements</a></li>
+<li><a href="#_work_packages">Work Packages</a></li>
+</ul>
+</li>
+<li><a href="#_the_platform">The Platform</a>
+<ul class="sectlevel2">
+<li><a href="#_the_hosting_strategies">The hosting strategies</a></li>
 <li><a href="#_the_container_engine_and_orchestrator">The container engine and orchestrator</a></li>
 <li><a href="#_the_cluster_availability">The cluster availability</a></li>
 <li><a href="#_the_distributed_block_storage">The distributed block storage</a></li>
@@ -462,28 +470,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_monitoring_and_alerting">Monitoring and alerting</a></li>
 <li><a href="#_orchestrator_management">Orchestrator management</a></li>
 <li><a href="#_backup_and_restore">Backup and restore</a></li>
-</ul>
-</li>
-<li><a href="#_the_components_overview">The components overview</a></li>
-<li><a href="#_security_hardening">Security Hardening</a></li>
+<li><a href="#_security_hardening">Security hardening</a></li>
 <li><a href="#_infrastructure_as_code">Infrastructure as code</a></li>
-<li><a href="#_the_ansible_collection">The Ansible collection</a>
-<ul class="sectlevel2">
-<li><a href="#_the_customization_of_armbian_images">The customization of Armbian images</a></li>
-<li><a href="#_the_common_configurations">The common configurations</a></li>
-<li><a href="#role_k3s_service">The k3s service</a></li>
-<li><a href="#_the_keepalived_service">The Keepalived service</a></li>
-<li><a href="#_the_kubernetes_deployment_manifests">The Kubernetes deployment manifests</a></li>
-<li><a href="#_the_dnas_integration">The dnas integration</a></li>
-<li><a href="#_the_ansible_inventory">The Ansible inventory</a></li>
-<li><a href="#_the_role_variables">The role variables</a></li>
-<li><a href="#_the_common_variables">The common variables</a></li>
+<li><a href="#_characteristics">Characteristics</a></li>
 </ul>
 </li>
-<li><a href="#_quality">Quality</a></li>
-<li><a href="#_conclusion">Conclusion</a></li>
-<li><a href="#appendix_dnas">Appendix A: dnas, a decentralized NAS</a></li>
-<li><a href="#appendix_keepalived_integration">Appendix B: Keepalived integration</a></li>
+<li><a href="#_decentralized_nas">Decentralized NAS</a>
+<ul class="sectlevel2">
+<li><a href="#_characteristics_2">Characteristics</a></li>
+<li><a href="#_software_architecture">Software Architecture</a></li>
+<li><a href="#_deployment">Deployment</a></li>
+<li><a href="#_example">Example</a></li>
+</ul>
+</li>
+<li><a href="#_services">Services</a>
+<ul class="sectlevel2">
+<li><a href="#_characteristics_3">Characteristics</a></li>
+<li><a href="#_software_architecture_2">Software Architecture</a></li>
+<li><a href="#_deployment_2">Deployment</a></li>
+<li><a href="#_example_2">Example</a></li>
+</ul>
+</li>
+<li><a href="#_deliverables">Deliverables</a></li>
 <li><a href="#_glossary">Glossary</a></li>
 <li><a href="#_references">References</a></li>
 </ul>
@@ -491,111 +499,1352 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Provide resources to bootstrap and manage:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>an private cloud</p>
+</li>
+<li>
+<p>and self-hosted services</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The main artifact is an Ansible collection.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>homecloud</code> aims to provide a <a href="#g_cloud_computing">cloud like environment</a>, especially an <a href="#g_internal_cloud">internal cloud</a>, at home.
-The underlying infrastructure is primarily based on low cost ARM boards, like Raspberry Pi, and powered by open source solutions like Kubernetes or Syncthing.</p>
+<p>The genesis of this initiative comes from two Framasoft momentum: De-google-ify Internet <a href="#dgo">[dgo]</a>; and its following one: Contributopia <a href="#cpa">[cpa]</a>.
+The main concern is <em>digital independence</em>.
+It&#8217;s about surveillance and privacy of what we are, but also centralization of actors and usages.</p>
 </div>
 <div class="paragraph">
-<p>The main artifact is an Ansible <a href="#ans">[ans]</a> collection designed to bootstrap a ready to use cloud like environment as well as a couple of end-users services.</p>
+<p>According to this context, the initiative provides a way to self-host services which deal with private data.
+It mainly leverages on n private cloud to support its realization.
+That means to run a cloud at home, so the name <code>homecloud</code>.</p>
+</div>
+<div class="paragraph">
+<p>A <em>cloud</em> is a network of hardware and software elements which provides dynamically and efficiently common resources (e.g. servers, storage &#8230;&#8203;) <a href="#dcc">[dcc]</a> .
+Obviously, the purpose is not to re-do the infrastructure of big actors in the living room.</p>
+</div>
+<div class="paragraph">
+<p>However, a cluster of affordable development boards (like <em>Raspberry PI</em>) associated to open source technologies (like <em>Kubernetes</em>) can be enough to get a working tiny private cloud &#8230;&#8203; in the living room.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_original_use_case">The original use case</h2>
+<h2 id="_vision">Vision</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The intentions which led to the <code>homecloud</code> creation match ones related to the Framasoft initiative: De-google-ify Internet <a href="#dgo">[dgo]</a>; and its following one: Contributopia <a href="#cpa">[cpa]</a>.</p>
+<p>The primary goal of <code>homecloud</code> is to provide the main services which manage private data (files sharing, contacts and calendars) storing it locally.</p>
 </div>
 <div class="paragraph">
-<p>Therefore, the original use case is:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>be able to host all services which care about private data: contacts, calendars, mobile pictures, private chats, private projects, &#8230;&#8203;</p>
-</li>
-<li>
-<p>be able to manage a human size of users, basically a family.</p>
-</li>
-</ul>
+<p>The secondary goal of <code>homecloud</code> is to provide services embracing both organizational structures: centralized and decentralized.</p>
 </div>
 <div class="paragraph">
-<p>Because big names of cloud computing are de facto discarded, the most affordable solution is to host all those services in a <a href="#g_cluster">cluster</a> of low cost ARM boards, especially at home.</p>
-</div>
-<div class="paragraph">
-<p>Nevertheless, many other use cases could match the need of a self-hosted cluster of low cost ARM boards, which provides the principal characteristics of cloud computing.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_the_original_cluster_layout">The original cluster layout</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Originally<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>, the cluster was composed of four ARM boards manufactured by PINE64 <a href="#p64">[p64]</a>.
-However, there are no constraints about the number of nodes.
-A <code>homecloud</code> cluster can be composed of one or many nodes.</p>
+<p><code>homecloud</code> is used by three kind of persons.
+Those which take care of their private data.
+Those which are skilled enough to administrate the system.
+And finally those which have been temporally allowed to interact with some services provided by the system.
+Additionally, <code>homecloud</code> can also be used by external systems like agents installed on smartphones, laptops, etc.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="original_cluster_layout.png" alt="The original cluster layout">
+<img src="vision_context.png" alt="Context Diagram of `homecloud`">
 </div>
-<div class="title">Figure 1. The original cluster layout</div>
+<div class="title">Figure 1. Vision: Context Diagram of <code>homecloud</code></div>
 </div>
-<div class="paragraph">
-<p>The four boards are inter-connected using the home&#8217;s router which is already connected to internet<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>.
-Each node is a PINE A64-LTS board <a href="#plts">[plts]</a> embedding an <code>aarch64</code> CPU and 2G of memory.
-The used operating system is based on Debian: Armbian <a href="#abn">[abn]</a>.</p>
+<div class="sect2">
+<h3 id="_business_scenarios">Business scenarios</h3>
+<div class="sect3">
+<h4 id="_photos_synchronization">Photos Synchronization</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Problem</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Photos took on mobile phones are usually, by convenience, synchronized in a third party cloud.
+Therefore, the photos binaries are stored somewhere in the world, escaping their owner&#8217;s control.
+Once synchronized, the mobile phone&#8217;s owner can browse and manage them according to the vendor&#8217;s user interfaces.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Environment</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The synchronization process can be centralized or decentralized but also unidirectional or bidirectional.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Outcomes</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>With <code>homecloud</code>, the photos can also be synchronized but still remain private because they are stored locally, under the control of the mobile phone&#8217;s owner.
+Moreover, they can also be managed using friendly user interfaces.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Human Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>the owner of the photos</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">System Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>a centralized system with authorized agents on the mobile phone(s)</p>
+</li>
+<li>
+<p>and/or a decentralized system leveraging on a network of peer-to-peer agents distributed on nodes (servers, computers, mobile phones &#8230;&#8203;)</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="bs-photos_synchronization-usecases.png" alt="Business Scenario: Usecase Diagram of Photos Synchronization">
+</div>
+<div class="title">Figure 2. Business Scenario: Usecase Diagram of Photos Synchronization</div>
+</div>
+<div class="sect4">
+<h5 id="_value_stream">Value Stream</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Name</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Handle Photos Changes</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Description</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The activities involved in keeping photos private from the device to <code>homecloud</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Stakeholder</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The owner of the photos.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Value</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The photos are synchronized and can be managed with interfaces provided by <code>homeloud</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="bs-photos_synchronization-value_stream.png" alt="Business Scenario: Value Stream of Handle Photos Changes">
+</div>
+<div class="title">Figure 3. Business Scenario: Value Stream of Handle Photos Changes</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Business Scenario: Value Stream Stages of Handle Photos Changes</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value Stream Stage</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Participating Stakeholders</th>
+<th class="tableblock halign-left valign-top">Entrance Criteria</th>
+<th class="tableblock halign-left valign-top">Exit Criteria</th>
+<th class="tableblock halign-left valign-top">Value Items</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change Photos on Device</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of taking or deleting photos on a device like a smartphone.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the photos</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner using its device</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Photos taken or deleted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Photos managed by the user it-self</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synchronize Photos</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of replicating changes across systems.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the photos</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Photos taken or deleted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Photos synchronized</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changes applied everywhere</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Manage Photos on <code>homecloud</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of copying, moving or deleting photos.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the photos</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Photos synchronized</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changes to synchronize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Photos managed according to owner wishes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_files_synchronization">Files Synchronization</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Problem</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>For convenience or backup purpose, it is common to synchronized files among devices or with centralized systems.
+For instance, to back up personal documents in case of disasters (e.g. hard disk crash) or to transfer user files from an old computer to a new one.
+Most of the built-in (and also convenient) solutions of famous operating systems like <em>Windows</em> or <em>Android</em> are mainly cloud based.
+Therefore, for a while, or permanently, the files are stored in a third party cloud, escaping the owner&#8217;s control.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Environment</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The synchronization process can be centralized or decentralized but also unidirectional or bidirectional.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Outcomes</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>With <code>homecloud</code>, the files can also be synchronized but still remain private because they are stored locally, under the control of the mobile phone&#8217;s owner.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Human Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>the owner of the files</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">System Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>a centralized system with authorized agents on edge nodes (computer, mobile phones &#8230;&#8203;)</p>
+</li>
+<li>
+<p>and/or a decentralized system leveraging on a network of peer-to-peer agents distributed on nodes (servers, computers, mobile phones &#8230;&#8203;)</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="bs-files_synchronization-usecases.png" alt="Business Scenario: Usecase Diagram of Files Synchronization">
+</div>
+<div class="title">Figure 4. Business Scenario: Usecase Diagram of Files Synchronization</div>
+</div>
+<div class="sect4">
+<h5 id="_value_stream_2">Value Stream</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Name</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Handle Files Changes</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Description</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The activities involved in keeping files private from the device to <code>homecloud</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Stakeholder</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The owner of the files.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Value</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The files are synchronized and can be managed with interfaces provided by <code>homeloud</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="bs-files_synchronization-value_stream.png" alt="Business Scenario: Value Stream of Handle Files Changes">
+</div>
+<div class="title">Figure 5. Business Scenario: Value Stream of Handle Files Changes</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Business Scenario: Value Stream Stages of Handle Files Changes</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value Stream Stage</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Participating Stakeholders</th>
+<th class="tableblock halign-left valign-top">Entrance Criteria</th>
+<th class="tableblock halign-left valign-top">Exit Criteria</th>
+<th class="tableblock halign-left valign-top">Value Items</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change Files on Device</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of creating, updating or deleting files on a device like a laptop.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner using its device</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files mutated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files managed by the user it-self</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synchronize Files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of replicating changes across systems.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files mutated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files synchronized</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changes applied everywhere</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Manage Files on <code>homecloud</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of copying, moving or deleting files.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files synchronized</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changes to synchronize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files managed according to owner wishes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_files_sharing">Files Sharing</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Problem</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The synchronization of photos or files leads to a dynamic replication of data.
+However, for some cases the replication is overkill.
+For instance, to share a file over Internet to a well-known contact.
+But also, to stream on the TV a content available in the local network.
+In those cases, it is just enough share the content, because only the consumer knows if the content has to be stored permanently or not once received.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Environment</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The share can be done within a local network, for instance using file systems like CIFS or over the web, for instance using a regular HTTP endpoint.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Outcomes</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>With <code>homecloud</code>, the content synchronized are also available for sharing, under the control of their owners, within the local network or over Internet.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Human Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>the owner of the shared content</p>
+</li>
+<li>
+<p>the recipients of the shared content</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">System Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>a centralized system hosting and controlling the accesses</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="bs-files_sharing-usecases.png" alt="Business Scenario: Usecase Diagram of Files Sharing">
+</div>
+<div class="title">Figure 6. Business Scenario: Usecase Diagram of Files Sharing</div>
+</div>
+<div class="sect4">
+<h5 id="_value_stream_3">Value Stream</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Name</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Share Files</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Description</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The activities involved in selecting and providing shared files hosted on <code>homecloud</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Stakeholder</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The owner of the files.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Value</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The files are shared abroad the <code>homecloud</code> boundaries.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="bs-files_sharing-value_stream.png" alt="Business Scenario: Value Stream of Share Files">
+</div>
+<div class="title">Figure 7. Business Scenario: Value Stream of Share Files</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Business Scenario: Value Stream Stages of Share Files</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Value Stream Stage</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Participating Stakeholders</th>
+<th class="tableblock halign-left valign-top">Entrance Criteria</th>
+<th class="tableblock halign-left valign-top">Exit Criteria</th>
+<th class="tableblock halign-left valign-top">Value Items</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Select Shared Files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of define which files have to be shared.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files to share</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files selected</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files selected by the user it-self</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provide Shared Files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of providing the shared files to the targets.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner of the files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files selected</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files shared</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files ready to be consumed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consume Shared Files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The act of interacting (fetching, streaming, &#8230;&#8203;) with the shared files.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>A Guest</p>
+</li>
+<li>
+<p>Owner of the files</p>
+</li>
+<li>
+<p>A <code>homecloud</code> service</p>
+</li>
+<li>
+<p>An External System</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files shared</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files consumed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files handled by the targets</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_contacts_and_calendars_management">Contacts and Calendars Management</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Problem</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>With smartphones, it became common to have virtual address books.
+Because of convenient, the address books are usually synchronized with a third party solution which, most of the time, is managed by the operating system&#8217;s owner.
+Therefore, a piece of who we are (i.e. who knows who) are stored in the cloud, somewhere in the world, escaping the control of the address book owner.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Environment</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The synchronization within the local network but also over the Internet.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Outcomes</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>With <code>homecloud</code>, address books and other personal calendars are also synchronized but, they are stored locally, under the control of their owners.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Human Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>the owner of the personal data</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">System Actors</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>a centralized system hosting and controlling the accesses</p>
+</li>
+<li>
+<p>and/or a decentralized system leveraging on a network of peer-to-peer agents distributed on nodes (servers, computers, mobile phones &#8230;&#8203;)</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="bs-contacts_calendars_management-usecases.png" alt="Business Scenario: Usecase Diagram of Contacts &amp; Calendars Management">
+</div>
+<div class="title">Figure 8. Business Scenario: Usecase Diagram of Contacts &amp; Calendars Management</div>
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_the_user_services">The user services</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The primarily purpose of the cluster is to host the following user services:</p>
+<div class="sect2">
+<h3 id="_drivers">Drivers</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Privacy</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>homecloud</code> emerged because of private data concern.
+De facto private date are located within the <code>homecloud</code> boundaries.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Flexibility</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A <code>homecloud</code> cluster is tailored by the user: the topology of the nodes, their operating systems, the available services, the domain names, passwords &#8230;&#8203;</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Extensibility</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The platform which supports the out-of-the-box <code>homecloud</code> services can also be used for other concerns.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Elasticity</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>homecloud</code> resources can be added or removed manually or dynamically.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Performance</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>homecloud</code> is not designed for high performances, intensive scaling and so on.
+Its main purpose is a <em>cloud at home</em> able to run on a cheap infrastructure.
+In deed, the performances are in fact highly related to hardware concerns and so the user decisions.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Security</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Despite delivered artifacts won&#8217;t cover all security concerns, configured resources for the platform and services will fulfill the minimum secure practices.
+Nevertheless, the flexibility and extensibility of <code>homecloud</code> provides to the user ways to define its own level of security.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Disaster Recovery</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>homecloud</code> provides services to prevent data loss with backup processes and data replication.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Observability</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Resources of a <code>homecloud</code> cluster can be monitored and observed.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_constraints">Constraints</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Target deployment platform</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The system must run on development boards at least for production purpose.</p>
+</li>
+<li>
+<p>The system must run in virtual environments at least for development and testing purposes.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Open source</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must rely exclusively on open source technologies.
+Dispensation can be done when open source alternatives are not available.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Technology Maturity</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Due to the nature of the initiative, <code>homecloud</code> may rely on adventurous solutions.
+Nevertheless, when available, matured technologies are emphasis.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Expected Technologies</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>homecloud</code> relies on container orchestration to provide some cloud computing architectural artifacts.
+The most complete implementation embracing container orchestration is <code>kubernetes</code>.
+Therefore, the main technology involves in <code>homecloud</code> must be <code>kubernetes</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Maintenance</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A <code>homecloud</code> cluster must rely on approaches like automation and self-healing to decrease the maintenance activities.
+Moreover, a <code>homecloud</code> should be easily administrate by a single person.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Skills</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A <code>homecloud</code> cluster cannot be managed by anyone, some skills related to system administration, container orchestration &#8230;&#8203; are expected.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_principles">Principles</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Name</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Separation of Services and Platform</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The services should not be tightly coupled to the <code>homecloud</code> platform.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rationale</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>With a loose coupling approach between the platform and the services, each side can have its own lifecycle.
+Moreover, services provided by external sources can also be easily integrated.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Implications</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>homecloud</code> provides must provide two main deliverables:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>dnas: a decentralized NAS (c.f. appendix <a href="#appendix_dnas">dnas, a decentralized NAS</a>) based on:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Syncthing: a free, open-source peer-to-peer file synchronization application <a href="#syt">[syt]</a>.</p>
+<p>resources to bootstrap and maintain the platform</p>
 </li>
 <li>
-<p>Samba: the standard Windows interoperability suite of programs for Linux and Unix <a href="#smb">[smb]</a>.</p>
+<p>resources to install and maintain the built-in services</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Moreover, each deliverable can be implemented separately with different paces of development or technologies.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Name</p></th>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Convergence of Centralization and Decentralization</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Services provided by `homecloud ` should embrace both organizational structures centralized and decentralized.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rationale</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Some services, especially those leveraging on files, can be handled from a centralized (e.g. a client/server relationship) or decentralized (e.g. a peer to peer network) approach.
+The best approach depends on the context of the usage.
+That why, as long as it is possible, the built-in services of <code>homecloud</code> should embrace both organizational structures.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Implications</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The solutions which embrace both organizational structures, especially those working on files, have to be carefully implemented to avoid conflict and data loss.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_requirements">Requirements</h3>
+<div class="sect3">
+<h4 id="_centralized_synchronization">Centralized Synchronization</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to synchronize files between a client and a server.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Synchronize Photos</p>
 </li>
 <li>
-<p>Nextcloud: a suite of client-server software for creating and using file hosting services <a href="#ncd">[ncd]</a>.</p>
-</li>
-<li>
-<p>calibre-web: a webapp for browsing, reading and downloading eBooks stored in a Calibre database <a href="#caw">[caw]</a>.</p>
+<p>Synchronize Files</p>
 </li>
 </ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Centralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The synchronization should leverage on the WebDav protocol.</p>
+</li>
+<li>
+<p>The synchronization can be handled by a non-standard solution.</p>
+</li>
+<li>
+<p>The synchronized content must be readable and mutable by a decentralized solution.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to synchronize contacts between a client and a server.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Synchronize Contacts</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Centralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The synchronization should leverage on the CardDav protocol.</p>
+</li>
+<li>
+<p>The synchronization can be handled by a non-standard solution.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to synchronize calendars between a client and a server.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Synchronize Calendars</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Centralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The synchronization should leverage on the CalDav protocol.</p>
+</li>
+<li>
+<p>The synchronization can be handled by a non-standard solution.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_decentralized_synchronization">Decentralized Synchronization</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to synchronize files between peers.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Synchronize Photos</p>
+</li>
+<li>
+<p>Synchronize Files</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Decentralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The synchronization can be handled by a non-standard solution.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to synchronize contacts between peers.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Synchronize Contacts</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Decentralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The synchronization should leverage on the vCard format.</p>
+</li>
+<li>
+<p>The synchronization can be handled by a non-standard solution.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to synchronize calendars between peers.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Synchronize Calendars</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Decentralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The synchronization should leverage on the iCalendar format.</p>
+</li>
+<li>
+<p>The synchronization can be handled by a non-standard solution.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_sharing">Sharing</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to share files to external systems.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Share Photos</p>
+</li>
+<li>
+<p>Share Files</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Centralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The following protocols must be supported: CIFS, NFS and WebDav.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to share files to guest.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected by use cases.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Use Cases</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Share Photos</p>
+</li>
+<li>
+<p>Share Files</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Principles</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Centralized approach</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>A User Interface must be available to create the share.</p>
+</li>
+<li>
+<p>A User Interface must be available to provide the shared content to the guest.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_non_functional">Non-Functional</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to back up and restore data managed by other <code>homecloud</code> services.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected to meet drivers.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Drivers</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Disaster Recovery</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The solution should be a "native" feature of the main platform technology.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Statement</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The system must provide a service to observe the <code>homecloud</code> resources.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Rational</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The requirement is expected to meet drivers.</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Drivers</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Observability</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-middle"><p class="tableblock">Specification</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>The solution may store data.</p>
+</li>
+<li>
+<p>The solution must provide a user interface.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_work_packages">Work Packages</h3>
+<div class="paragraph">
+<p><code>homecloud</code> leverages on three main work packages.
+The first one, the <em>Platform</em>, provides support for the two other ones.
+The second one, the <em>Decentralized NAS</em>, is a regular centralized <a href="#g_nas">NAS</a> dedicated to store the private photos and files.
+However, a peer-to-peer system is plugged to it, so that replication can also be handled with a decentralized approach.
+Finally, the <em>Services</em>, relies on the <em>Decentralized NAS</em> to manage its content and to provide the remaining services: contacts management, files sharing &#8230;&#8203;</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="user_services_layout.png" alt="The provided user services of the cluster">
+<img src="vison_work_packages.png" alt="Vision: Component Diagram of the Work Packages">
 </div>
-<div class="title">Figure 2. The provided user services of the cluster</div>
+<div class="title">Figure 9. Vision: Component Diagram of the Work Packages</div>
 </div>
-<div class="paragraph">
-<p>Nextcloud and calibre-web can fetch data from the Samba share as any other compatible clients within the home network.</p>
-</div>
-<div class="paragraph">
-<p>However, to properly operate the above listed services, two hosting strategies are highly emphasis: containerized workloads and container orchestration.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_hosting_strategies">The hosting strategies</h2>
+<h2 id="_the_platform">The Platform</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_the_hosting_strategies">The hosting strategies</h3>
+<div class="paragraph">
+<p>To properly operate services, <code>homecloud</code> leverages on two hosting strategies: containerized workloads and container orchestration.</p>
+</div>
 <div class="paragraph">
 <p>The first strategy, the containerized workload (i.e. the <a href="#g_containerization">containerization</a>), provides many benefits about the packaging, distribution and usage of the services them-self <a href="#rhc">[rhc]</a>.</p>
 </div>
@@ -605,16 +1854,16 @@ The used operating system is based on Debian: Armbian <a href="#abn">[abn]</a>.<
 <div class="ulist">
 <ul>
 <li>
-<p>Portability : a container can be easily deployed in a container environment whatever the host&#8217;s operating system within the respect of the container&#8217;s and host&#8217;s architecture.</p>
+<p>Portability: a container can be easily deployed in a container environment whatever the host&#8217;s operating system within the respect of the container&#8217;s and host&#8217;s architecture.</p>
 </li>
 <li>
-<p>Configurability : a container can be easily configured about its infrastructure (cpu, memory &#8230;&#8203;) but also about the underlying workload (overriding containerized file or environment variables).</p>
+<p>Configurability: a container can be easily configured about its infrastructure (cpu, memory &#8230;&#8203;) but also about the underlying workload (overriding containerized file or environment variables).</p>
 </li>
 <li>
-<p>Isolation : a container cannot exceed its infrastructure limit and so cannot impact sibling running containers.</p>
+<p>Isolation: a container cannot exceed its infrastructure limit and so cannot impact sibling running containers.</p>
 </li>
 <li>
-<p>Efficient disk usage : a containerized workload needs less disk usage than virtualized one.</p>
+<p>Efficient disk usage: a containerized workload needs less disk usage than virtualized one.</p>
 </li>
 </ul>
 </div>
@@ -627,47 +1876,33 @@ The used operating system is based on Debian: Armbian <a href="#abn">[abn]</a>.<
 <div class="ulist">
 <ul>
 <li>
-<p>Automatic deployments : a container orchestrator manages it-self the deployment process of containerized workloads across the nodes.</p>
+<p>Automatic deployments: a container orchestrator manages it-self the deployment process of containerized workloads across the nodes.</p>
 </li>
 <li>
-<p>Container management : a container orchestrator provides services to monitor and interact with containerized workloads deployed among the cluster nodes.</p>
+<p>Container management: a container orchestrator provides services to monitor and interact with containerized workloads deployed among the cluster nodes.</p>
 </li>
 <li>
-<p>Resource allocation : a container orchestrator monitors and manages the resources to satisfy the requirements of the deployed containerized workloads.</p>
+<p>Resource allocation: a container orchestrator monitors and manages the resources to satisfy the requirements of the deployed containerized workloads.</p>
 </li>
 <li>
-<p>Networking configuration : a container orchestrator manages it-self the networking configuration to provide isolation and/or inter-connection between containerized workloads according to their needs.</p>
+<p>Networking configuration: a container orchestrator manages it-self the networking configuration to provide isolation and/or inter-connection between containerized workloads according to their needs.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>However, a wish list of services, and a couple of hosting strategies are not enough to provide an efficient cluster.
+<p>However, a couple of hosting strategies are not enough to provide an efficient platform.
 Some pieces are still missing: a set of building blocks able to support the services embracing the hosting strategies.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_the_building_blocks">The building blocks</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The purpose of the building blocks is to support the execution of the user services.
-Some building blocks are parts of the virtual world whereas others to the physical one.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="building_blocks_and_user_services.png" alt="User Services and Building Blocks">
-</div>
-<div class="title">Figure 3. User Services and Building Blocks</div>
 </div>
 <div class="sect2">
 <h3 id="_the_container_engine_and_orchestrator">The container engine and orchestrator</h3>
 <div class="paragraph">
 <p>The containerization of workloads as well as their management are handled by many technologies.
-Nevertheless, an effort of standardization emerged from the industry which led to the creation of the Cloud Native Computing Foundation (CNCF) [cncf].
+Nevertheless, an effort of standardization emerged from the industry which led to the creation of the Cloud Native Computing Foundation (CNCF) <a href="#cncf">[cncf]</a>.
 The CNCF hosts many components, some of them are the first building blocks of the <code>homecloud</code> stack.</p>
 </div>
 <div class="paragraph">
-<p>The first is <code>containerd</code> <a href="#cntd">[cntd]</a>. It&#8217;s the container engine which handles the containerization of workloads.
+<p>The first one is <code>containerd</code> <a href="#cntd">[cntd]</a>. It&#8217;s the container engine which handles the containerization of workloads.
 The second one is <code>kubernetes</code> <a href="#k8s">[k8s]</a>. It&#8217;s the container orchestrator managing the cluster of <code>containerd</code> instances.
 Finally, the last one is <code>k3s</code> <a href="#k3s">[k3s]</a>. It&#8217;s a distribution of <code>kubernetes</code> dedicated of IoT or other cloudless native environments &#8230;&#8203; like <code>homecloud</code>.</p>
 </div>
@@ -695,10 +1930,6 @@ Therefore, the cluster is not reliable because the cluster is not <a href="#g_ha
 That means, from the router point of view, the cluster is in fact just a unique server which can be reached with a unique IP address which will never ever change.</p>
 </div>
 <div class="paragraph">
-<p>Keepalived is one of the most popular implementations of the virtual server technique <a href="#kad">[kad]</a>.
-An overview of the Keepalived integration is available in the appendix: <a href="#appendix_keepalived_integration">Keepalived integration</a>.</p>
-</div>
-<div class="paragraph">
 <p>Now the cluster is highly available, the next topic is to be sure the containerized workloads are fully highly available too.</p>
 </div>
 </div>
@@ -715,10 +1946,6 @@ However, it doesn&#8217;t manage the availability of the container&#8217;s data 
 <p>In order to get the availability of the data among the nodes of the cluster, a distributed storage system has to be configured.</p>
 </div>
 <div class="paragraph">
-<p>Kubernetes and its ecosystem provide many solutions which solve the availability issue of the data among the nodes.
-One of them, the lighter on, is Longhorn <a href="#lhn">[lhn]</a>.</p>
-</div>
-<div class="paragraph">
 <p>Now containers are able to recover their data over their lifecycles, there is another topic to deal with: how final services will be found and reached from Internet?</p>
 </div>
 </div>
@@ -728,10 +1955,6 @@ One of them, the lighter on, is Longhorn <a href="#lhn">[lhn]</a>.</p>
 <p>A <a href="#g_reverse_proxy_server">reverse proxy</a> handles the requests coming from the external world and then dispatch them to the internal one.
 In the <code>homecloud</code> context, the reverse proxy handles the requests coming from Internet and then dispatch them to the containerized workloads.
 The handling of incoming requests can be straight forward or much complex: enhancement of requests, security, load balancing &#8230;&#8203;</p>
-</div>
-<div class="paragraph">
-<p>Traefik is one of the most popular technology about reverse proxy <a href="#tra">[tra]</a>.
-Moreover, it can be easily integrated in Kubernetes.</p>
 </div>
 <div class="paragraph">
 <p>Presently, the cluster is able to properly serves services within usual circumstances.
@@ -745,24 +1968,12 @@ Unavailability is not welcome and another building block should prevent it: the 
 <table>
 <tr>
 <td class="icon">
-<div class="title">Note</div>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 <div class="paragraph">
-<p><span class="yellow-background">TODO</span></p>
-</div>
-<div class="paragraph">
-<p>Introduce the following items:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>prometheus <a href="#pmt">[pmt]</a></p>
-</li>
-<li>
-<p>graphana <a href="#pmt">[pmt]</a></p>
-</li>
-</ul>
+<p><span class="yellow-background">TODO</span>
+Introduce observability</p>
 </div>
 </td>
 </tr>
@@ -778,14 +1989,10 @@ Another way is to use a web-app which will be able to directly deals with the Ku
 So that, the management activities can be done without direct access to the cluster nodes.</p>
 </div>
 <div class="paragraph">
-<p>Portainer is one of the lighter solutions to manage Kubernetes clusters from a web-app <a href="#por">[por]</a>.
-Moreover, it provides natively the support of Kubernetes for the expected architectures.</p>
-</div>
-<div class="paragraph">
 <p>The management of the Kubernetes resources cannot resolve all maintenance cases.
 The Murphy’s law is too strong, too true.
 <em>Anything that can go wrong will go wrong</em>, and it could be disaster.
-Therefore, a final building block has to be defined: the backup and restore.</p>
+Therefore, another building block has to be defined: the backup and restore.</p>
 </div>
 </div>
 <div class="sect2">
@@ -794,77 +2001,17 @@ Therefore, a final building block has to be defined: the backup and restore.</p>
 <p>In the <code>homecloud</code> context, the term disaster means: data stored in Ceph have been lost.
 For instance, the Nextcloud database cannot be used any more because of data corruption which cannot be resolved by the MariaDB engine it-self.
 Therefore, <code>homecloud</code> must provide a way <a href="#g_disaster_recovery">to recover the disaster</a>.
-The most affordable way to recover data is to regularly backup them and storing them into another system.</p>
+The most affordable way to recover data is to regularly backup them and storing them in another system.</p>
 </div>
 <div class="paragraph">
-<p>Longhorn provides a built-in feature to backup blocks on external system.</p>
+<p>At this point, all main building blocks have been introduced.
+Nevertheless, side concerns have to be yet tackled.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
+</div>
+<div class="sect2">
+<h3 id="_security_hardening">Security hardening</h3>
 <div class="paragraph">
-<p><span class="yellow-background">TODO</span></p>
-</div>
-<div class="paragraph">
-<p>Introduce Duplicity <a href="#dup">[dup]</a>.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>backup + restore of specific directories/files</p>
-</li>
-<li>
-<p>large set of destinations like SFTP, AWS S3, Google Drive, &#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>At this point, all building blocks have been introduced, it&#8217;s time to summarize the cluster&#8217;s components.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_the_components_overview">The components overview</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>All <code>homecloud</code> services and building blocks, can be breakdown in two categories:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>services managed by Operating System</p>
-</li>
-<li>
-<p>services managed by Kubernetes</p>
-</li>
-</ol>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="components_overview_hierarchy.png" alt="The components hierarchy">
-</div>
-<div class="title">Figure 4. The components hierarchy</div>
-</div>
-<div class="paragraph">
-<p>Running a highly available cluster able to provide services to end users within isolated execution contexts and, moreover, protected by a modern reverse proxy from Internet accesses is good.
-However, it doesn&#8217;t mean the cluster is secured against external threats &#8230;&#8203;</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_security_hardening">Security Hardening</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>An internal cloud, 1) hosted on low cost ARM boards, 2) available from a domestic Internet access and, 3) managed with non-professional manners could be a target for external threats.
+<p>A private cloud, 1) hosted on low cost ARM boards, 2) available from a domestic Internet access and, 3) managed with non-professional manners could be a target for external threats.
 Therefore, in the <code>homecloud</code> context, the best way is, by default, <a href="#g_hardening">to harder</a> every thing.</p>
 </div>
 <div class="paragraph">
@@ -879,357 +2026,814 @@ It focuses only on the virtual world, i.e. from the operating systems to the app
 </div>
 <div class="paragraph">
 <p>Resources exist to deal with the security hardening subject in the scope of a cluster of servers.
-One of the most popular projects is the DevSec Project <a href="#dsp">[dsp]</a>.
-It covers two hardening area with the Ansible collection <code>devsec.hardening</code> <a href="#acsh">[acsh]</a> :</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>the operating system GNU/Linux</p>
-</li>
-<li>
-<p>the SSH configuration</p>
-</li>
-</ul>
+One of the most popular projects is the DevSec Project <a href="#dsp">[dsp]</a>.</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_infrastructure_as_code">Infrastructure as code</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_infrastructure_as_code">Infrastructure as code</h3>
 <div class="paragraph">
-<p>A <code>homecloud</code> cluster can be fully installed manually node by node, task by task, package by package &#8230;&#8203;
-However, this approach, even if highly instructive, is time-consuming and error prone.
+<p>A <code>homecloud</code> cluster can be fully installed manually node by node, task by task, package by package, etc.
+However, this approach, even if highly instructive, is time-consuming and error-prone.
 In the IT industry there is more efficient way to manage infrastructure stuff: the infrastructure as code <a href="#rhic">[rhic]</a>.</p>
 </div>
 <div class="paragraph">
-<p>There are many solutions which embraces infrastructure as code.
-One of the most popular one is Ansible.
-It is an open source tool to automate IT tasks with a declarative model.
-Ansible projects can be stored in a Version Control System but also easily tested in virtual environments, especially in a <a href="#g_continuous_integration">continuous integration</a> process.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_the_ansible_collection">The Ansible collection</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>An Ansible collection is mainly composed of Ansible Roles.
-A role helps to bundle resources like variables, tasks or templates.
-The purpose of a role is to mutate the state of a system (i.e. a host): change file content, install packages, execute command, etc.
-Ansible Roles are usually executed in Ansible Playbook.
-An Ansible Playbook helps to orchestrate roles according to an inventory of hosts.
-In the <code>homecloud</code> context, the inventory describes the nodes of the cluster.</p>
-</div>
-<div class="paragraph">
-<p>The purpose of the <code>homecloud</code> Ansible Collection is to provide a set of Roles as well as a set of Playbooks helping to bootstrap the main building blocks of an internal cloud.</p>
-</div>
-<div class="sect2">
-<h3 id="_the_customization_of_armbian_images">The customization of Armbian images</h3>
-<div class="paragraph">
-<p>In order to mutate a host using <a href="#g_ssh">SSH</a>, Ansible expects a location (e.g. its IP), and a remote user properly configured.
-According to the original cluster layout, it means each node of the cluster must be manually configured before to execute the playbooks of the <code>homecloud</code> collection.</p>
-</div>
-<div class="paragraph">
-<p>In fact, Armbian is by default configured to get an IP by <a href="#g_dhcp">DHCP</a> and to configure users at the first boot.
-Therefore, to save time, it is better to implement an Ansible role able to generate a customized <code>.img</code> file per cluster node.
-So that, a static IP and a proper user can be configured automatically for each cluster node.
-The last remaining action is to manually writes the <code>.img</code> file on the respective eMMC or SD-Card.</p>
-</div>
-<div class="paragraph">
-<p>The Ansible role <code>image_armbian</code> manages the whole processing:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>download the <code>.img</code> files</p>
-</li>
-<li>
-<p>for each node patch a dedicated <code>.img</code> file</p>
-</li>
-</ul>
+<p>It relies on a declarative model stored in a revision control system (e.g. GIT).
+The model is then used to drive tools which automate the IT tasks.
+So that, processes become a development artifact.
+Therefore, to <em>source code</em> of the artifacts can be developed and tested iteratively in virtual environments, especially in a <a href="#g_continuous_integration">continuous integration</a> context.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_common_configurations">The common configurations</h3>
-<div class="paragraph">
-<p>Some configurations have to be applied to all nodes of the cluster.
-They deal with hostnames, memory management or even package management.
-It is the purpose of the Ansible role <code>cluster_node</code>.</p>
-</div>
-<div class="paragraph">
-<p>Basically, all nodes should know the hostname of all cluster nodes.</p>
-</div>
-<div class="paragraph">
-<p>About memory, Armbian enables by default <a href="#g_memory_swapping">memory swapping</a>.
-However, its usage on ARM boards leads to poor performances.
-Therefore, the Swap must be disabled on each node of the cluster.</p>
-</div>
-<div class="paragraph">
-<p>Finally, it can be necessary to freeze packages.
-For instance, the PINE A64-LTS cannot work with eMMC on recent Linux releases.
-Therefore, the respective packages have to be frozen otherwise the system couldn&#8217;t restart.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="role_k3s_service">The k3s service</h3>
-<div class="paragraph">
-<p>The k3s service is one of the main building block of <code>homecloud</code>.
-The service must be available on each host of the cluster.
-It installs and configures Kubernetes.
-The Ansible role <code>service_k3s</code> configures the hosts accordingly.</p>
-</div>
-<div class="paragraph">
-<p>According to the k3s terminology, a host can be a server or an agent.
-The inventory groups of the hosts define the role.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>k3s_srv</code> contains the server nodes.</p>
-</li>
-<li>
-<p><code>k3s_agt</code> contains the agent nodes.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_keepalived_service">The Keepalived service</h3>
-<div class="paragraph">
-<p>The Ansible role <code>service_keepalived</code> installs and configure Keepalived as an operating service on each host of the cluster.</p>
-</div>
-<div class="paragraph">
-<p>The role configures also the load of the kernel module <code>ip_vs</code> on system boot.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_kubernetes_deployment_manifests">The Kubernetes deployment manifests</h3>
-<div class="paragraph">
-<p>There is a dedicated Ansible role by manifests.
-Each role provides the definition of the manifest as well as its deployment process.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>k3s_csi_driver_smb</code> a CSI plugin to mount Samba shares.</p>
-</li>
-<li>
-<p><code>k3s_dashboard</code> deploys the Kubernetes Dashboard.</p>
-</li>
-<li>
-<p><code>k3s_dnas</code> a decentralized NAS based in Synchting and Samba.</p>
-</li>
-<li>
-<p><code>k3s_longhorn</code> deploys the distributed block storage system: Longhorn.</p>
-</li>
-<li>
-<p><code>k3s_traefik</code> deploys the ingress controller: Traefik.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_dnas_integration">The dnas integration</h3>
-<div class="paragraph">
-<p>The Ansible role <code>k3s_dnas</code> installs and configures Syncthing, Samba and NFS.
-It manages the mount of the block device which contains the files to expose over Syncthing, Samba and NFS.
-It manages also the basic configuration of Syncthing, Samba and NFS like credentials.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_ansible_inventory">The Ansible inventory</h3>
-<div class="paragraph">
-<p>The inventory defines the nodes of the <code>homecloud</code> cluster according to their purposes.</p>
-</div>
-<div class="listingblock">
-<div class="title">The hierarchy of the inventory groups</div>
+<h3 id="_characteristics">Characteristics</h3>
+<div class="imageblock">
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">all
-  boards
-    pine64
-    ...
-  k3s
-    k3s_srv
-    k3s_agt
-  dnas</code></pre>
+<img src="platform_stack.svg" alt="The Platform: The Characteristics Stack">
 </div>
+<div class="title">Figure 10. The Platform: The Characteristics Stack</div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_the_role_variables">The role variables</h3>
-<div class="paragraph">
-<p>By convention, the name of the role is the prefix of its variable names.
-The convention prevents naming collisions and increase readability of the inventory declarations.</p>
-</div>
-<div class="paragraph">
-<p>For instance, the email tp provide to Let&#8217;s Encrypt is defined with a variable name starting with <code>k3s_traefik</code> because the variable is only used in the Ansible role <code>k3s_traefik</code>: <code>k3s_traefik_acme_email</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_common_variables">The common variables</h3>
-<div class="paragraph">
-<p>Some Ansible roles share the same variables.
-In order to avoid confusions, by convention, the prefix of common variables is <code>homecloud_</code>.</p>
-</div>
-<div class="paragraph">
-<p>For instance, the variable <code>homecloud_virtual_ip</code> is common because it drives the configuration of Traefik as well as declarations of Keepalived.</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. The Platform: The Characteristics Matrix</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Characteristic</th>
+<th class="tableblock halign-left valign-top">MoSCoW value</th>
+<th class="tableblock halign-left valign-top">Solutions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Container Orchestration</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Kubernetes <a href="#k8s">[k8s]</a> distributed by k3s <a href="#k3s">[k3s]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Reverse Proxy</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Traefik <a href="#tra">[tra]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Infrastructure as code</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Ansible <a href="#ans">[ans]</a></p>
+</li>
+<li>
+<p>Kustomize <a href="#ktz">[ktz]</a></p>
+</li>
+<li>
+<p>Helm <a href="#hlm">[hlm]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">High Availability</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Should Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Keepalived <a href="#kad">[kad]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Distributed Storage</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Should Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Longhorn <a href="#lhn">[lhn]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Backup and Restore</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Should Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Longhorn <a href="#lhn">[lhn]</a></p>
+</li>
+<li>
+<p>duplicity <a href="#dup">[dup]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Security Hardening</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Could Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>devsec.hardening <a href="#acsh">[acsh]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Cluster Management</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Could Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Kubernetes Dashboard <a href="#kdb">[kdb]</a></p>
+</li>
+<li>
+<p>Portainer <a href="#por">[por]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Observability</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Could Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Prometheus <a href="#pmt">[pmt]</a> &amp; Grafana  <a href="#grf">[grf]</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_quality">Quality</h2>
+<h2 id="_decentralized_nas">Decentralized NAS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The good point of the infrastructure as code approach is to provide a source code which can be validated in the continuous integration process.</p>
-</div>
-<div class="paragraph">
-<p>The validation of the described Ansible collection focuses on two axes.
-The first one checks the syntax of the source code in order increase good practices and preventing the bad one.
-The second axe checks the implementation performing end-to-end tests.
-Those kinds of tests provide two main benefits: 1) the implemented features are tested before to reach the real life and 2) potential regressions are early identified.</p>
-</div>
-<div class="paragraph">
-<p>For each axe, the Ansible community provides a solution which can be easily integrated in a continuous integration process.</p>
-</div>
-<div class="paragraph">
-<p>Ansible-lint is the solution to check the syntax <a href="#alt">[alt]</a>.
-Fortunately, it is shipped with a large set of rules.</p>
-</div>
-<div class="paragraph">
-<p>Molecule is the test framework which help to prepare and execute test scenarios with many virtualization providers <a href="#mol">[mol]</a>.
-Therefore, the Ansible collection can directly be tested on a virtual server with 1, 2 or more nodes.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_conclusion">Conclusion</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Put all together, the described approaches, concepts and technologies help the design as well as the implementation of an internal cloud.
-A kind of cloud able to host private data and provide services all around the world for a reasonable amount of users.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="appendix_dnas">Appendix A: dnas, a decentralized NAS</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The purpose of <em>dnas</em> is to expose private files over the local network like a usual <a href="#g_nas">NAS</a>  but also from Internet.
-Samba and NFS provide remote accesses from the local network.
-On the other side, Syncthing brings the decentralized part with its peer-to-peer replication protocol over the local network and Internet.</p>
+<p>The purpose of a Decentralized NAS (also named <em>dnas</em>) is to expose private files over the local network like a usual <a href="#g_nas">NAS</a> but also from Internet.
+Moreover, changes are handled by centralized protocols (e.g. CIFS, NFS) and also decentralized ones (e.g. p2p).</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="user_services_dnas.png" alt="The dnas overview">
+<img src="dnas_context.png" alt="Decentralized NAS: Context Diagram of Decentralized NAS">
 </div>
-<div class="title">Figure 5. The dnas overview</div>
+<div class="title">Figure 11. Decentralized NAS: Context Diagram of Decentralized NAS</div>
+</div>
+<div class="sect2">
+<h3 id="_characteristics_2">Characteristics</h3>
+<div class="imageblock">
+<div class="content">
+<img src="dnas_stack.svg" alt="Decentralized NAS: The Characteristics Stack">
+</div>
+<div class="title">Figure 12. Decentralized NAS: The Characteristics Stack</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Decentralized NAS: The Characteristics Matrix</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Characteristic</th>
+<th class="tableblock halign-left valign-top">MoSCoW value</th>
+<th class="tableblock halign-left valign-top">Solutions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Synchronization over P2P</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Syncthing <a href="#syt">[syt]</a></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Share over CIFS</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Samba <a href="#smb">[smb]</a></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Share over NFS</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>NFS Server <a href="#nfs">[nfs]</a></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">External Storage</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>USB Drive, SD-Card, etc.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_software_architecture">Software Architecture</h3>
+<div class="paragraph">
+<p>The solution leverages on three main runtimes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a NFS server to serve files over the NFS protocol</p>
+</li>
+<li>
+<p>a Samba server to serve files over the CIFS protocol</p>
+</li>
+<li>
+<p>a Syncthing instance to handle files replication over a P2P network</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The same disk is <em>opened</em> to the internal network as a Samba/NFS share.
-The Syncthing service replicates data to the external SSD Disk.</p>
+<p>All runtimes rely on the same source of truth: a location in the file-system.
+The location  can be related to a mount of an external block storage, e.g. USB Drive, SD-Card.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="dnas_software.png" alt="Decentralized NAS: Container Diagram of Decentralized NAS">
+</div>
+<div class="title">Figure 13. Decentralized NAS: Container Diagram of Decentralized NAS</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deployment">Deployment</h3>
+<div class="paragraph">
+<p>Syncthing is managed as a regular service of the operating system.
+That means, the process has direct accesses to the host resources, especially the network stack.
+The CIFS server and Samba are deployed in Kubernetes within the same pod.
+Because the three services rely on the same location in the host filesystem, they have to run on the same <code>homecloud</code> node, i.e. the same board.</p>
+</div>
+<div class="paragraph">
+<p>Many instances of Decentralized NAS can co-exist within the same <code>homecloud</code> cluster.
+In that case, Syncthing is used to synchronized data between them.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="dnas_deployment_node.svg" alt="Decentralized NAS: Layout of a dnas node">
+</div>
+<div class="title">Figure 14. Decentralized NAS: Layout of a dnas node</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example">Example</h3>
+<div class="paragraph">
+<p>In the following example, Decentralized NAS is deployed on two nodes, i.e. two different boards.</p>
+</div>
+<div class="paragraph">
+<p><em>User Phone</em> pushes photos to <em>Node #2</em> with its Syncthing application.
+The photos are then stored in the <em>Node #2</em> file system and also synchronized with <em>Node #1</em> because of the Syncthing peering.</p>
+</div>
+<div class="paragraph">
+<p>On <em>User Laptop</em>, private documents (spreadsheets, pictures, etc.) are synchronized with <em>Node #1</em> using Syncthing.
+Because of the Syncthing peering with <em>Node #2</em>, the documents are also replicated there.
+Additionally, a <em>File Navigator</em> is connected to the <em>Samba</em> server on <em>Node #1</em>, so that photos pushed by <em>User Phone</em> can be locally browsed.
+Moreover, downloaded ROMS are pushed to the Decentralized NAS with the same CIFS channel.</p>
+</div>
+<div class="paragraph">
+<p>Finally, on <em>Console</em>, the gaming platform can fetch the ROMs (pushed by <em>User Laptop</em>) on the NFS Server of <em>Node #2</em>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="dnas_infrastructure.png" alt="Decentralized NAS: An example of Decentralized NAS usage">
+</div>
+<div class="title">Figure 15. Decentralized NAS: An example of Decentralized NAS usage</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="appendix_keepalived_integration">Appendix B: Keepalived integration</h2>
+<h2 id="_services">Services</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For each board, i.e. node of the cluster, the Keepalived application runs as an operating system service.</p>
+<p>The purpose of Services is to expose services over the web via front-ends for end users as well as web-services for external systems.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="building_blocks_keepalived.png" alt="Overview of the Keepalived integration">
+<img src="services_context.png" alt="Services: Context Diagram of Services">
 </div>
-<div class="title">Figure 6. Overview of the Keepalived integration</div>
+<div class="title">Figure 16. Services: Context Diagram of Decentralized NAS</div>
 </div>
+<div class="sect2">
+<h3 id="_characteristics_3">Characteristics</h3>
+<div class="paragraph">
+<p>Because of its <em>cloud</em> nature, <code>homecloud</code> can support many services.
+Nevertheless, only those identified within the vision description (c.f. <a href="#_vision">Vision</a>) will be detailed.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="services_stack.svg" alt="Services: The Characteristics Stack">
+</div>
+<div class="title">Figure 17. Services: The Characteristics Stack</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. Services: The Characteristics Matrix</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Characteristic</th>
+<th class="tableblock halign-left valign-top">MoSCoW value</th>
+<th class="tableblock halign-left valign-top">Solutions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Contacts Management</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Nextcloud <a href="#ncd">[ncd]</a></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Calendars Management</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Nextcloud <a href="#ncd">[ncd]</a></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Files (Photos) Synchronization</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Nextcloud <a href="#ncd">[ncd]</a></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Files Sharing</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Must Have</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Nextcloud <a href="#ncd">[ncd]</a></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_software_architecture_2">Software Architecture</h3>
+<div class="paragraph">
+<p>The solution leverages on only one system, Nextcloud, which is composed of three main runtimes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the monolith which handles the requests</p>
+</li>
+<li>
+<p>the database which contains the data like users, contacts, &#8230;&#8203;</p>
+</li>
+<li>
+<p>the cache which contains transient data for improvement</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Moreover, the solution relies on the Decentralized NAS to have access to private files.
+So that, private files can be fetched and mutated from both approaches centralized and decentralized.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="services_software.png" alt="Services: Container Diagram of Services">
+</div>
+<div class="title">Figure 18. Services: Container Diagram of Services</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deployment_2">Deployment</h3>
+<div class="paragraph">
+<p>The Nextcloud system is fully managed by Kubernetes.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="services_deployment_nextcloud.png" alt="Services: Nextcloud and Kubernetes integration">
+</div>
+<div class="title">Figure 19. Services: Nextcloud and Kubernetes integration</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_2">Example</h3>
+<div class="paragraph">
+<p>The following example shows photos took on <em>User Phone</em> are synchronized <em>User Phone</em></p>
+</div>
+<div class="paragraph">
+<p>In the following example, the Services is deployed on two nodes, i.e. two different boards.</p>
+</div>
+<div class="paragraph">
+<p><em>User Phone</em> pushes photos to <em>Nextcloud Monolith</em> with the local mobile Nexcloud application.
+On <em>Nextcloud Monolith</em>, the photos are directly written in a CIFS share provided by <em>Decentralized NAS</em>.
+So that, the photos are stored in the local <em>dnas data</em> drive and then replicated on <em>Node #2</em> over Syncthing.</p>
+</div>
+<div class="paragraph">
+<p>On <em>User Laptop</em>, downloaded ROMS are synchronized with <em>Node #1</em> using the local desktop Nexcloud application.
+Like for the photos, the ROMS are store in the local <em>dnas data</em> drive and then replicated on <em>Node #2</em>.
+The same photos can also be browsed using the front-end of Nextcloud Monolith with an <em>Internet Navigator</em>.</p>
+</div>
+<div class="paragraph">
+<p>Finally, on <em>Console</em>, the gaming platform can fetch the ROMs (pushed by <em>User Laptop</em>) on the NFS Server of <em>Node #2</em>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="services_infrastructure.png" alt="Services: An example of Services usage">
+</div>
+<div class="title">Figure 20. Services: An example of Services usage</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deliverables">Deliverables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>homecloud</code> work packages are bundled in two main deliverables:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>an Ansible Collection <a href="#ans">[ans]</a> which implements both work packages the Platform and Decentralized NAS</p>
+</li>
+<li>
+<p>Kustomize Modules <a href="#ktz">[ktz]</a> which implements the work package Services</p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Deliverables: The Platform Matrix</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Solution</th>
+<th class="tableblock halign-left valign-top">Characteristics</th>
+<th class="tableblock halign-left valign-top">Deliverable</th>
+<th class="tableblock halign-left valign-top">Runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">devsec.hardening</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Security Hardening</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Operating System</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Keepalived</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>High Availability</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Operating System</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">k3s</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Container Orchestration</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Operating System</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Traefik</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Reverse Proxy</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Longhorn</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Distributed Storage</p>
+</li>
+<li>
+<p>Backup and Restore</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes Dashboard</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Cluster Management</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Portainer</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Cluster Management</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Prometheus &amp; Grafana</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Observability</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Deliverables: The Decentralized NAS Matrix</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Solution</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Characteristics</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Deliverable</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Runtime</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Syncthing</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Files Synchronization</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Operating System</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Samba Server</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Files Sharing</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">NFS Server</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Files Sharing</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ansible Collection</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Deliverables: The Services Matrix</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Solution</th>
+<th class="tableblock halign-left valign-top">Characteristics</th>
+<th class="tableblock halign-left valign-top">Deliverable</th>
+<th class="tableblock halign-left valign-top">Runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="tableblock halign-left valign-top"><p class="tableblock">Nextcloud</p></th>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Contacts Management</p>
+</li>
+<li>
+<p>Calendars Management</p>
+</li>
+<li>
+<p>Photos Synchronization</p>
+</li>
+<li>
+<p>Files Synchronization</p>
+</li>
+<li>
+<p>Files Sharing</p>
+</li>
+<li>
+<p>Backup and Restore (with duplicity)</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kustomize Module</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Kubernetes</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_glossary">Glossary</h2>
 <div class="sectionbody">
-<div class="dlist glossary">
+<div class="dlist">
 <dl>
-<dt><a id="g_cloud_computing"></a>Cloud Computing</dt>
-<dd>
-<p>Cloud computing is the use of various services, such as software development platforms, servers, storage and software, over the internet, often referred to as the "cloud."<br>
-<a href="https://www.techopedia.com/definition/2/cloud-computing" class="bare">https://www.techopedia.com/definition/2/cloud-computing</a></p>
-</dd>
-<dt><a id="g_cloud_monitoring"></a>Cloud Monitoring</dt>
-<dd>
-<p>Cloud monitoring is the process of reviewing, monitoring and managing the operational workflow and processes within a cloud-based IT asset or infrastructure.
-It is the use of manual or automated IT monitoring and management techniques to ensure that a cloud infrastructure or platform performs optimally.<br>
-<a href="https://www.techopedia.com/definition/29862/cloud-monitoring" class="bare">https://www.techopedia.com/definition/29862/cloud-monitoring</a></p>
-</dd>
-<dt><a id="g_containerization"></a>Containerization</dt>
+<dt class="hdlist1"><a id="g_containerization"></a>Containerization</dt>
 <dd>
 <p>Containerization is a type of virtualization strategy that emerged as an alternative to traditional hypervisor-based virtualization.<br>
 <a href="https://www.techopedia.com/definition/31234/containerization-computers" class="bare">https://www.techopedia.com/definition/31234/containerization-computers</a></p>
 </dd>
-<dt><a id="g_continuous_integration"></a>Continuous Integration (CI)</dt>
+<dt class="hdlist1"><a id="g_continuous_integration"></a>Continuous Integration (CI)</dt>
 <dd>
 <p>Continuous integration (CI) is a software development practice in which each member of a development team integrates his work with that produced by others on a continuous basis.<br>
 <a href="https://www.techopedia.com/definition/24368/continuous-integration-ci" class="bare">https://www.techopedia.com/definition/24368/continuous-integration-ci</a></p>
 </dd>
-<dt><a id="g_cluster"></a>Cluster</dt>
-<dd>
-<p>A cluster, in the context of servers, is a group of computers that are connected with each other and operate closely to act as a single computer.<br>
-<a href="https://www.techopedia.com/definition/997/cluster-servers" class="bare">https://www.techopedia.com/definition/997/cluster-servers</a></p>
-</dd>
-<dt><a id="g_dhcp"></a>Dynamic Host Configuration Protocol (DHCP)</dt>
-<dd>
-<p>Dynamic Host Configuration Protocol (DHCP) is a network management protocol used to dynamically assign an IP address to any new node entering the network.
-DHCP permits a node to be configured automatically, thereby avoiding the necessity of involvement by a network administrator.<br>
-<a href="https://www.techopedia.com/definition/11337/dynamic-host-configuration-protocol-dhcp" class="bare">https://www.techopedia.com/definition/11337/dynamic-host-configuration-protocol-dhcp</a></p>
-</dd>
-<dt><a id="g_disaster_recovery"></a>Disaster Recovery</dt>
+<dt class="hdlist1"><a id="g_disaster_recovery"></a>Disaster Recovery</dt>
 <dd>
 <p>Disaster recovery is a set of policies and procedures which focus on protecting an organization from any significant effects in case of a negative event, which may include cyberattacks, natural disasters or building or device failures.<br>
 <a href="https://www.techopedia.com/definition/31989/disaster-recovery" class="bare">https://www.techopedia.com/definition/31989/disaster-recovery</a></p>
 </dd>
-<dt><a id="g_hardening"></a>Hardening</dt>
+<dt class="hdlist1"><a id="g_hardening"></a>Hardening</dt>
 <dd>
 <p>Hardening refers to providing various means of protection in a computer system.
 Protection is provided in various layers and is often referred to as defense in depth.<br>
 <a href="https://www.techopedia.com/definition/24833/hardening" class="bare">https://www.techopedia.com/definition/24833/hardening</a></p>
 </dd>
-<dt><a id="g_ha"></a>High Availability (HA)</dt>
+<dt class="hdlist1"><a id="g_ha"></a>High Availability (HA)</dt>
 <dd>
 <p>High availability refers to systems that are durable and likely to operate continuously without failure for a long time.<br>
 <a href="https://www.techopedia.com/definition/1021/high-availability-ha" class="bare">https://www.techopedia.com/definition/1021/high-availability-ha</a></p>
 </dd>
-<dt><a id="g_internal_cloud"></a>Internal Cloud</dt>
+<dt class="hdlist1"><a id="g_port_forwarding"></a>Port Forwarding</dt>
 <dd>
-<p>An internal cloud is a cloud computing service model implemented within an organization&#8217;s dedicated resources and infrastructure.<br>
-<a href="https://www.techopedia.com/definition/26648/internal-cloud" class="bare">https://www.techopedia.com/definition/26648/internal-cloud</a></p>
+<p>Port forwarding is a networking technique through which a gateway or similar device transmits all incoming communication/traffic of a specific port to the same port on any internal network node.<br>
+<a href="https://www.techopedia.com/definition/4057/port-forwarding" class="bare">https://www.techopedia.com/definition/4057/port-forwarding</a></p>
 </dd>
-<dt><a id="g_memory_swapping"></a>Memory Swapping</dt>
-<dd>
-<p>Memory swapping is a memory reclamation method wherein memory contents not currently in use are swapped to a disk to make the memory available for other applications or processes.
-The exact state or "page" of memory is copied to the disk to make the data contiguous and easy to restore later.<br>
-<a href="https://www.techopedia.com/definition/30467/memory-swapping" class="bare">https://www.techopedia.com/definition/30467/memory-swapping</a></p>
-</dd>
-<dt><a id="g_nas"></a>Network-attached storage (NAS)</dt>
+<dt class="hdlist1"><a id="g_nas"></a>Network-attached storage (NAS)</dt>
 <dd>
 <p>Network attached storage (NAS) is a dedicated server, also referred to as an appliance, used for file storage and sharing.
 NAS is a hard drive attached to a network, used for storage and accessed through an assigned network address.<br>
 <a href="https://www.techopedia.com/definition/26197/network-attached-storage-nas" class="bare">https://www.techopedia.com/definition/26197/network-attached-storage-nas</a></p>
 </dd>
-<dt><a id="g_port_forwarding"></a>Port Forwarding</dt>
-<dd>
-<p>Port forwarding is a networking technique through which a gateway or similar device transmits all incoming communication/traffic of a specific port to the same port on any internal network node.<br>
-<a href="https://www.techopedia.com/definition/4057/port-forwarding" class="bare">https://www.techopedia.com/definition/4057/port-forwarding</a></p>
-</dd>
-<dt><a id="g_reverse_proxy_server"></a>Reverse Proxy Server</dt>
+<dt class="hdlist1"><a id="g_reverse_proxy_server"></a>Reverse Proxy Server</dt>
 <dd>
 <p>A reverse proxy server is a type of proxy server that manages a connection or any specific requests coming from an external network/Internet toward an internal network.<br>
 <a href="https://www.techopedia.com/definition/16048/reverse-proxy-server" class="bare">https://www.techopedia.com/definition/16048/reverse-proxy-server</a></p>
-</dd>
-<dt><a id="g_ssh"></a>Secure Shell (SSH)</dt>
-<dd>
-<p>SSH is a cryptographic protocol and interface for executing network services, shell services and secure network communication with a remote computer.<br>
-<a href="https://www.techopedia.com/definition/4127/secure-shell-ssh" class="bare">https://www.techopedia.com/definition/4127/secure-shell-ssh</a></p>
 </dd>
 </dl>
 </div>
@@ -1248,6 +2852,16 @@ NAS is a hard drive attached to a network, used for storage and accessed through
 </li>
 <li>
 <p><a id="dgo"></a>[dgo] De-google-ify Internet, <a href="https://degooglisons-internet.org/en" class="bare">https://degooglisons-internet.org/en</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Publication</strong></p>
+</div>
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a id="dcc"></a>[dcc] The NIST Definition of Cloud Computing, <a href="https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-145.pdf" class="bare">https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-145.pdf</a></p>
 </li>
 </ul>
 </div>
@@ -1287,37 +2901,15 @@ NAS is a hard drive attached to a network, used for storage and accessed through
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>Hardware</strong></p>
-</div>
-<div class="ulist bibliography">
-<ul class="bibliography">
-<li>
-<p><a id="p64"></a>[p64] PINE64, <a href="https://www.pine64.org" class="bare">https://www.pine64.org</a></p>
-</li>
-<li>
-<p><a id="plts"></a>[plts] PINE A64-LTS, <a href="https://www.pine64.org/devices/single-board-computers/pine-a64-lts" class="bare">https://www.pine64.org/devices/single-board-computers/pine-a64-lts</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
 <p><strong>Technologies</strong></p>
 </div>
 <div class="ulist bibliography">
 <ul class="bibliography">
 <li>
-<p><a id="abn"></a>[abn] Armbian, <a href="https://www.armbian.com" class="bare">https://www.armbian.com</a></p>
-</li>
-<li>
 <p><a id="acsh"></a>[acsh] Ansible Collection - devsec.hardening, <a href="https://galaxy.ansible.com/devsec/hardening" class="bare">https://galaxy.ansible.com/devsec/hardening</a></p>
 </li>
 <li>
-<p><a id="alt"></a>[alt] Ansible-lint, <a href="https://github.com/ansible-community/ansible-lint" class="bare">https://github.com/ansible-community/ansible-lint</a></p>
-</li>
-<li>
 <p><a id="ans"></a>[ans] Ansible, <a href="https://www.ansible.com" class="bare">https://www.ansible.com</a></p>
-</li>
-<li>
-<p><a id="caw"></a>[caw] calibre-web <a href="https://github.com/janeczku/calibre-web" class="bare">https://github.com/janeczku/calibre-web</a></p>
 </li>
 <li>
 <p><a id="cncf"></a>[cncf] Cloud Native Computing Foundation, <a href="https://www.cncf.io" class="bare">https://www.cncf.io</a></p>
@@ -1329,6 +2921,12 @@ NAS is a hard drive attached to a network, used for storage and accessed through
 <p><a id="dup"></a>[dup] duplicity, <a href="http://duplicity.nongnu.org" class="bare">http://duplicity.nongnu.org</a></p>
 </li>
 <li>
+<p><a id="grf"></a>[grf] Grafana, <a href="https://grafana.com/" class="bare">https://grafana.com/</a></p>
+</li>
+<li>
+<p><a id="hlm"></a>[hlm] Helm, <a href="https://helm.sh" class="bare">https://helm.sh</a></p>
+</li>
+<li>
 <p><a id="k3s"></a>[k3s] k3s, <a href="https://k3s.io" class="bare">https://k3s.io</a></p>
 </li>
 <li>
@@ -1338,10 +2936,13 @@ NAS is a hard drive attached to a network, used for storage and accessed through
 <p><a id="kad"></a>[kad] Keepalived, <a href="https://www.keepalived.org" class="bare">https://www.keepalived.org</a></p>
 </li>
 <li>
-<p><a id="lhn"></a>[lhn] Longhorn, <a href="https://longhorn.io" class="bare">https://longhorn.io</a></p>
+<p><a id="kdb"></a>[kdb] Kubernetes Dashboard, <a href="https://github.com/kubernetes/dashboard" class="bare">https://github.com/kubernetes/dashboard</a></p>
 </li>
 <li>
-<p><a id="mol"></a>[mol] Molecule, <a href="https://github.com/ansible-community/molecule" class="bare">https://github.com/ansible-community/molecule</a></p>
+<p><a id="ktz"></a>[ktz] Kustomize, <a href="https://kustomize.io" class="bare">https://kustomize.io</a></p>
+</li>
+<li>
+<p><a id="lhn"></a>[lhn] Longhorn, <a href="https://longhorn.io" class="bare">https://longhorn.io</a></p>
 </li>
 <li>
 <p><a id="ncd"></a>[ncd] Nextcloud, <a href="https://nextcloud.com" class="bare">https://nextcloud.com</a></p>
@@ -1369,18 +2970,9 @@ NAS is a hard drive attached to a network, used for storage and accessed through
 </div>
 </div>
 </div>
-<div id="footnotes">
-<hr>
-<div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. The author, Thibault Morin, declares that there is no conflict of interest with PINE64. Thibault Morin is just a regular consumer of PINE64 products.
-</div>
-<div class="footnote" id="_footnotedef_2">
-<a href="#_footnoteref_2">2</a>. To reduce the complexity of the diagram, the demilitarized zone of the home network is skipped.
-</div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-10-26 11:21:57 UTC
+Last updated 2022-05-23 05:26:10 UTC
 </div>
 </div>
 </body>
