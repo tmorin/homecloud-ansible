@@ -49,7 +49,7 @@
     group: root
     mode: 0644
 
-- name: "Enable and start the mount configuration"
+- name: "Enable and start the service configuration"
   become: true
   ansible.builtin.systemd:
     daemon_reload: true
@@ -71,12 +71,19 @@
     force: false
     fstype: "{{ k3s_longhorn_disk_type }}"
 
-- name: "Mount the block image on boot"
+- name: "Transfer the mount configuration"
   become: true
-  when: not stat_k3s_longhorn_image_file.stat.exists
-  ansible.posix.mount:
-    boot: true
-    state: mounted
-    src: "{{ k3s_longhorn_image_device }}"
-    path: "{{ k3s_longhorn_disk_path }}"
-    fstype: "{{ k3s_longhorn_disk_type }}"
+  ansible.builtin.template:
+    src: longhorn_loop.mount
+    dest: "/etc/systemd/system/{{ k3s_longhorn_disk_name }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Enable and start the mount configuration"
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: "{{ k3s_longhorn_disk_name }}"
+    enabled: true
+    state: restarted

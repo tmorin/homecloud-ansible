@@ -3,7 +3,7 @@
 - name: Transfer the mount configuration
   become: true
   ansible.builtin.template:
-    src: mnt-dnas.mount.jinja2
+    src: mnt-dnas.mount
     dest: /etc/systemd/system/{{ k3s_dnas_mount_name }}.mount
     owner: root
     group: root

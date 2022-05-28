@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount the Longhorm disk
+After=longhorn_loop.service
+Before=k3s.service
+
+[Mount]
+What={{ k3s_longhorn_image_device }}
+Where={{ k3s_longhorn_disk_path }}
+Type={{ k3s_longhorn_disk_type }}
+Options={{ k3s_longhorn_disk_options }}
+
+[Install]
+WantedBy=local-fs.target

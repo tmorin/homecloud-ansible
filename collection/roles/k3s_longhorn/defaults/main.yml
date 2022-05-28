@@ -13,5 +13,6 @@ k3s_longhorn_block_device: ""
 
 k3s_longhorn_disk_path: "/var/lib/longhorn"
 k3s_longhorn_disk_type: "ext4"
+k3s_longhorn_disk_options: "defaults"
 
 k3s_longhorn_settings: { }

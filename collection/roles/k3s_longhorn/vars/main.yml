@@ -1,0 +1,3 @@
+---
+
+k3s_longhorn_disk_name: "{{ k3s_longhorn_disk_path | regex_replace('^/', '', 1) | replace('/', '-') }}.mount"

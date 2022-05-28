@@ -1,10 +1,12 @@
 [Unit]
 Description=Mount the decentralized NAS drive
-Before=docker.service syncthing@{{ k3s_dnas_username }}.service smbd.service
+Before=k3s.service syncthing@{{ k3s_dnas_username }}.service smbd.service
+
 [Mount]
 What={{ k3s_dnas_mount_what }}
 Where={{ k3s_dnas_mount_where }}
 Type={{ k3s_dnas_mount_type }}
 Options={{ k3s_dnas_mount_options }}
+
 [Install]
 WantedBy=local-fs.target
