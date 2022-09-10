@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/tmorin/homecloud-ansible/compare/v2.8.0...v2.8.1) (2022-09-10)
+
+
+### Bug Fixes
+
+* Raspberry Pi image tasks ([a86eb05](https://github.com/tmorin/homecloud-ansible/commit/a86eb051f3f91f49e611fee8f00999acea6d32d5))
+
 ## [2.8.0](https://github.com/tmorin/homecloud-ansible/compare/v2.7.0...v2.8.0) (2022-09-10)
 
 
