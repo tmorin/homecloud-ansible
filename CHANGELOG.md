@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://github.com/tmorin/homecloud-ansible/compare/v2.7.0...v2.8.0) (2022-09-10)
+
+
+### Features
+
+* upgrade Longhorn version ([22cc3e4](https://github.com/tmorin/homecloud-ansible/commit/22cc3e49ce95d0b6cd601566de46d4bb21584342))
+
+
+### Bug Fixes
+
+* enable `cgroup_enable=cpuset` for Raspberry Pi image ([d01ae65](https://github.com/tmorin/homecloud-ansible/commit/d01ae65a8e14d78739dd405cd2fb8e59ac47ac23))
+
 ## [2.7.0](https://github.com/tmorin/homecloud-ansible/compare/v2.6.2...v2.7.0) (2022-05-23)
 
 
