@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.2](https://github.com/tmorin/homecloud-ansible/compare/v2.8.1...v2.8.2) (2022-09-11)
+
+
+### Bug Fixes
+
+* **k3s_longhorn:** the updated manifest is broken because of changes in the original one ([2726b28](https://github.com/tmorin/homecloud-ansible/commit/2726b28c22a9ce28cb864df117d1291bf9fd8b1b))
+
 ### [2.8.1](https://github.com/tmorin/homecloud-ansible/compare/v2.8.0...v2.8.1) (2022-09-10)
 
 
