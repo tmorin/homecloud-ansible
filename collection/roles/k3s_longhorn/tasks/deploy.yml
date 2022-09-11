@@ -22,7 +22,7 @@
 - name: "Apply custom settings"
   ansible.builtin.lineinfile:
     path: /tmp/resources/longhorn.yaml
-    regexp: '    {{ item[0] }}:'
+    regexp: '{{ item[0] }}:'
     line: '    {{ item[0] }}: {{ item[1] }}'
   changed_when: false
   loop: "{{ (k3s_longhorn_settings | default({})).items() }}"
