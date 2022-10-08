@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/tmorin/homecloud-ansible/compare/v2.8.2...v2.9.0) (2022-10-08)
+
+
+### Features
+
+* **image_armbian:** add support for wifi configuration ([3ac0e6d](https://github.com/tmorin/homecloud-ansible/commit/3ac0e6d5d5795d6a5e2bc2e4262ad8a92e44fc87))
+
 ### [2.8.2](https://github.com/tmorin/homecloud-ansible/compare/v2.8.1...v2.8.2) (2022-09-11)
 
 
