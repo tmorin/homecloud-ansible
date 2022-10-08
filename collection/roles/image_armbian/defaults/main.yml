@@ -6,6 +6,11 @@ homecloud_network_netmask: ''
 homecloud_network_gateway: ''
 homecloud_network_nameserver: [ ]
 
+homecloud_wifi_enabled: '0'
+homecloud_wifi_ssid: ''
+homecloud_wifi_key: ''
+homecloud_wifi_countrycode: ''
+
 # the url to get the armbian archive (c.f. https://dl.armbian.com)
 image_armbian_image_url: ""
 # the name of the armbian archive (for instance Armbian_20.05.1_Rock64_bionic_current_5.4.43_desktop.img.xz)

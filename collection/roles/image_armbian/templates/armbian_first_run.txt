@@ -22,17 +22,17 @@ FR_net_change_defaults=1
 #	NB: If both are enabled, WiFi will take priority and Ethernet will be disabled.
 
 FR_net_ethernet_enabled=1
-FR_net_wifi_enabled=0
+FR_net_wifi_enabled={{ homecloud_wifi_enabled }}
 
 #Enter your WiFi creds
 #	SECURITY WARN: Your wifi keys will be stored in plaintext, no encryption.
 
-FR_net_wifi_ssid='MySSID'
-FR_net_wifi_key='MyWiFiKEY'
+FR_net_wifi_ssid='{{ homecloud_wifi_ssid }}'
+FR_net_wifi_key='{{ homecloud_wifi_key }}'
 
 #	Country code to enable power ratings and channels for your country. eg: GB US DE | https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
-FR_net_wifi_countrycode='GB'
+FR_net_wifi_countrycode='{{ homecloud_wifi_countrycode }}'
 
 #If you want to use a static ip, set it here
 
