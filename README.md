@@ -1,4 +1,4 @@
-ysu# homecloud-ansible
+# homecloud-ansible
 
 [![badge for Ansible Collection](https://img.shields.io/badge/Ansible%20Collection-tmorin/homecloud-blue?logo=ansible&logoColor=white)](https://galaxy.ansible.com/tmorin/homecloud)
 [![badge for HTML paper](https://img.shields.io/badge/Paper-HTML-informational)](https://tmorin.github.io/homecloud-ansible)
